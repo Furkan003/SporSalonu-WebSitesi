@@ -1,0 +1,588 @@
+/* ═══════════════════════════════════════════════════════
+   NFA Spor Salonu – Custom Theme (OKLCH / Shadcn-inspired)
+   Bootstrap 5 override layer
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Google Font ─── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ─── CSS Custom Properties (Light) ─── */
+:root {
+    --nfa-bg: oklch(0.9821 0 0);
+    --nfa-fg: oklch(0.2435 0 0);
+    --nfa-card: oklch(0.9911 0 0);
+    --nfa-card-fg: oklch(0.2435 0 0);
+    --nfa-primary: oklch(0.8606 0.1731 91.9357);
+    --nfa-primary-fg: oklch(0.2103 0.0059 285.8852);
+    --nfa-secondary: oklch(0.2739 0.0055 286.0326);
+    --nfa-secondary-fg: oklch(1 0 0);
+    --nfa-muted: oklch(0.9521 0 0);
+    --nfa-muted-fg: oklch(0.5032 0 0);
+    --nfa-accent: oklch(0.931 0 0);
+    --nfa-accent-fg: oklch(0.2435 0 0);
+    --nfa-destructive: oklch(0.6271 0.1936 33.339);
+    --nfa-destructive-fg: oklch(1 0 0);
+    --nfa-border: oklch(0.8822 0 0);
+    --nfa-input: oklch(0.8822 0 0);
+    --nfa-ring: oklch(0.4341 0.0392 41.9938);
+    --nfa-radius: 0.625rem;
+
+    /* chart / accent palette */
+    --nfa-chart-1: oklch(0.4341 0.0392 41.9938);
+    --nfa-chart-2: oklch(0.92 0.0651 74.3695);
+    --nfa-chart-3: oklch(0.931 0 0);
+    --nfa-chart-4: oklch(0.9367 0.0523 75.5009);
+    --nfa-chart-5: oklch(0.4338 0.0437 41.6746);
+
+    /* sidebar */
+    --nfa-sidebar: oklch(0.9881 0 0);
+    --nfa-sidebar-fg: oklch(0.2645 0 0);
+    --nfa-sidebar-border: oklch(0.9401 0 0);
+}
+
+/* ─── Dark Mode ─── */
+.dark,
+[data-bs-theme="dark"] {
+    --nfa-bg: oklch(0.1776 0 0);
+    --nfa-fg: oklch(0.9491 0 0);
+    --nfa-card: oklch(0.2134 0 0);
+    --nfa-card-fg: oklch(0.9491 0 0);
+    --nfa-primary: oklch(0.8606 0.1731 91.9357);
+    --nfa-primary-fg: oklch(0.2103 0.0059 285.8852);
+    --nfa-secondary: oklch(0.2739 0.0055 286.0326);
+    --nfa-secondary-fg: oklch(1 0 0);
+    --nfa-muted: oklch(0.252 0 0);
+    --nfa-muted-fg: oklch(0.7699 0 0);
+    --nfa-accent: oklch(0.285 0 0);
+    --nfa-accent-fg: oklch(0.9491 0 0);
+    --nfa-destructive: oklch(0.6271 0.1936 33.339);
+    --nfa-destructive-fg: oklch(1 0 0);
+    --nfa-border: oklch(0.2351 0.0115 91.7467);
+    --nfa-input: oklch(0.4017 0 0);
+    --nfa-ring: oklch(0.9247 0.0524 66.1732);
+
+    --nfa-sidebar: oklch(0.2103 0.0059 285.8852);
+    --nfa-sidebar-fg: oklch(0.9674 0.0013 286.3752);
+    --nfa-sidebar-border: oklch(0.2739 0.0055 286.0326);
+}
+
+/* ─── Base Resets ─── */
+*,
+*::before,
+*::after {
+    border-color: var(--nfa-border);
+}
+
+html {
+    font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+    background-color: var(--nfa-bg);
+    color: var(--nfa-fg);
+    font-family: inherit;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Cards ─── */
+.card {
+    background-color: var(--nfa-card);
+    color: var(--nfa-card-fg);
+    border: 1px solid var(--nfa-border);
+    border-radius: var(--nfa-radius);
+    transition: box-shadow .25s ease, transform .25s ease;
+}
+
+.card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .08);
+}
+
+.card-nfa-shadow {
+    box-shadow: 0 1px 3px 0 hsl(0 0% 0% / .1), 0 1px 2px -1px hsl(0 0% 0% / .1);
+}
+
+.card-nfa-shadow-lg {
+    box-shadow: 0 4px 24px 0 hsl(0 0% 0% / .08), 0 1px 3px 0 hsl(0 0% 0% / .06);
+}
+
+/* ─── Primary Button ─── */
+.btn-nfa-primary {
+    background-color: var(--nfa-primary);
+    color: var(--nfa-primary-fg);
+    border: none;
+    border-radius: var(--nfa-radius);
+    font-weight: 600;
+    letter-spacing: .01em;
+    padding: .625rem 1.5rem;
+    transition: filter .2s, box-shadow .2s, transform .15s;
+}
+
+.btn-nfa-primary:hover {
+    filter: brightness(1.06);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .12);
+    transform: translateY(-1px);
+    color: var(--nfa-primary-fg);
+}
+
+.btn-nfa-primary:active {
+    transform: translateY(0);
+}
+
+/* ─── Secondary / Outline ─── */
+.btn-nfa-secondary {
+    background-color: var(--nfa-secondary);
+    color: var(--nfa-secondary-fg);
+    border: none;
+    border-radius: var(--nfa-radius);
+    font-weight: 600;
+    padding: .625rem 1.5rem;
+    transition: filter .2s, box-shadow .2s;
+}
+
+.btn-nfa-secondary:hover {
+    filter: brightness(1.2);
+    color: var(--nfa-secondary-fg);
+}
+
+.btn-nfa-outline {
+    background-color: transparent;
+    color: var(--nfa-fg);
+    border: 1px solid var(--nfa-border);
+    border-radius: var(--nfa-radius);
+    font-weight: 500;
+    padding: .625rem 1.5rem;
+    transition: background-color .2s, border-color .2s;
+}
+
+.btn-nfa-outline:hover {
+    background-color: var(--nfa-accent);
+    border-color: var(--nfa-ring);
+}
+
+/* ─── Form Controls ─── */
+.form-control-nfa {
+    background-color: var(--nfa-card);
+    border: 1px solid var(--nfa-input);
+    border-radius: var(--nfa-radius);
+    color: var(--nfa-fg);
+    padding: .625rem .875rem;
+    font-size: .9375rem;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.form-control-nfa:focus {
+    border-color: var(--nfa-primary);
+    box-shadow: 0 0 0 3px oklch(0.8606 0.1731 91.9357 / .25);
+    outline: none;
+}
+
+.form-control-nfa::placeholder {
+    color: var(--nfa-muted-fg);
+}
+
+.form-check-input:checked {
+    background-color: var(--nfa-primary);
+    border-color: var(--nfa-primary);
+}
+
+/* ─── Auth Page Wrapper ─── */
+.nfa-auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--nfa-bg) 0%, var(--nfa-muted) 50%, var(--nfa-accent) 100%);
+    padding: 1rem;
+}
+
+.nfa-auth-card {
+    width: 100%;
+    max-width: 440px;
+    border-radius: calc(var(--nfa-radius) * 2);
+    overflow: hidden;
+}
+
+.nfa-auth-header {
+    background: var(--nfa-secondary);
+    color: var(--nfa-secondary-fg);
+    padding: 2rem 2rem 1.5rem;
+    text-align: center;
+}
+
+.nfa-auth-header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: .25rem;
+}
+
+.nfa-auth-header p {
+    opacity: .8;
+    font-size: .875rem;
+    margin-bottom: 0;
+}
+
+.nfa-auth-body {
+    padding: 2rem;
+}
+
+.nfa-auth-brand {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--nfa-primary);
+    color: var(--nfa-primary-fg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 14px oklch(0.8606 0.1731 91.9357 / .35);
+}
+
+/* ─── Stats Card (Dashboard) ─── */
+.nfa-stat-card {
+    border: none;
+    border-radius: calc(var(--nfa-radius) * 1.5);
+    padding: 1.25rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.nfa-stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .1);
+}
+
+.nfa-stat-card .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.nfa-stat-card .stat-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.nfa-stat-card .stat-label {
+    font-size: .8125rem;
+    font-weight: 500;
+    opacity: .7;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+/* gradient overlays for stat cards */
+.nfa-stat-primary {
+    background: linear-gradient(135deg, oklch(0.8606 0.1731 91.9357) 0%, oklch(0.9 0.12 85) 100%);
+    color: var(--nfa-primary-fg);
+}
+
+.nfa-stat-success {
+    background: linear-gradient(135deg, oklch(0.72 0.19 155) 0%, oklch(0.8 0.15 150) 100%);
+    color: #fff;
+}
+
+.nfa-stat-info {
+    background: linear-gradient(135deg, oklch(0.62 0.18 250) 0%, oklch(0.72 0.14 245) 100%);
+    color: #fff;
+}
+
+.nfa-stat-warning {
+    background: linear-gradient(135deg, oklch(0.78 0.15 55) 0%, oklch(0.88 0.11 50) 100%);
+    color: var(--nfa-primary-fg);
+}
+
+.nfa-stat-danger {
+    background: linear-gradient(135deg, oklch(0.6271 0.1936 33.339) 0%, oklch(0.72 0.15 30) 100%);
+    color: #fff;
+}
+
+.nfa-stat-dark {
+    background: linear-gradient(135deg, var(--nfa-secondary) 0%, oklch(0.35 0.01 286) 100%);
+    color: var(--nfa-secondary-fg);
+}
+
+/* ─── Section Headings ─── */
+.nfa-section-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--nfa-fg);
+    position: relative;
+    padding-left: .75rem;
+    margin-bottom: 1.25rem;
+}
+
+.nfa-section-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: .15em;
+    bottom: .15em;
+    width: 4px;
+    border-radius: 4px;
+    background: var(--nfa-primary);
+}
+
+/* ─── Badge overrides ─── */
+.badge-nfa-active {
+    background-color: oklch(0.72 0.19 155 / .15);
+    color: oklch(0.5 0.15 155);
+    font-weight: 600;
+}
+
+.badge-nfa-expired {
+    background-color: oklch(0.6271 0.1936 33.339 / .15);
+    color: oklch(0.5 0.15 33);
+    font-weight: 600;
+}
+
+.badge-nfa-pending {
+    background-color: oklch(0.78 0.15 55 / .15);
+    color: oklch(0.55 0.12 55);
+    font-weight: 600;
+}
+
+/* ─── Table Styling ─── */
+.table-nfa {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-nfa thead th {
+    background-color: var(--nfa-muted);
+    color: var(--nfa-muted-fg);
+    font-size: .75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    padding: .75rem 1rem;
+    border: none;
+}
+
+.table-nfa tbody td {
+    padding: .75rem 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--nfa-border);
+    font-size: .875rem;
+}
+
+.table-nfa tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table-nfa tbody tr {
+    transition: background-color .15s;
+}
+
+.table-nfa tbody tr:hover {
+    background-color: var(--nfa-accent);
+}
+
+/* ─── Progress bar override ─── */
+.progress-nfa {
+    background-color: var(--nfa-muted);
+    border-radius: 999px;
+    height: .5rem;
+    overflow: hidden;
+}
+
+.progress-nfa .progress-bar {
+    background: linear-gradient(90deg, var(--nfa-primary), oklch(0.92 0.0651 74.3695));
+    border-radius: 999px;
+}
+
+/* ─── QR placeholder ─── */
+.nfa-qr-wrapper {
+    width: 180px;
+    height: 180px;
+    border-radius: var(--nfa-radius);
+    border: 2px dashed var(--nfa-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--nfa-muted);
+    margin: 0 auto;
+}
+
+/* ─── Notification list ─── */
+.nfa-notification-item {
+    padding: .75rem 1rem;
+    border-bottom: 1px solid var(--nfa-border);
+    transition: background-color .15s;
+    display: flex;
+    gap: .75rem;
+    align-items: flex-start;
+}
+
+.nfa-notification-item:last-child {
+    border-bottom: none;
+}
+
+.nfa-notification-item:hover {
+    background-color: var(--nfa-accent);
+}
+
+.nfa-notification-item.unread {
+    background-color: oklch(0.8606 0.1731 91.9357 / .06);
+}
+
+.nfa-notif-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--nfa-primary);
+    flex-shrink: 0;
+    margin-top: .4rem;
+}
+
+/* ─── Profile avatar fallback ─── */
+.nfa-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--nfa-primary);
+    box-shadow: 0 4px 14px oklch(0.8606 0.1731 91.9357 / .2);
+}
+
+.nfa-avatar-placeholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--nfa-primary), oklch(0.92 0.0651 74.3695));
+    color: var(--nfa-primary-fg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    border: 3px solid var(--nfa-card);
+    box-shadow: 0 4px 14px oklch(0.8606 0.1731 91.9357 / .2);
+}
+
+/* ─── Sidebar (Admin Layout) ─── */
+.nfa-admin-sidebar {
+    background-color: var(--nfa-sidebar);
+    border-right: 1px solid var(--nfa-sidebar-border);
+    color: var(--nfa-sidebar-fg);
+    width: 260px;
+    min-height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1030;
+    transition: transform .3s ease;
+}
+
+.nfa-admin-content {
+    margin-left: 260px;
+    min-height: 100vh;
+    padding: 1.5rem 2rem;
+}
+
+@media (max-width: 991.98px) {
+    .nfa-admin-sidebar {
+        transform: translateX(-100%);
+    }
+
+    .nfa-admin-sidebar.show {
+        transform: translateX(0);
+    }
+
+    .nfa-admin-content {
+        margin-left: 0;
+    }
+}
+
+/* ─── Animations ─── */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.nfa-animate-in {
+    animation: fadeInUp .45s ease forwards;
+}
+
+.nfa-animate-in:nth-child(2) { animation-delay: .08s; }
+.nfa-animate-in:nth-child(3) { animation-delay: .16s; }
+.nfa-animate-in:nth-child(4) { animation-delay: .24s; }
+.nfa-animate-in:nth-child(5) { animation-delay: .32s; }
+.nfa-animate-in:nth-child(6) { animation-delay: .40s; }
+
+/* ─── Alert Enhancements ─── */
+.alert-nfa {
+    border-radius: var(--nfa-radius);
+    border: none;
+    font-weight: 500;
+    font-size: .875rem;
+}
+
+.alert-nfa-success {
+    background-color: oklch(0.72 0.19 155 / .12);
+    color: oklch(0.45 0.15 155);
+}
+
+.alert-nfa-error {
+    background-color: oklch(0.6271 0.1936 33.339 / .12);
+    color: oklch(0.5 0.15 33);
+}
+
+/* ─── Misc ─── */
+.text-nfa-muted {
+    color: var(--nfa-muted-fg) !important;
+}
+
+.bg-nfa-muted {
+    background-color: var(--nfa-muted) !important;
+}
+
+.border-nfa {
+    border-color: var(--nfa-border) !important;
+}
+
+a.nfa-link {
+    color: var(--nfa-ring);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color .2s;
+}
+
+a.nfa-link:hover {
+    color: var(--nfa-primary);
+    text-decoration: underline;
+}
+
+/* ─── Smooth scrollbar ─── */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--nfa-muted);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--nfa-border);
+    border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--nfa-muted-fg);
+}

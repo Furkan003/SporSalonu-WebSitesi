@@ -1,0 +1,202 @@
+@model AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_AdminLayout";
+}
+
+@* ═══════════ İSTATİSTİK KARTLARI ═══════════ *@
+<div class="row g-3 mb-4">
+
+    @* Toplam Üye *@
+    <div class="col-6 col-md-3">
+        <div class="card nfa-stat-card nfa-stat-primary nfa-animate-in">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="stat-icon" style="background:rgba(255,255,255,.2);">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+            </div>
+            <div class="stat-value">@Model.TotalUsers</div>
+            <div class="stat-label">Toplam Üye</div>
+        </div>
+    </div>
+
+    @* Aktif Üyelikler *@
+    <div class="col-6 col-md-3">
+        <div class="card nfa-stat-card nfa-stat-success nfa-animate-in">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="stat-icon" style="background:rgba(255,255,255,.2);">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+            </div>
+            <div class="stat-value">@Model.ActiveMemberships</div>
+            <div class="stat-label">Aktif Üyelikler</div>
+        </div>
+    </div>
+
+    @* Günlük Giriş *@
+    <div class="col-6 col-md-3">
+        <div class="card nfa-stat-card nfa-stat-info nfa-animate-in">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="stat-icon" style="background:rgba(255,255,255,.2);">
+                    <i class="bi bi-door-open-fill"></i>
+                </div>
+            </div>
+            <div class="stat-value">@Model.TodayAccessCount</div>
+            <div class="stat-label">Günlük Giriş</div>
+        </div>
+    </div>
+
+    @* Eğitmenler *@
+    <div class="col-6 col-md-3">
+        <div class="card nfa-stat-card nfa-stat-warning nfa-animate-in">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="stat-icon" style="background:rgba(0,0,0,.08);">
+                    <i class="bi bi-person-badge-fill"></i>
+                </div>
+            </div>
+            <div class="stat-value">@Model.TotalTrainers</div>
+            <div class="stat-label">Eğitmenler</div>
+        </div>
+    </div>
+</div>
+
+@* ═══════════ FİNANSAL KARTLAR ═══════════ *@
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card card-nfa-shadow p-3 nfa-animate-in">
+            <div class="d-flex align-items-center gap-3 mb-2">
+                <div class="stat-icon nfa-stat-dark d-flex align-items-center justify-content-center" style="width:40px;height:40px;border-radius:10px;">
+                    <i class="bi bi-currency-exchange text-white"></i>
+                </div>
+                <div>
+                    <div class="stat-label text-nfa-muted" style="font-size:.75rem;">Toplam Gelir</div>
+                    <div class="fw-bold" style="font-size:1.25rem;">@Model.TotalRevenue.ToString("C0", new System.Globalization.CultureInfo("tr-TR"))</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-nfa-shadow p-3 nfa-animate-in">
+            <div class="d-flex align-items-center gap-3 mb-2">
+                <div class="stat-icon nfa-stat-success d-flex align-items-center justify-content-center" style="width:40px;height:40px;border-radius:10px;">
+                    <i class="bi bi-graph-up-arrow text-white"></i>
+                </div>
+                <div>
+                    <div class="stat-label text-nfa-muted" style="font-size:.75rem;">Aylık Gelir</div>
+                    <div class="fw-bold" style="font-size:1.25rem;">@Model.MonthlyRevenue.ToString("C0", new System.Globalization.CultureInfo("tr-TR"))</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-nfa-shadow p-3 nfa-animate-in">
+            <div class="d-flex align-items-center gap-3 mb-2">
+                <div class="stat-icon nfa-stat-danger d-flex align-items-center justify-content-center" style="width:40px;height:40px;border-radius:10px;">
+                    <i class="bi bi-hourglass-split text-white"></i>
+                </div>
+                <div>
+                    <div class="stat-label text-nfa-muted" style="font-size:.75rem;">Bekleyen Ödeme</div>
+                    <div class="fw-bold" style="font-size:1.25rem;">@Model.PendingPayments</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ═══════════ ALT BÖLÜM: Tablo + Ek Bilgi ═══════════ *@
+<div class="row g-3">
+
+    @* Son Kayıt Olan Üyeler *@
+    <div class="col-lg-8">
+        <div class="card card-nfa-shadow nfa-animate-in">
+            <div class="card-body p-0">
+                <div class="px-4 pt-4 pb-2">
+                    <h6 class="nfa-section-title">Son Kayıt Olan Üyeler</h6>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-nfa mb-0">
+                        <thead>
+                            <tr>
+                                <th>Ad Soyad</th>
+                                <th>E-posta</th>
+                                <th>Rol</th>
+                                <th>Kayıt Tarihi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.RecentMembers.Any())
+                            {
+                                @foreach (var member in Model.RecentMembers)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold">@member.FullName</td>
+                                        <td class="text-nfa-muted">@member.Email</td>
+                                        <td>
+                                            <span class="badge rounded-pill badge-nfa-active px-2 py-1">
+                                                @(member.RoleName ?? "–")
+                                            </span>
+                                        </td>
+                                        <td class="text-nfa-muted">
+                                            @(member.CreatedAt?.ToString("dd MMM yyyy") ?? "–")
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center text-nfa-muted py-4">Henüz kayıtlı üye bulunmuyor.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Sağ Kolon: Hızlı Bilgiler *@
+    <div class="col-lg-4">
+        @* Üyelik Özeti *@
+        <div class="card card-nfa-shadow mb-3 nfa-animate-in">
+            <div class="card-body">
+                <h6 class="nfa-section-title">Üyelik Özeti</h6>
+                <ul class="list-unstyled mb-0">
+                    <li class="d-flex justify-content-between align-items-center py-2" style="border-bottom:1px solid var(--nfa-border);">
+                        <span class="text-nfa-muted" style="font-size:.875rem;">Aktif Planlar</span>
+                        <span class="fw-bold">@Model.TotalMembershipPlans</span>
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center py-2" style="border-bottom:1px solid var(--nfa-border);">
+                        <span class="text-nfa-muted" style="font-size:.875rem;">Aktif Üyelikler</span>
+                        <span class="badge badge-nfa-active rounded-pill px-2">@Model.ActiveMemberships</span>
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center py-2" style="border-bottom:1px solid var(--nfa-border);">
+                        <span class="text-nfa-muted" style="font-size:.875rem;">Süresi Dolan</span>
+                        <span class="badge badge-nfa-expired rounded-pill px-2">@Model.ExpiredMemberships</span>
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center py-2">
+                        <span class="text-nfa-muted" style="font-size:.875rem;">Aktif Üyeler</span>
+                        <span class="fw-bold">@Model.ActiveMembers</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        @* Bildirimler *@
+        <div class="card card-nfa-shadow nfa-animate-in">
+            <div class="card-body">
+                <h6 class="nfa-section-title">
+                    Bildirimler
+                    @if (Model.UnreadNotifications > 0)
+                    {
+                        <span class="badge badge-nfa-pending rounded-pill ms-2">@Model.UnreadNotifications</span>
+                    }
+                </h6>
+                <p class="text-nfa-muted mb-0" style="font-size:.875rem;">
+                    <i class="bi bi-bell me-1"></i>
+                    @Model.UnreadNotifications okunmamış bildiriminiz var.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

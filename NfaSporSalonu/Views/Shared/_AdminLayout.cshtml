@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - NFA Yönetim Paneli</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/custom-theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+</head>
+<body>
+
+    @* ═══════ Sidebar ═══════ *@
+    <aside class="nfa-admin-sidebar d-flex flex-column" id="adminSidebar">
+        @* Brand *@
+        <div class="px-4 py-3 d-flex align-items-center gap-2" style="border-bottom:1px solid var(--nfa-sidebar-border);">
+            <span class="nfa-auth-brand" style="width:40px;height:40px;font-size:1rem;margin-bottom:0;">NFA</span>
+            <span class="fw-bold" style="font-size:1.05rem;">Yönetim Paneli</span>
+        </div>
+
+        @* Navigation *@
+        <nav class="flex-grow-1 p-3">
+            <ul class="nav flex-column gap-1">
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2 active"
+                       asp-controller="Admin" asp-action="Dashboard"
+                       style="color:var(--nfa-sidebar-fg);font-weight:500;font-size:.9rem;transition:background .15s;">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2"
+                       href="#"
+                       style="color:var(--nfa-sidebar-fg);font-weight:500;font-size:.9rem;transition:background .15s;">
+                        <i class="bi bi-people"></i> Üyeler
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2"
+                       href="#"
+                       style="color:var(--nfa-sidebar-fg);font-weight:500;font-size:.9rem;transition:background .15s;">
+                        <i class="bi bi-credit-card"></i> Üyelik Planları
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2"
+                       href="#"
+                       style="color:var(--nfa-sidebar-fg);font-weight:500;font-size:.9rem;transition:background .15s;">
+                        <i class="bi bi-cash-stack"></i> Ödemeler
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2"
+                       href="#"
+                       style="color:var(--nfa-sidebar-fg);font-weight:500;font-size:.9rem;transition:background .15s;">
+                        <i class="bi bi-person-badge"></i> Eğitmenler
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2"
+                       href="#"
+                       style="color:var(--nfa-sidebar-fg);font-weight:500;font-size:.9rem;transition:background .15s;">
+                        <i class="bi bi-bell"></i> Bildirimler
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        @* Footer *@
+        <div class="p-3" style="border-top:1px solid var(--nfa-sidebar-border);">
+            <form asp-controller="Account" asp-action="Logout" method="post">
+                <button type="submit" class="btn btn-nfa-outline w-100 d-flex align-items-center justify-content-center gap-2" style="font-size:.875rem;">
+                    <i class="bi bi-box-arrow-left"></i> Çıkış Yap
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    @* ═══════ Main Content ═══════ *@
+    <div class="nfa-admin-content">
+        @* Top Bar (mobile toggle + breadcrumb) *@
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-nfa-outline d-lg-none p-2" type="button" onclick="document.getElementById('adminSidebar').classList.toggle('show')">
+                    <i class="bi bi-list" style="font-size:1.25rem;"></i>
+                </button>
+                <h4 class="fw-bold mb-0">@ViewData["Title"]</h4>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-nfa-muted" style="font-size:.8125rem;">
+                    <i class="bi bi-person-circle me-1"></i>@User.Identity?.Name
+                </span>
+            </div>
+        </div>
+
+        @* ── TempData Alerts ── *@
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-nfa alert-nfa-success d-flex align-items-center alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span>@TempData["Success"]</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-nfa alert-nfa-error d-flex align-items-center alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span>@TempData["Error"]</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+            </div>
+        }
+
+        @RenderBody()
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <style>
+        .nfa-admin-sidebar .nav-link:hover,
+        .nfa-admin-sidebar .nav-link.active {
+            background-color: var(--nfa-sidebar-accent, oklch(0.9761 0 0));
+            color: var(--nfa-sidebar-accent-foreground, oklch(0.325 0 0)) !important;
+        }
+    </style>
+</body>
+</html>

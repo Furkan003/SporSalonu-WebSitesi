@@ -1,8 +1,379 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Ana Sayfa";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@section Styles {
+    <style>
+        /* ─── Landing Page Styles ─── */
+        .nfa-hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(160deg, oklch(0.18 0.01 286) 0%, oklch(0.25 0.02 286) 40%, oklch(0.22 0.03 60) 100%);
+        }
+        .nfa-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 60% 50% at 70% 50%, oklch(0.8606 0.1731 91.9357 / .1) 0%, transparent 70%),
+                        radial-gradient(ellipse 40% 60% at 20% 80%, oklch(0.62 0.18 250 / .08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .nfa-hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 120px;
+            background: linear-gradient(to top, var(--nfa-bg), transparent);
+            pointer-events: none;
+        }
+        .nfa-hero-title {
+            font-size: clamp(2.25rem, 5vw, 3.75rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -.02em;
+            color: #fff;
+        }
+        .nfa-hero-title .nfa-gold {
+            background: linear-gradient(135deg, var(--nfa-primary), oklch(0.92 0.065 74));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .nfa-hero-sub {
+            font-size: clamp(.95rem, 1.5vw, 1.15rem);
+            color: rgba(255,255,255,.7);
+            max-width: 540px;
+            line-height: 1.7;
+        }
+        .nfa-hero-stats { display: flex; gap: 2.5rem; margin-top: 2.5rem; }
+        .nfa-hero-stats .hs-val { font-size: 1.75rem; font-weight: 800; color: var(--nfa-primary); }
+        .nfa-hero-stats .hs-lbl { font-size: .75rem; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .06em; }
+
+        /* floating shapes */
+        .nfa-float { position: absolute; border-radius: 50%; opacity: .06; pointer-events: none; }
+        .nfa-float-1 { width: 400px; height: 400px; background: var(--nfa-primary); top: -80px; right: -100px; animation: floatY 8s ease-in-out infinite; }
+        .nfa-float-2 { width: 250px; height: 250px; background: oklch(0.62 0.18 250); bottom: 10%; left: -60px; animation: floatY 10s ease-in-out infinite reverse; }
+        @@keyframes floatY { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-30px); } }
+
+        /* ─── Section Common ─── */
+        .nfa-section { padding: 5rem 0; }
+        .nfa-section-badge {
+            display: inline-block;
+            background: oklch(0.8606 0.1731 91.9357 / .12);
+            color: var(--nfa-ring);
+            font-size: .75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            padding: .35rem 1rem;
+            border-radius: 999px;
+            margin-bottom: .75rem;
+        }
+        .nfa-heading {
+            font-size: clamp(1.5rem, 3vw, 2.25rem);
+            font-weight: 800;
+            letter-spacing: -.01em;
+            line-height: 1.2;
+        }
+
+        /* ─── Service Cards ─── */
+        .nfa-service-card {
+            background: var(--nfa-card);
+            border: 1px solid var(--nfa-border);
+            border-radius: calc(var(--nfa-radius) * 2);
+            padding: 2rem 1.75rem;
+            text-align: center;
+            transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+            height: 100%;
+        }
+        .nfa-service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 40px rgba(0,0,0,.08);
+            border-color: var(--nfa-primary);
+        }
+        .nfa-service-icon {
+            width: 72px; height: 72px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 1.25rem;
+            transition: transform .3s;
+        }
+        .nfa-service-card:hover .nfa-service-icon { transform: scale(1.1) rotate(-3deg); }
+        .si-fitness  { background: linear-gradient(135deg, oklch(0.8606 0.1731 91.9357 / .15), oklch(0.92 0.065 74 / .1)); color: oklch(0.7 0.15 90); }
+        .si-cross    { background: linear-gradient(135deg, oklch(0.72 0.19 155 / .15), oklch(0.8 0.15 150 / .1)); color: oklch(0.55 0.17 155); }
+        .si-box      { background: linear-gradient(135deg, oklch(0.6271 0.1936 33 / .15), oklch(0.72 0.15 30 / .1)); color: oklch(0.55 0.17 33); }
+        .si-kick     { background: linear-gradient(135deg, oklch(0.62 0.18 250 / .15), oklch(0.72 0.14 245 / .1)); color: oklch(0.5 0.16 250); }
+
+        /* ─── Contact Band ─── */
+        .nfa-contact-band {
+            background: linear-gradient(160deg, oklch(0.22 0.01 286), oklch(0.18 0.02 286));
+            color: #fff;
+            padding: 4rem 0;
+        }
+        .nfa-contact-item { display: flex; gap: .75rem; align-items: flex-start; margin-bottom: 1.25rem; }
+        .nfa-contact-icon {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            background: oklch(1 0 0 / .08);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            color: var(--nfa-primary);
+        }
+        .nfa-contact-item .ci-label { font-size: .75rem; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .05em; }
+        .nfa-contact-item .ci-value { font-size: .9375rem; font-weight: 500; }
+
+        .nfa-hour-row { display: flex; justify-content: space-between; padding: .5rem 0; border-bottom: 1px solid rgba(255,255,255,.08); font-size: .875rem; }
+        .nfa-hour-row:last-child { border-bottom: none; }
+
+        /* ─── Scroll reveal ─── */
+        .nfa-reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+        .nfa-reveal.visible { opacity: 1; transform: translateY(0); }
+    </style>
+}
+
+@* ═══════════════════════════════════════════
+   PHASE 1 – HERO SECTION
+   ═══════════════════════════════════════════ *@
+<section class="nfa-hero" id="hero">
+    <div class="nfa-float nfa-float-1"></div>
+    <div class="nfa-float nfa-float-2"></div>
+
+    <div class="container position-relative" style="z-index:2;">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <div class="nfa-section-badge" style="background:oklch(1 0 0 / .08);color:var(--nfa-primary);">
+                    <i class="bi bi-lightning-charge-fill me-1"></i> NFA Spor Merkezi
+                </div>
+                <h1 class="nfa-hero-title mt-2 mb-4">
+                    Gücünü Şekillendir,<br/>
+                    <span class="nfa-gold">Sınırlarını Aş!</span>
+                </h1>
+                <p class="nfa-hero-sub mb-4">
+                    Yaşam kalitesini arttırmanın en önemli hususlarından biri tartışmasız egzersizdir. Profesyonel eğitim programları ve ekipmanlarıyla, bireylere sağlıklı ve fit bir yaşamın kapılarını açar.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-nfa-primary px-4 py-2" style="font-size:.9375rem;">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Giriş Yap
+                    </a>
+                    <a asp-controller="Account" asp-action="Register" class="btn px-4 py-2"
+                       style="border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:var(--nfa-radius);font-weight:600;font-size:.9375rem;transition:background .2s,border-color .2s;">
+                        Kayıt Ol <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+                </div>
+
+                <div class="nfa-hero-stats">
+                    <div><div class="hs-val">500+</div><div class="hs-lbl">Aktif Üye</div></div>
+                    <div><div class="hs-val">15+</div><div class="hs-lbl">Eğitmen</div></div>
+                    <div><div class="hs-val">10+</div><div class="hs-lbl">Yıl Tecrübe</div></div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 d-none d-lg-flex justify-content-center align-items-center">
+                <div style="width:340px;height:340px;border-radius:50%;background:linear-gradient(135deg, oklch(0.8606 0.1731 91.9357 / .12), oklch(0.62 0.18 250 / .08));display:flex;align-items:center;justify-content:center;">
+                    <div style="width:260px;height:260px;border-radius:50%;background:oklch(1 0 0 / .04);border:1px solid oklch(1 0 0 / .06);display:flex;align-items:center;justify-content:center;">
+                        <i class="bi bi-trophy-fill" style="font-size:5rem;color:var(--nfa-primary);opacity:.8;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@* ═══════════════════════════════════════════
+   PHASE 2 – HAKKIMIZDA
+   ═══════════════════════════════════════════ *@
+<section class="nfa-section" id="about" style="background:var(--nfa-bg);">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5 nfa-reveal">
+                <div style="aspect-ratio:4/3;border-radius:calc(var(--nfa-radius)*2);background:linear-gradient(135deg, var(--nfa-muted), var(--nfa-accent));display:flex;align-items:center;justify-content:center;border:1px solid var(--nfa-border);">
+                    <i class="bi bi-heart-pulse-fill" style="font-size:4rem;color:var(--nfa-primary);opacity:.6;"></i>
+                </div>
+            </div>
+            <div class="col-lg-7 nfa-reveal">
+                <div class="nfa-section-badge">Hakkımızda</div>
+                <h2 class="nfa-heading mb-3">Sadece Spor Değil,<br/><span style="color:var(--nfa-primary);">Bir Yaşam Felsefesi</span></h2>
+                <p style="font-size:1rem;line-height:1.8;color:var(--nfa-muted-fg);">
+                    Vücut geliştirme, sadece estetik bir görünüm elde etmek ya da kasları büyütmekten ibaret değildir; bu, zihinsel, fiziksel ve duygusal bir disiplin yolculuğudur.
+                </p>
+                <p style="font-size:1rem;line-height:1.8;color:var(--nfa-muted-fg);">
+                    NFA Spor Merkezi'nde nitelikli antrenörler eşliğinde, kişiye özel programlarla sağlıklı bir dönüşüm hedefliyoruz. Modern ekipmanlarımız ve motivasyonla dolu ortamımız, her seviyeden sporcuyu karşılamak için hazır.
+                </p>
+                <div class="row g-3 mt-3">
+                    <div class="col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-check-circle-fill" style="color:oklch(0.65 0.19 155);"></i>
+                            <span style="font-size:.875rem;font-weight:500;">Profesyonel Eğitmenler</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-check-circle-fill" style="color:oklch(0.65 0.19 155);"></i>
+                            <span style="font-size:.875rem;font-weight:500;">Modern Ekipman</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-check-circle-fill" style="color:oklch(0.65 0.19 155);"></i>
+                            <span style="font-size:.875rem;font-weight:500;">Kişisel Programlar</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-check-circle-fill" style="color:oklch(0.65 0.19 155);"></i>
+                            <span style="font-size:.875rem;font-weight:500;">Motivasyonlu Ortam</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@* ═══════════════════════════════════════════
+   PHASE 3 – HİZMETLER
+   ═══════════════════════════════════════════ *@
+<section class="nfa-section" id="services" style="background:var(--nfa-muted);">
+    <div class="container">
+        <div class="text-center mb-5 nfa-reveal">
+            <div class="nfa-section-badge">Hizmetlerimiz</div>
+            <h2 class="nfa-heading">Sana Uygun <span style="color:var(--nfa-primary);">Branşı</span> Keşfet</h2>
+            <p class="text-nfa-muted mx-auto mt-2" style="max-width:520px;font-size:.9375rem;">
+                Her seviyeye uygun programlarla hedeflerine ulaşmanı sağlıyoruz.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            @* Fitness *@
+            <div class="col-sm-6 col-lg-3 nfa-reveal">
+                <div class="nfa-service-card">
+                    <div class="nfa-service-icon si-fitness"><i class="bi bi-activity"></i></div>
+                    <h5 style="font-weight:700;font-size:1.05rem;margin-bottom:.5rem;">Fitness</h5>
+                    <p class="text-nfa-muted mb-0" style="font-size:.8375rem;line-height:1.6;">
+                        Bireysel hedeflerine göre tasarlanmış antrenman programları ile formunu yakala.
+                    </p>
+                </div>
+            </div>
+            @* Cross Antrenman *@
+            <div class="col-sm-6 col-lg-3 nfa-reveal">
+                <div class="nfa-service-card">
+                    <div class="nfa-service-icon si-cross"><i class="bi bi-lightning-charge"></i></div>
+                    <h5 style="font-weight:700;font-size:1.05rem;margin-bottom:.5rem;">Cross Antrenman</h5>
+                    <p class="text-nfa-muted mb-0" style="font-size:.8375rem;line-height:1.6;">
+                        Fonksiyonel hareketlerle dayanıklılığını ve gücünü aynı anda geliştir.
+                    </p>
+                </div>
+            </div>
+            @* Boks *@
+            <div class="col-sm-6 col-lg-3 nfa-reveal">
+                <div class="nfa-service-card">
+                    <div class="nfa-service-icon si-box"><i class="bi bi-fire"></i></div>
+                    <h5 style="font-weight:700;font-size:1.05rem;margin-bottom:.5rem;">Boks</h5>
+                    <p class="text-nfa-muted mb-0" style="font-size:.8375rem;line-height:1.6;">
+                        Reflekslerini keskinleştir, özgüvenini ve kararlılığını zirveye taşı.
+                    </p>
+                </div>
+            </div>
+            @* Kick Box *@
+            <div class="col-sm-6 col-lg-3 nfa-reveal">
+                <div class="nfa-service-card">
+                    <div class="nfa-service-icon si-kick"><i class="bi bi-bullseye"></i></div>
+                    <h5 style="font-weight:700;font-size:1.05rem;margin-bottom:.5rem;">Kick Box</h5>
+                    <p class="text-nfa-muted mb-0" style="font-size:.8375rem;line-height:1.6;">
+                        Yüksek tempolu tekniklerle hem savunma hem kondisyon kazan.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@* ═══════════════════════════════════════════
+   PHASE 4 – İLETİŞİM & SAATLER
+   ═══════════════════════════════════════════ *@
+<section class="nfa-contact-band" id="contact">
+    <div class="container">
+        <div class="row g-5 nfa-reveal">
+            @* İletişim *@
+            <div class="col-lg-4">
+                <div class="nfa-section-badge" style="background:oklch(1 0 0 / .08);">İletişim</div>
+                <h3 style="font-weight:700;font-size:1.5rem;margin-bottom:1.25rem;">Bize Ulaşın</h3>
+
+                <div class="nfa-contact-item">
+                    <div class="nfa-contact-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                    <div>
+                        <div class="ci-label">Adres</div>
+                        <div class="ci-value">Kiremitocağı Mahallesi, İstanbul Cd. No:123 Merkez / Düzce</div>
+                    </div>
+                </div>
+                <div class="nfa-contact-item">
+                    <div class="nfa-contact-icon"><i class="bi bi-telephone-fill"></i></div>
+                    <div>
+                        <div class="ci-label">Telefon</div>
+                        <div class="ci-value">+90 380 524 77 07</div>
+                    </div>
+                </div>
+                <div class="nfa-contact-item">
+                    <div class="nfa-contact-icon"><i class="bi bi-envelope-fill"></i></div>
+                    <div>
+                        <div class="ci-label">E-posta</div>
+                        <div class="ci-value">info@nfaspormerkezi.com</div>
+                    </div>
+                </div>
+            </div>
+
+            @* Çalışma Saatleri *@
+            <div class="col-lg-4">
+                <div class="nfa-section-badge" style="background:oklch(1 0 0 / .08);">Çalışma Saatleri</div>
+                <h3 style="font-weight:700;font-size:1.5rem;margin-bottom:1.25rem;">Saat Bilgisi</h3>
+
+                <div class="nfa-hour-row"><span>Pazartesi</span><span style="color:var(--nfa-primary);font-weight:600;">07:00 – 23:50</span></div>
+                <div class="nfa-hour-row"><span>Salı</span><span style="color:var(--nfa-primary);font-weight:600;">07:00 – 23:50</span></div>
+                <div class="nfa-hour-row"><span>Çarşamba</span><span style="color:var(--nfa-primary);font-weight:600;">07:00 – 23:50</span></div>
+                <div class="nfa-hour-row"><span>Perşembe</span><span style="color:var(--nfa-primary);font-weight:600;">07:00 – 23:50</span></div>
+                <div class="nfa-hour-row"><span>Cuma</span><span style="color:var(--nfa-primary);font-weight:600;">07:00 – 23:50</span></div>
+                <div class="nfa-hour-row"><span>Cumartesi</span><span style="color:rgba(255,255,255,.4);">Kapalı</span></div>
+                <div class="nfa-hour-row"><span>Pazar</span><span style="color:rgba(255,255,255,.4);">Kapalı</span></div>
+            </div>
+
+            @* CTA *@
+            <div class="col-lg-4 d-flex align-items-center">
+                <div class="text-center text-lg-start w-100 p-4" style="background:oklch(1 0 0 / .05);border-radius:calc(var(--nfa-radius)*2);border:1px solid oklch(1 0 0 / .08);">
+                    <i class="bi bi-rocket-takeoff-fill" style="font-size:2.5rem;color:var(--nfa-primary);"></i>
+                    <h4 class="mt-3 mb-2" style="font-weight:700;font-size:1.25rem;">Hemen Başla!</h4>
+                    <p style="font-size:.875rem;color:rgba(255,255,255,.6);margin-bottom:1.25rem;">
+                        İlk adımı at, hedeflerine giden yolda sana eşlik edelim.
+                    </p>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-nfa-primary px-4 py-2 w-100" style="font-size:.9375rem;">
+                        <i class="bi bi-person-plus me-2"></i>Üye Ol
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // Scroll reveal
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.nfa-reveal').forEach(el => obs.observe(el));
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const t = document.querySelector(a.getAttribute('href'));
+                if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+}

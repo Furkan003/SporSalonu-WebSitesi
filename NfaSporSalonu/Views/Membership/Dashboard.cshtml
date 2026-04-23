@@ -1,0 +1,272 @@
+@model MemberDashboardViewModel
+@{
+    ViewData["Title"] = "Üye Paneli";
+    Layout = "_Layout";
+}
+
+@* ── TempData Alerts ── *@
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-nfa alert-nfa-success d-flex align-items-center alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <span>@TempData["Success"]</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-nfa alert-nfa-error d-flex align-items-center alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span>@TempData["Error"]</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+    </div>
+}
+
+@* ═══════════ PROFİL HEADER ═══════════ *@
+<div class="card card-nfa-shadow-lg mb-4 nfa-animate-in" style="border-radius:calc(var(--nfa-radius) * 2);overflow:hidden;">
+    @* Banner *@
+    <div style="height:120px;background:linear-gradient(135deg, var(--nfa-secondary) 0%, oklch(0.4 0.02 286) 50%, var(--nfa-primary) 100%);"></div>
+
+    <div class="card-body position-relative" style="margin-top:-50px;">
+        <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-end gap-3">
+            @* Avatar *@
+            @if (!string.IsNullOrEmpty(Model.ProfileImageUrl))
+            {
+                <img src="@Model.ProfileImageUrl" alt="Profil" class="nfa-avatar" />
+            }
+            else
+            {
+                <div class="nfa-avatar-placeholder">
+                    @Model.FullName?.FirstOrDefault()
+                </div>
+            }
+
+            <div class="text-center text-sm-start flex-grow-1">
+                <h4 class="fw-bold mb-0">@Model.FullName</h4>
+                <span class="text-nfa-muted" style="font-size:.875rem;">
+                    <i class="bi bi-envelope me-1"></i>@Model.Email
+                </span>
+            </div>
+
+            @* Durum Badge *@
+            <div class="text-center text-sm-end">
+                @if (Model.MembershipStatus == "Active")
+                {
+                    <span class="badge badge-nfa-active rounded-pill px-3 py-2" style="font-size:.8125rem;">
+                        <i class="bi bi-check-circle me-1"></i>Aktif Üyelik
+                    </span>
+                }
+                else
+                {
+                    <span class="badge badge-nfa-expired rounded-pill px-3 py-2" style="font-size:.8125rem;">
+                        <i class="bi bi-x-circle me-1"></i>@Model.MembershipStatus
+                    </span>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ═══════════ ANA İÇERİK ═══════════ *@
+<div class="row g-4">
+
+    @* ─── Sol Kolon: Üyelik + Ölçüm + Bildirimler ─── *@
+    <div class="col-lg-8">
+
+        @* Aktif Paket & Kalan Süre *@
+        <div class="card card-nfa-shadow mb-4 nfa-animate-in">
+            <div class="card-body">
+                <h6 class="nfa-section-title">Aktif Üyelik Paketiniz</h6>
+
+                @if (Model.CurrentPlanName != null)
+                {
+                    <div class="row g-3 align-items-center">
+                        <div class="col-sm-6">
+                            <div class="mb-2">
+                                <span class="text-nfa-muted" style="font-size:.8125rem;">Paket</span>
+                                <div class="fw-bold" style="font-size:1.125rem;">@Model.CurrentPlanName</div>
+                            </div>
+                            <div class="mb-2">
+                                <span class="text-nfa-muted" style="font-size:.8125rem;">Başlangıç</span>
+                                <div class="fw-semibold">@Model.MembershipStartDate?.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))</div>
+                            </div>
+                            <div>
+                                <span class="text-nfa-muted" style="font-size:.8125rem;">Bitiş</span>
+                                <div class="fw-semibold">@Model.MembershipEndDate?.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 text-center">
+                            @{
+                                var totalDays = (Model.MembershipEndDate - Model.MembershipStartDate)?.TotalDays ?? 1;
+                                var remaining = Model.RemainingDays ?? 0;
+                                var progress = totalDays > 0 ? Math.Round((1 - (double)remaining / totalDays) * 100) : 100;
+                            }
+                            <div class="mb-2">
+                                <span style="font-size:2.5rem;font-weight:800;color:var(--nfa-primary);">@remaining</span>
+                                <span class="text-nfa-muted d-block" style="font-size:.8125rem;">gün kaldı</span>
+                            </div>
+                            <div class="progress progress-nfa mx-auto" style="max-width:200px;">
+                                <div class="progress-bar" role="progressbar" style="width:@progress%;" aria-valuenow="@progress" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <span class="text-nfa-muted" style="font-size:.75rem;">%@progress kullanıldı</span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="bi bi-inbox" style="font-size:2.5rem;color:var(--nfa-muted-fg);"></i>
+                        <p class="text-nfa-muted mt-2 mb-3">Aktif bir üyelik paketiniz bulunmuyor.</p>
+                        <a href="#" class="btn btn-nfa-primary btn-sm px-4">
+                            <i class="bi bi-bag-plus me-1"></i>Paket Satın Al
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @* Hızlı Bilgiler Kartları *@
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="card nfa-stat-card nfa-stat-primary nfa-animate-in">
+                    <div class="stat-value">@(Model.LastWeight?.ToString("0.#") ?? "–")</div>
+                    <div class="stat-label">Kilo (kg)</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card nfa-stat-card nfa-stat-info nfa-animate-in">
+                    <div class="stat-value">@(Model.LastHeight?.ToString("0.#") ?? "–")</div>
+                    <div class="stat-label">Boy (cm)</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card nfa-stat-card nfa-stat-success nfa-animate-in">
+                    <div class="stat-value">@Model.ActiveProgramCount</div>
+                    <div class="stat-label">Aktif Program</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card nfa-stat-card nfa-stat-warning nfa-animate-in">
+                    <div class="stat-value">@Model.UnreadNotificationCount</div>
+                    <div class="stat-label">Bildirim</div>
+                </div>
+            </div>
+        </div>
+
+        @* Son Bildirimler *@
+        <div class="card card-nfa-shadow nfa-animate-in">
+            <div class="card-body p-0">
+                <div class="px-4 pt-4 pb-2">
+                    <h6 class="nfa-section-title">Son Bildirimler</h6>
+                </div>
+
+                @if (Model.RecentNotifications.Any())
+                {
+                    @foreach (var notif in Model.RecentNotifications)
+                    {
+                        <div class="nfa-notification-item @(notif.IsRead ? "" : "unread")">
+                            @if (!notif.IsRead)
+                            {
+                                <div class="nfa-notif-dot"></div>
+                            }
+                            else
+                            {
+                                <div style="width:8px;flex-shrink:0;"></div>
+                            }
+                            <div class="flex-grow-1">
+                                <div style="font-size:.875rem;" class="@(notif.IsRead ? "text-nfa-muted" : "fw-semibold")">
+                                    @notif.Message
+                                </div>
+                                <div class="text-nfa-muted" style="font-size:.75rem;">
+                                    <i class="bi bi-clock me-1"></i>@notif.CreatedDate?.ToString("dd MMM yyyy HH:mm")
+                                    @if (!string.IsNullOrEmpty(notif.NotificationType))
+                                    {
+                                        <span class="ms-2 badge bg-nfa-muted rounded-pill" style="font-size:.6875rem;">@notif.NotificationType</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center text-nfa-muted py-4" style="font-size:.875rem;">
+                        <i class="bi bi-bell-slash me-1"></i>Bildiriminiz bulunmuyor.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    @* ─── Sağ Kolon: QR + Eğitmen ─── *@
+    <div class="col-lg-4">
+
+        @* QR Kod Kartı *@
+        <div class="card card-nfa-shadow mb-4 nfa-animate-in">
+            <div class="card-body text-center">
+                <h6 class="nfa-section-title text-center" style="padding-left:0;">
+                    <span style="display:inline-block;width:4px;height:1em;background:var(--nfa-primary);border-radius:4px;margin-right:.5rem;vertical-align:middle;"></span>
+                    Giriş QR Kodunuz
+                </h6>
+                <div class="nfa-qr-wrapper my-3">
+                    <i class="bi bi-qr-code" style="font-size:4rem;color:var(--nfa-muted-fg);"></i>
+                </div>
+                <p class="text-nfa-muted mb-0" style="font-size:.8125rem;">
+                    Spor salonuna giriş için bu QR kodu okutunuz.
+                </p>
+            </div>
+        </div>
+
+        @* Eğitmen Bilgisi *@
+        <div class="card card-nfa-shadow mb-4 nfa-animate-in">
+            <div class="card-body">
+                <h6 class="nfa-section-title">Eğitmeniniz</h6>
+                @if (!string.IsNullOrEmpty(Model.CurrentTrainerName))
+                {
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="nfa-avatar-placeholder" style="width:48px;height:48px;font-size:1.125rem;border-width:2px;">
+                            @Model.CurrentTrainerName.FirstOrDefault()
+                        </div>
+                        <div>
+                            <div class="fw-bold" style="font-size:.9375rem;">@Model.CurrentTrainerName</div>
+                            <span class="text-nfa-muted" style="font-size:.8125rem;">Kişisel Eğitmen</span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-nfa-muted mb-0" style="font-size:.875rem;">
+                        <i class="bi bi-person-x me-1"></i>Henüz bir eğitmen atanmamış.
+                    </p>
+                }
+            </div>
+        </div>
+
+        @* Son Ölçüm Tarihi *@
+        <div class="card card-nfa-shadow nfa-animate-in">
+            <div class="card-body">
+                <h6 class="nfa-section-title">Son Ölçüm</h6>
+                @if (Model.LastMeasurementDate != null)
+                {
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-calendar-check" style="font-size:1.25rem;color:var(--nfa-primary);"></i>
+                        <span style="font-size:.9375rem;">
+                            @Model.LastMeasurementDate?.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))
+                        </span>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-nfa-muted mb-0" style="font-size:.875rem;">
+                        <i class="bi bi-rulers me-1"></i>Henüz ölçüm kaydı yok.
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="~/css/custom-theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+}

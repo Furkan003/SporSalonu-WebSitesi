@@ -1,0 +1,173 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Kayıt Ol";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - NFA Spor Salonu</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/custom-theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+</head>
+<body>
+    <div class="nfa-auth-wrapper">
+        <div class="card nfa-auth-card card-nfa-shadow-lg nfa-animate-in" style="max-width:520px;">
+
+            @* ── Header ── *@
+            <div class="nfa-auth-header">
+                <div class="nfa-auth-brand">NFA</div>
+                <h1>Hesap Oluşturun</h1>
+                <p>Spor yolculuğunuza başlayın</p>
+            </div>
+
+            @* ── Body ── *@
+            <div class="nfa-auth-body">
+
+                @* ── TempData Alerts ── *@
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-nfa alert-nfa-success d-flex align-items-center alert-dismissible fade show" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        <span>@TempData["Success"]</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+                    </div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-nfa alert-nfa-error d-flex align-items-center alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <span>@TempData["Error"]</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+                    </div>
+                }
+
+                @* ── Validation Summary ── *@
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3" style="font-size:.875rem;"></div>
+
+                @* ── Register Form ── *@
+                <form asp-controller="Account" asp-action="Register" method="post">
+
+                    @* Ad & Soyad *@
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6">
+                            <label asp-for="FirstName" class="form-label fw-semibold" style="font-size:.875rem;"></label>
+                            <div class="input-group">
+                                <span class="input-group-text border-end-0" style="background:var(--nfa-card);border-color:var(--nfa-input);border-radius:var(--nfa-radius) 0 0 var(--nfa-radius);">
+                                    <i class="bi bi-person text-nfa-muted"></i>
+                                </span>
+                                <input asp-for="FirstName" class="form-control form-control-nfa border-start-0" placeholder="Adınız"
+                                       style="border-radius:0 var(--nfa-radius) var(--nfa-radius) 0;" />
+                            </div>
+                            <span asp-validation-for="FirstName" class="text-danger" style="font-size:.8125rem;"></span>
+                        </div>
+                        <div class="col-sm-6">
+                            <label asp-for="LastName" class="form-label fw-semibold" style="font-size:.875rem;"></label>
+                            <div class="input-group">
+                                <span class="input-group-text border-end-0" style="background:var(--nfa-card);border-color:var(--nfa-input);border-radius:var(--nfa-radius) 0 0 var(--nfa-radius);">
+                                    <i class="bi bi-person text-nfa-muted"></i>
+                                </span>
+                                <input asp-for="LastName" class="form-control form-control-nfa border-start-0" placeholder="Soyadınız"
+                                       style="border-radius:0 var(--nfa-radius) var(--nfa-radius) 0;" />
+                            </div>
+                            <span asp-validation-for="LastName" class="text-danger" style="font-size:.8125rem;"></span>
+                        </div>
+                    </div>
+
+                    @* E-posta *@
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label fw-semibold" style="font-size:.875rem;"></label>
+                        <div class="input-group">
+                            <span class="input-group-text border-end-0" style="background:var(--nfa-card);border-color:var(--nfa-input);border-radius:var(--nfa-radius) 0 0 var(--nfa-radius);">
+                                <i class="bi bi-envelope text-nfa-muted"></i>
+                            </span>
+                            <input asp-for="Email" class="form-control form-control-nfa border-start-0" placeholder="ornek@email.com"
+                                   style="border-radius:0 var(--nfa-radius) var(--nfa-radius) 0;" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger" style="font-size:.8125rem;"></span>
+                    </div>
+
+                    @* Şifre & Tekrar *@
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6">
+                            <label asp-for="Password" class="form-label fw-semibold" style="font-size:.875rem;"></label>
+                            <div class="input-group">
+                                <span class="input-group-text border-end-0" style="background:var(--nfa-card);border-color:var(--nfa-input);border-radius:var(--nfa-radius) 0 0 var(--nfa-radius);">
+                                    <i class="bi bi-lock text-nfa-muted"></i>
+                                </span>
+                                <input asp-for="Password" class="form-control form-control-nfa border-start-0" placeholder="••••••••"
+                                       style="border-radius:0 var(--nfa-radius) var(--nfa-radius) 0;" />
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger" style="font-size:.8125rem;"></span>
+                        </div>
+                        <div class="col-sm-6">
+                            <label asp-for="ConfirmPassword" class="form-label fw-semibold" style="font-size:.875rem;"></label>
+                            <div class="input-group">
+                                <span class="input-group-text border-end-0" style="background:var(--nfa-card);border-color:var(--nfa-input);border-radius:var(--nfa-radius) 0 0 var(--nfa-radius);">
+                                    <i class="bi bi-lock-fill text-nfa-muted"></i>
+                                </span>
+                                <input asp-for="ConfirmPassword" class="form-control form-control-nfa border-start-0" placeholder="••••••••"
+                                       style="border-radius:0 var(--nfa-radius) var(--nfa-radius) 0;" />
+                            </div>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger" style="font-size:.8125rem;"></span>
+                        </div>
+                    </div>
+
+                    @* Telefon *@
+                    <div class="mb-3">
+                        <label asp-for="PhoneNumber" class="form-label fw-semibold" style="font-size:.875rem;"></label>
+                        <div class="input-group">
+                            <span class="input-group-text border-end-0" style="background:var(--nfa-card);border-color:var(--nfa-input);border-radius:var(--nfa-radius) 0 0 var(--nfa-radius);">
+                                <i class="bi bi-telephone text-nfa-muted"></i>
+                            </span>
+                            <input asp-for="PhoneNumber" class="form-control form-control-nfa border-start-0" placeholder="05XX XXX XX XX"
+                                   style="border-radius:0 var(--nfa-radius) var(--nfa-radius) 0;" />
+                        </div>
+                        <span asp-validation-for="PhoneNumber" class="text-danger" style="font-size:.8125rem;"></span>
+                    </div>
+
+                    @* Cinsiyet & Doğum Tarihi *@
+                    <div class="row g-3 mb-4">
+                        <div class="col-sm-6">
+                            <label asp-for="Gender" class="form-label fw-semibold" style="font-size:.875rem;"></label>
+                            <select asp-for="Gender" class="form-select form-control-nfa">
+                                <option value="">Seçiniz</option>
+                                <option value="Erkek">Erkek</option>
+                                <option value="Kadın">Kadın</option>
+                                <option value="Diğer">Diğer</option>
+                            </select>
+                            <span asp-validation-for="Gender" class="text-danger" style="font-size:.8125rem;"></span>
+                        </div>
+                        <div class="col-sm-6">
+                            <label asp-for="DateOfBirth" class="form-label fw-semibold" style="font-size:.875rem;"></label>
+                            <input asp-for="DateOfBirth" class="form-control form-control-nfa" type="date" />
+                            <span asp-validation-for="DateOfBirth" class="text-danger" style="font-size:.8125rem;"></span>
+                        </div>
+                    </div>
+
+                    @* Kayıt Butonu *@
+                    <button type="submit" class="btn btn-nfa-primary w-100 py-2">
+                        <i class="bi bi-person-plus me-2"></i>Kayıt Ol
+                    </button>
+                </form>
+
+                @* ── Giriş Linki ── *@
+                <div class="text-center mt-4 pt-3" style="border-top:1px solid var(--nfa-border);">
+                    <span class="text-nfa-muted" style="font-size:.875rem;">Zaten hesabınız var mı?</span>
+                    <a asp-controller="Account" asp-action="Login" class="nfa-link ms-1" style="font-size:.875rem;">
+                        Giriş Yapın
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

@@ -1,47 +1,112 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - NfaSporSalonu</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] - NFA Spor Merkezi</title>
+    <meta name="description" content="NFA Spor Merkezi – Profesyonel eğitim programları ve modern ekipmanlarla sağlıklı yaşam." />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/custom-theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/NfaSporSalonu.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
+    @* ═══════ Navbar ═══════ *@
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">NfaSporSalonu</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+        <nav class="navbar navbar-expand-lg fixed-top"
+             style="background:oklch(0.2739 0.0055 286.0326 / .92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid oklch(1 0 0 / .06);"
+             id="mainNavbar">
+            <div class="container">
+                @* Brand *@
+                <a class="navbar-brand d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index"
+                   style="color:#fff;font-weight:800;font-size:1.15rem;letter-spacing:-.01em;">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--nfa-primary);color:var(--nfa-primary-fg);font-size:.85rem;font-weight:800;">NFA</span>
+                    Spor Merkezi
+                </a>
+
+                @* Toggler *@
+                <button class="navbar-toggler border-0" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#navbarMain"
+                        aria-controls="navbarMain" aria-expanded="false" aria-label="Menüyü aç"
+                        style="color:rgba(255,255,255,.7);">
+                    <i class="bi bi-list" style="font-size:1.5rem;"></i>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                @* Links *@
+                <div class="collapse navbar-collapse" id="navbarMain">
+                    <ul class="navbar-nav mx-auto gap-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link px-3" href="#hero" style="color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;transition:color .2s;">Ana Sayfa</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link px-3" href="#about" style="color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;transition:color .2s;">Hakkımızda</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="#services" style="color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;transition:color .2s;">Hizmetler</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="#contact" style="color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;transition:color .2s;">İletişim</a>
                         </li>
                     </ul>
+
+                    @* Auth Buttons *@
+                    <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <span class="text-white me-2" style="font-size:.875rem;">
+                                <i class="bi bi-person-circle me-1"></i>@User.Identity.Name
+                            </span>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-nfa-primary btn-sm px-3">
+                                    <i class="bi bi-speedometer2 me-1"></i>Panel
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Membership" asp-action="Dashboard" class="btn btn-nfa-primary btn-sm px-3">
+                                    <i class="bi bi-grid me-1"></i>Panelim
+                                </a>
+                            }
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm px-3" style="border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:var(--nfa-radius);font-weight:500;font-size:.8125rem;">
+                                    <i class="bi bi-box-arrow-left me-1"></i>Çıkış
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="Login"
+                               class="btn btn-sm px-3" style="border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:var(--nfa-radius);font-weight:500;font-size:.8125rem;transition:background .2s;">
+                                Giriş Yap
+                            </a>
+                            <a asp-controller="Account" asp-action="Register"
+                               class="btn btn-nfa-primary btn-sm px-3" style="font-size:.8125rem;">
+                                Kayıt Ol
+                            </a>
+                        }
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - NfaSporSalonu - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    @* ═══════ Main ═══════ *@
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    @* ═══════ Footer ═══════ *@
+    <footer style="background:var(--nfa-secondary);color:rgba(255,255,255,.6);padding:1.5rem 0;font-size:.8125rem;">
+        <div class="container text-center">
+            <span>&copy; @DateTime.Now.Year NFA Spor Merkezi. Tüm hakları saklıdır.</span>
+            <span class="mx-2">|</span>
+            <a asp-controller="Home" asp-action="Privacy" style="color:rgba(255,255,255,.6);text-decoration:none;">Gizlilik Politikası</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
