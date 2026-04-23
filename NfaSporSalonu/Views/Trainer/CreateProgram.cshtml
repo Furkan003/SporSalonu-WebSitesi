@@ -1,0 +1,66 @@
+@model CreateProgramViewModel
+@{
+    ViewData["Title"] = "Program Oluştur";
+    Layout = "_AdminLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card card-nfa-shadow-lg nfa-animate-in" style="border-radius:calc(var(--nfa-radius) * 2);">
+            <div class="card-body p-4">
+                <h5 class="nfa-section-title"><i class="bi bi-journal-plus me-1"></i>Yeni Program Oluştur</h5>
+                <form asp-action="CreateProgram" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="TrainerId" class="form-label fw-semibold" style="font-size:.875rem;">Antrenör</label>
+                            <select asp-for="TrainerId" class="form-select form-control-nfa">
+                                <option value="">-- Seçiniz --</option>
+                                @foreach (var u in Model.AvailableTrainers){<option value="@u.UserId">@u.FullName</option>}
+                            </select>
+                            <span asp-validation-for="TrainerId" class="text-danger" style="font-size:.75rem;"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="TraineeId" class="form-label fw-semibold" style="font-size:.875rem;">Üye</label>
+                            <select asp-for="TraineeId" class="form-select form-control-nfa">
+                                <option value="">-- Seçiniz --</option>
+                                @foreach (var u in Model.AvailableTrainees){<option value="@u.UserId">@u.FullName</option>}
+                            </select>
+                            <span asp-validation-for="TraineeId" class="text-danger" style="font-size:.75rem;"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ProgramType" class="form-label fw-semibold" style="font-size:.875rem;">Program Türü</label>
+                            <select asp-for="ProgramType" class="form-select form-control-nfa">
+                                <option value="">-- Seçiniz --</option>
+                                <option value="Workout">Antrenman</option>
+                                <option value="Diet">Diyet</option>
+                            </select>
+                            <span asp-validation-for="ProgramType" class="text-danger" style="font-size:.75rem;"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="EndDate" class="form-label fw-semibold" style="font-size:.875rem;">Bitiş Tarihi</label>
+                            <input asp-for="EndDate" type="date" class="form-control form-control-nfa" />
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Title" class="form-label fw-semibold" style="font-size:.875rem;">Başlık</label>
+                            <input asp-for="Title" class="form-control form-control-nfa" placeholder="Örn: Haftalık Kol Programı" />
+                            <span asp-validation-for="Title" class="text-danger" style="font-size:.75rem;"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Content" class="form-label fw-semibold" style="font-size:.875rem;">Program İçeriği</label>
+                            <textarea asp-for="Content" class="form-control form-control-nfa" rows="8" placeholder="Günlere göre program detaylarını yazınız..."></textarea>
+                            <span asp-validation-for="Content" class="text-danger" style="font-size:.75rem;"></span>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 mt-4">
+                        <a asp-action="Programs" class="btn btn-nfa-outline flex-grow-1"><i class="bi bi-arrow-left me-1"></i>Geri</a>
+                        <button type="submit" class="btn btn-nfa-primary flex-grow-1"><i class="bi bi-check-lg me-1"></i>Oluştur</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

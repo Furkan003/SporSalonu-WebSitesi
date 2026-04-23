@@ -22,7 +22,7 @@
         <nav class="flex-grow-1 p-3">
             <ul class="nav flex-column gap-1">
                 <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2 active"
+                    <a class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2"
                        asp-controller="Admin" asp-action="Dashboard"
                        style="color:var(--nfa-sidebar-fg);font-weight:500;font-size:.9rem;transition:background .15s;">
                         <i class="bi bi-speedometer2"></i> Dashboard
@@ -30,35 +30,28 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2"
-                       href="#"
-                       style="color:var(--nfa-sidebar-fg);font-weight:500;font-size:.9rem;transition:background .15s;">
-                        <i class="bi bi-people"></i> Üyeler
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2"
-                       href="#"
-                       style="color:var(--nfa-sidebar-fg);font-weight:500;font-size:.9rem;transition:background .15s;">
-                        <i class="bi bi-credit-card"></i> Üyelik Planları
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2"
-                       href="#"
+                       asp-controller="Admin" asp-action="Payments"
                        style="color:var(--nfa-sidebar-fg);font-weight:500;font-size:.9rem;transition:background .15s;">
                         <i class="bi bi-cash-stack"></i> Ödemeler
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2"
-                       href="#"
+                       asp-controller="Trainer" asp-action="Index"
                        style="color:var(--nfa-sidebar-fg);font-weight:500;font-size:.9rem;transition:background .15s;">
                         <i class="bi bi-person-badge"></i> Eğitmenler
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2"
-                       href="#"
+                       asp-controller="Trainer" asp-action="Programs"
+                       style="color:var(--nfa-sidebar-fg);font-weight:500;font-size:.9rem;transition:background .15s;">
+                        <i class="bi bi-journal-text"></i> Programlar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2"
+                       asp-controller="Admin" asp-action="Notifications"
                        style="color:var(--nfa-sidebar-fg);font-weight:500;font-size:.9rem;transition:background .15s;">
                         <i class="bi bi-bell"></i> Bildirimler
                     </a>

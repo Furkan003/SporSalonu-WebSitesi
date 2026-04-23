@@ -1,0 +1,42 @@
+@model AdminNotificationListViewModel
+@{
+    ViewData["Title"] = "Bildirim Yönetimi";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 nfa-animate-in">
+    <div>
+        <span class="text-nfa-muted" style="font-size:.875rem;">Toplam: @Model.TotalCount | Okunmamış: <strong>@Model.UnreadCount</strong></span>
+    </div>
+    <a asp-action="SendNotification" class="btn btn-nfa-primary btn-sm px-3"><i class="bi bi-send me-1"></i>Bildirim Gönder</a>
+</div>
+
+<div class="card card-nfa-shadow nfa-animate-in">
+    <div class="card-body p-0">
+        @if (Model.Notifications.Any())
+        {
+            @foreach (var n in Model.Notifications)
+            {
+                <div class="nfa-notification-item @(n.IsRead ? "" : "unread")">
+                    @if (!n.IsRead){<div class="nfa-notif-dot"></div>}else{<div style="width:8px;flex-shrink:0;"></div>}
+                    <div class="flex-grow-1">
+                        <div style="font-size:.875rem;" class="@(n.IsRead ? "text-nfa-muted" : "fw-semibold")">@n.Message</div>
+                        <div class="text-nfa-muted" style="font-size:.75rem;">
+                            <i class="bi bi-person me-1"></i>@(n.UserFullName ?? "–") (@(n.UserEmail ?? "–"))
+                            <span class="ms-2"><i class="bi bi-clock me-1"></i>@(n.CreatedDate?.ToString("dd.MM.yyyy HH:mm") ?? "–")</span>
+                            @if (!string.IsNullOrEmpty(n.NotificationType)){<span class="ms-2 badge bg-nfa-muted rounded-pill" style="font-size:.6875rem;">@n.NotificationType</span>}
+                        </div>
+                    </div>
+                    <form asp-action="DeleteNotification" asp-route-id="@n.NotificationId" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm px-2 py-1" style="color:var(--nfa-destructive);" title="Sil"><i class="bi bi-trash3"></i></button>
+                    </form>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center py-5 text-nfa-muted"><i class="bi bi-bell-slash me-1"></i>Bildirim bulunmuyor.</div>
+        }
+    </div>
+</div>

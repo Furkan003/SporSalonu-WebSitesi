@@ -1,0 +1,76 @@
+@model SendNotificationViewModel
+@{
+    ViewData["Title"] = "Bildirim Gönder";
+    Layout = "_AdminLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card card-nfa-shadow-lg nfa-animate-in" style="border-radius:calc(var(--nfa-radius) * 2);">
+            <div class="card-body p-4">
+                <h5 class="nfa-section-title"><i class="bi bi-send me-1"></i>Bildirim Gönder</h5>
+
+                <form asp-action="SendNotification" method="post">
+                    @Html.AntiForgeryToken()
+
+                    @* Gönderim Türü *@
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" asp-for="SendToAll" id="sendToAllSwitch" onchange="toggleUserSelect()" />
+                            <label class="form-check-label fw-semibold" for="sendToAllSwitch">Tüm Üyelere Gönder</label>
+                        </div>
+                    </div>
+
+                    @* Üye Seçimi *@
+                    <div class="mb-3" id="userSelectDiv">
+                        <label asp-for="UserId" class="form-label fw-semibold" style="font-size:.875rem;">Üye Seçin</label>
+                        <select asp-for="UserId" class="form-select form-control-nfa">
+                            <option value="">-- Üye Seçiniz --</option>
+                            @foreach (var u in Model.AvailableUsers)
+                            {
+                                <option value="@u.UserId">@u.FullName (@u.Email)</option>
+                            }
+                        </select>
+                        <span asp-validation-for="UserId" class="text-danger" style="font-size:.75rem;"></span>
+                    </div>
+
+                    @* Bildirim Türü *@
+                    <div class="mb-3">
+                        <label asp-for="NotificationType" class="form-label fw-semibold" style="font-size:.875rem;">Bildirim Türü</label>
+                        <select asp-for="NotificationType" class="form-select form-control-nfa">
+                            <option value="">Genel</option>
+                            <option value="Duyuru">Duyuru</option>
+                            <option value="Ödeme">Ödeme</option>
+                            <option value="Üyelik">Üyelik</option>
+                            <option value="Program">Program</option>
+                            <option value="Hatırlatma">Hatırlatma</option>
+                        </select>
+                    </div>
+
+                    @* Mesaj *@
+                    <div class="mb-4">
+                        <label asp-for="Message" class="form-label fw-semibold" style="font-size:.875rem;">Mesaj</label>
+                        <textarea asp-for="Message" class="form-control form-control-nfa" rows="4" placeholder="Bildirim mesajını yazınız..."></textarea>
+                        <span asp-validation-for="Message" class="text-danger" style="font-size:.75rem;"></span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a asp-action="Notifications" class="btn btn-nfa-outline flex-grow-1"><i class="bi bi-arrow-left me-1"></i>Geri</a>
+                        <button type="submit" class="btn btn-nfa-primary flex-grow-1"><i class="bi bi-send-fill me-1"></i>Gönder</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function toggleUserSelect() {
+            var sw = document.getElementById('sendToAllSwitch');
+            document.getElementById('userSelectDiv').style.display = sw.checked ? 'none' : 'block';
+        }
+        toggleUserSelect();
+    </script>
+}

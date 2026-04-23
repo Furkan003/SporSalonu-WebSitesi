@@ -1,0 +1,51 @@
+@model TrainerListViewModel
+@{
+    ViewData["Title"] = "Antrenör Yönetimi";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 nfa-animate-in">
+    <span class="text-nfa-muted">Toplam: @Model.Trainers.Count antrenör</span>
+    <a asp-action="Assign" class="btn btn-nfa-primary btn-sm px-3"><i class="bi bi-person-plus me-1"></i>Antrenör Ata</a>
+</div>
+
+@if (Model.Trainers.Any())
+{
+    <div class="row g-3">
+        @foreach (var t in Model.Trainers)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card card-nfa-shadow h-100 nfa-animate-in">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="nfa-avatar-placeholder" style="width:48px;height:48px;font-size:1.125rem;border-width:2px;">
+                                @t.FullName.FirstOrDefault()
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0" style="font-size:.9375rem;">@t.FullName</h6>
+                                <span class="text-nfa-muted" style="font-size:.8125rem;">@t.Email</span>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(t.PhoneNumber))
+                        {
+                            <div class="mb-2" style="font-size:.8125rem;"><i class="bi bi-telephone me-1 text-nfa-muted"></i>@t.PhoneNumber</div>
+                        }
+                        <div class="d-flex gap-3" style="font-size:.8125rem;">
+                            <span><i class="bi bi-people me-1" style="color:var(--nfa-primary);"></i><strong>@t.TraineeCount</strong> öğrenci</span>
+                            <span><i class="bi bi-journal-text me-1" style="color:var(--nfa-primary);"></i><strong>@t.ProgramCount</strong> program</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="card card-nfa-shadow nfa-animate-in">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-person-badge" style="font-size:3rem;color:var(--nfa-muted-fg);"></i>
+            <p class="text-nfa-muted mt-3">Henüz antrenör bulunmuyor.</p>
+        </div>
+    </div>
+}

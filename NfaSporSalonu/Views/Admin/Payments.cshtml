@@ -1,0 +1,76 @@
+@model AdminPaymentListViewModel
+@{
+    ViewData["Title"] = "Ödeme Yönetimi";
+    Layout = "_AdminLayout";
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card card-nfa-shadow p-3 nfa-animate-in">
+            <div class="d-flex align-items-center gap-3">
+                <div class="stat-icon nfa-stat-dark d-flex align-items-center justify-content-center" style="width:40px;height:40px;border-radius:10px;"><i class="bi bi-currency-exchange text-white"></i></div>
+                <div><div class="stat-label text-nfa-muted" style="font-size:.75rem;">Toplam Gelir</div><div class="fw-bold" style="font-size:1.25rem;">@Model.TotalRevenue.ToString("C0", new System.Globalization.CultureInfo("tr-TR"))</div></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-nfa-shadow p-3 nfa-animate-in">
+            <div class="d-flex align-items-center gap-3">
+                <div class="stat-icon nfa-stat-success d-flex align-items-center justify-content-center" style="width:40px;height:40px;border-radius:10px;"><i class="bi bi-graph-up-arrow text-white"></i></div>
+                <div><div class="stat-label text-nfa-muted" style="font-size:.75rem;">Aylık Gelir</div><div class="fw-bold" style="font-size:1.25rem;">@Model.MonthlyRevenue.ToString("C0", new System.Globalization.CultureInfo("tr-TR"))</div></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-nfa-shadow p-3 nfa-animate-in">
+            <div class="d-flex align-items-center gap-3">
+                <div class="stat-icon nfa-stat-danger d-flex align-items-center justify-content-center" style="width:40px;height:40px;border-radius:10px;"><i class="bi bi-hourglass-split text-white"></i></div>
+                <div><div class="stat-label text-nfa-muted" style="font-size:.75rem;">Bekleyen</div><div class="fw-bold" style="font-size:1.25rem;">@Model.PendingCount</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Filtreler *@
+<div class="d-flex gap-2 mb-3 nfa-animate-in">
+    <a asp-action="Payments" class="btn @(Model.FilterStatus == null ? "btn-nfa-primary" : "btn-nfa-outline") btn-sm px-3">Tümü</a>
+    <a asp-action="Payments" asp-route-status="Completed" class="btn @(Model.FilterStatus == "Completed" ? "btn-nfa-primary" : "btn-nfa-outline") btn-sm px-3">Tamamlanan</a>
+    <a asp-action="Payments" asp-route-status="Pending" class="btn @(Model.FilterStatus == "Pending" ? "btn-nfa-primary" : "btn-nfa-outline") btn-sm px-3">Bekleyen</a>
+</div>
+
+<div class="card card-nfa-shadow nfa-animate-in">
+    <div class="card-body p-0">
+        @if (Model.Payments.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-nfa mb-0">
+                    <thead>
+                        <tr><th>İşlem No</th><th>Paket</th><th>Tutar</th><th>Yöntem</th><th>Tarih</th><th>Durum</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model.Payments)
+                        {
+                            <tr>
+                                <td style="font-family:monospace;font-size:.8125rem;">@(p.TransactionId ?? "–")</td>
+                                <td>@(p.PlanName ?? "–")</td>
+                                <td class="fw-bold">@p.Amount.ToString("C0", new System.Globalization.CultureInfo("tr-TR"))</td>
+                                <td>@(p.PaymentMethod ?? "–")</td>
+                                <td>@(p.PaymentDate?.ToString("dd.MM.yyyy") ?? "–")</td>
+                                <td>
+                                    @if (p.Status == "Completed"){<span class="badge badge-nfa-active rounded-pill px-2 py-1">Tamamlandı</span>}
+                                    else if (p.Status == "Pending"){<span class="badge badge-nfa-pending rounded-pill px-2 py-1">Bekliyor</span>}
+                                    else{<span class="badge badge-nfa-expired rounded-pill px-2 py-1">@p.Status</span>}
+                                </td>
+                                <td><a asp-action="PaymentDetail" asp-route-id="@p.PaymentId" class="btn btn-nfa-outline btn-sm px-2 py-1"><i class="bi bi-eye"></i></a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5 text-nfa-muted">Ödeme kaydı bulunamadı.</div>
+        }
+    </div>
+</div>

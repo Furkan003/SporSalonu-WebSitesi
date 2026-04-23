@@ -1,0 +1,92 @@
+@model MemberProgramListViewModel
+@{
+    ViewData["Title"] = "Programlarım";
+    Layout = "_Layout";
+}
+
+<section style="padding-top:100px;padding-bottom:60px;min-height:100vh;">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 nfa-animate-in">
+            <div>
+                <h1 class="fw-bold mb-1" style="font-size:1.75rem;"><i class="bi bi-journal-text me-2" style="color:var(--nfa-primary);"></i>Programlarım</h1>
+                <p class="text-nfa-muted mb-0">
+                    @if (!string.IsNullOrEmpty(Model.TrainerName))
+                    {
+                        <text>Eğitmeniniz: <strong>@Model.TrainerName</strong></text>
+                    }
+                    else
+                    {
+                        <text>Antrenman ve diyet programlarınız</text>
+                    }
+                </p>
+            </div>
+        </div>
+
+        @if (Model.Programs.Any())
+        {
+            <div class="row g-3">
+                @foreach (var p in Model.Programs)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card card-nfa-shadow h-100 nfa-animate-in">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    @if (p.ProgramType == "Workout")
+                                    {
+                                        <div class="stat-icon nfa-stat-primary d-flex align-items-center justify-content-center" style="width:40px;height:40px;border-radius:10px;font-size:.9rem;">
+                                            <i class="bi bi-lightning-fill"></i>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="stat-icon nfa-stat-success d-flex align-items-center justify-content-center" style="width:40px;height:40px;border-radius:10px;font-size:.9rem;">
+                                            <i class="bi bi-heart-pulse-fill"></i>
+                                        </div>
+                                    }
+                                    <div>
+                                        <h6 class="fw-bold mb-0" style="font-size:.9375rem;">@p.Title</h6>
+                                        <span class="text-nfa-muted" style="font-size:.75rem;">@p.ProgramType</span>
+                                    </div>
+                                </div>
+                                <div class="mb-2" style="font-size:.8125rem;">
+                                    <span class="text-nfa-muted"><i class="bi bi-person-badge me-1"></i>@(p.TrainerName ?? "–")</span>
+                                </div>
+                                <div class="mb-3" style="font-size:.8125rem;">
+                                    <span class="text-nfa-muted"><i class="bi bi-calendar me-1"></i>@(p.CreatedDate?.ToString("dd.MM.yyyy") ?? "–")</span>
+                                    @if (p.EndDate != null)
+                                    {
+                                        <span class="text-nfa-muted ms-2"><i class="bi bi-calendar-x me-1"></i>@p.EndDate?.ToString("dd.MM.yyyy")</span>
+                                    }
+                                </div>
+                                <div class="mt-auto d-flex gap-2">
+                                    @if (p.IsActive)
+                                    {
+                                        <span class="badge badge-nfa-active rounded-pill px-2 py-1" style="font-size:.75rem;">Aktif</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-nfa-expired rounded-pill px-2 py-1" style="font-size:.75rem;">Sona Erdi</span>
+                                    }
+                                    <a asp-action="ProgramDetail" asp-route-id="@p.ProgramId" class="btn btn-nfa-outline btn-sm ms-auto px-3">Detay</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="card card-nfa-shadow nfa-animate-in">
+                <div class="card-body text-center py-5">
+                    <i class="bi bi-journal-x" style="font-size:3rem;color:var(--nfa-muted-fg);"></i>
+                    <p class="text-nfa-muted mt-3">Henüz size atanmış bir program bulunmuyor.</p>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+@section Styles {
+    <link rel="stylesheet" href="~/css/custom-theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+}

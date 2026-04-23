@@ -1,0 +1,96 @@
+@model PurchaseMembershipViewModel
+@{
+    ViewData["Title"] = "Paket Satın Al";
+    Layout = "_Layout";
+}
+
+<section style="padding-top:100px;padding-bottom:60px;background:linear-gradient(135deg, var(--nfa-bg) 0%, var(--nfa-muted) 100%);min-height:100vh;">
+    <div class="container" style="max-width:640px;">
+
+        <div class="card card-nfa-shadow-lg nfa-animate-in" style="border-radius:calc(var(--nfa-radius) * 2);overflow:hidden;">
+
+            @* Header *@
+            <div style="background:linear-gradient(135deg, var(--nfa-secondary) 0%, oklch(0.4 0.02 286) 100%);padding:2rem;color:#fff;text-align:center;">
+                <i class="bi bi-bag-check" style="font-size:2.5rem;opacity:.9;"></i>
+                <h2 class="fw-bold mt-2 mb-1">Paket Satın Al</h2>
+                <p style="opacity:.8;font-size:.875rem;margin-bottom:0;">Güvenli ödeme ile üyeliğinizi başlatın</p>
+            </div>
+
+            <div class="card-body p-4">
+
+                @* Paket Özeti *@
+                <div class="p-3 mb-4" style="background:var(--nfa-muted);border-radius:var(--nfa-radius);">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold" style="font-size:1.125rem;">@Model.PlanName</span>
+                        <span class="badge badge-nfa-active rounded-pill px-3 py-1">@Model.DurationInDays gün</span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <p class="text-nfa-muted mb-2" style="font-size:.8125rem;">@Model.Description</p>
+                    }
+                    <div class="d-flex justify-content-between align-items-center" style="border-top:1px solid var(--nfa-border);padding-top:.75rem;">
+                        <span class="text-nfa-muted">Toplam Tutar</span>
+                        <span class="fw-bold" style="font-size:1.5rem;color:var(--nfa-primary);">
+                            @Model.Price.ToString("C0", new System.Globalization.CultureInfo("tr-TR"))
+                        </span>
+                    </div>
+                </div>
+
+                @* Ödeme Formu *@
+                <form asp-action="Purchase" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="PlanId" />
+                    <input type="hidden" asp-for="PlanName" />
+                    <input type="hidden" asp-for="Price" />
+                    <input type="hidden" asp-for="DurationInDays" />
+                    <input type="hidden" asp-for="Description" />
+
+                    <div class="mb-4">
+                        <label asp-for="PaymentMethod" class="form-label fw-semibold" style="font-size:.875rem;">
+                            <i class="bi bi-credit-card me-1"></i>Ödeme Yöntemi
+                        </label>
+
+                        <div class="d-flex flex-column gap-2">
+                            <label class="d-flex align-items-center gap-3 p-3" style="border:1px solid var(--nfa-border);border-radius:var(--nfa-radius);cursor:pointer;transition:border-color .2s;">
+                                <input type="radio" asp-for="PaymentMethod" value="Kredi Kartı" class="form-check-input" />
+                                <i class="bi bi-credit-card-2-front" style="font-size:1.25rem;color:var(--nfa-primary);"></i>
+                                <span>Kredi Kartı</span>
+                            </label>
+                            <label class="d-flex align-items-center gap-3 p-3" style="border:1px solid var(--nfa-border);border-radius:var(--nfa-radius);cursor:pointer;transition:border-color .2s;">
+                                <input type="radio" asp-for="PaymentMethod" value="Nakit" class="form-check-input" />
+                                <i class="bi bi-cash-stack" style="font-size:1.25rem;color:var(--nfa-primary);"></i>
+                                <span>Nakit</span>
+                            </label>
+                            <label class="d-flex align-items-center gap-3 p-3" style="border:1px solid var(--nfa-border);border-radius:var(--nfa-radius);cursor:pointer;transition:border-color .2s;">
+                                <input type="radio" asp-for="PaymentMethod" value="Havale/EFT" class="form-check-input" />
+                                <i class="bi bi-bank" style="font-size:1.25rem;color:var(--nfa-primary);"></i>
+                                <span>Havale / EFT</span>
+                            </label>
+                        </div>
+                        <span asp-validation-for="PaymentMethod" class="text-danger" style="font-size:.8125rem;"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-nfa-primary w-100 py-3" style="font-size:1rem;">
+                        <i class="bi bi-lock-fill me-2"></i>Ödemeyi Tamamla — @Model.Price.ToString("C0", new System.Globalization.CultureInfo("tr-TR"))
+                    </button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <a asp-action="Packages" class="nfa-link" style="font-size:.8125rem;">
+                        <i class="bi bi-arrow-left me-1"></i>Paketlere Dön
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/custom-theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

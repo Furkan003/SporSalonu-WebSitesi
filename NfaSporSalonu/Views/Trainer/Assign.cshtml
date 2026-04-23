@@ -1,0 +1,51 @@
+@model AssignTrainerViewModel
+@{
+    ViewData["Title"] = "Antrenör Ata";
+    Layout = "_AdminLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card card-nfa-shadow-lg nfa-animate-in" style="border-radius:calc(var(--nfa-radius) * 2);">
+            <div class="card-body p-4">
+                <h5 class="nfa-section-title"><i class="bi bi-person-plus me-1"></i>Üyeye Antrenör Ata</h5>
+                <form asp-action="Assign" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label asp-for="TraineeId" class="form-label fw-semibold" style="font-size:.875rem;">Üye</label>
+                        <select asp-for="TraineeId" class="form-select form-control-nfa">
+                            <option value="">-- Üye Seçiniz --</option>
+                            @foreach (var u in Model.AvailableTrainees)
+                            {
+                                <option value="@u.UserId">@u.FullName (@u.Email)</option>
+                            }
+                        </select>
+                        <span asp-validation-for="TraineeId" class="text-danger" style="font-size:.75rem;"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="TrainerId" class="form-label fw-semibold" style="font-size:.875rem;">Antrenör</label>
+                        <select asp-for="TrainerId" class="form-select form-control-nfa">
+                            <option value="">-- Antrenör Seçiniz --</option>
+                            @foreach (var u in Model.AvailableTrainers)
+                            {
+                                <option value="@u.UserId">@u.FullName (@u.Email)</option>
+                            }
+                        </select>
+                        <span asp-validation-for="TrainerId" class="text-danger" style="font-size:.75rem;"></span>
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="Notes" class="form-label fw-semibold" style="font-size:.875rem;">Notlar</label>
+                        <textarea asp-for="Notes" class="form-control form-control-nfa" rows="2" placeholder="İsteğe bağlı..."></textarea>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a asp-action="Index" class="btn btn-nfa-outline flex-grow-1"><i class="bi bi-arrow-left me-1"></i>Geri</a>
+                        <button type="submit" class="btn btn-nfa-primary flex-grow-1"><i class="bi bi-check-lg me-1"></i>Ata</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

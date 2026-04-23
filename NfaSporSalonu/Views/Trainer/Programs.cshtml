@@ -1,0 +1,54 @@
+@model ProgramListViewModel
+@{
+    ViewData["Title"] = "Program Yönetimi";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 nfa-animate-in">
+    <span class="text-nfa-muted">Toplam: @Model.Programs.Count program</span>
+    <a asp-action="CreateProgram" class="btn btn-nfa-primary btn-sm px-3"><i class="bi bi-plus-lg me-1"></i>Yeni Program</a>
+</div>
+
+<div class="card card-nfa-shadow nfa-animate-in">
+    <div class="card-body p-0">
+        @if (Model.Programs.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-nfa mb-0">
+                    <thead>
+                        <tr><th>Başlık</th><th>Tür</th><th>Antrenör</th><th>Üye</th><th>Tarih</th><th>Durum</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model.Programs)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@p.Title</td>
+                                <td>
+                                    @if (p.ProgramType == "Workout"){<span class="badge badge-nfa-active rounded-pill px-2 py-1" style="font-size:.75rem;">Antrenman</span>}
+                                    else{<span class="badge badge-nfa-pending rounded-pill px-2 py-1" style="font-size:.75rem;">Diyet</span>}
+                                </td>
+                                <td>@(p.TrainerName ?? "–")</td>
+                                <td>@(p.TraineeName ?? "–")</td>
+                                <td class="text-nfa-muted">@(p.CreatedDate?.ToString("dd.MM.yyyy") ?? "–")</td>
+                                <td>
+                                    @if (p.IsActive){<span class="badge badge-nfa-active rounded-pill px-2 py-1" style="font-size:.7rem;">Aktif</span>}
+                                    else{<span class="badge badge-nfa-expired rounded-pill px-2 py-1" style="font-size:.7rem;">Bitti</span>}
+                                </td>
+                                <td>
+                                    <form asp-action="DeleteProgram" asp-route-id="@p.ProgramId" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm px-2 py-1" style="color:var(--nfa-destructive);" title="Sil" onclick="return confirm('Silmek istediğinize emin misiniz?')"><i class="bi bi-trash3"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5 text-nfa-muted">Program bulunamadı.</div>
+        }
+    </div>
+</div>
