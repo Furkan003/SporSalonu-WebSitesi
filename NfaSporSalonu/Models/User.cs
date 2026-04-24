@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace NfaSporSalonu.Models;
@@ -28,6 +28,11 @@ public partial class User
     public bool? IsActive { get; set; }
 
     public DateTime? CreatedAt { get; set; }
+
+    // Brute-Force koruması alanları
+    public int? FailedLoginAttempts { get; set; }
+
+    public DateTime? LockoutEndTime { get; set; }
 
     public virtual ICollection<AccessCredential> AccessCredentials { get; set; } = new List<AccessCredential>();
 
