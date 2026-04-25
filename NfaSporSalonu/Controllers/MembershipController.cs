@@ -79,6 +79,22 @@ namespace NfaSporSalonu.Controllers
                 })
                 .ToListAsync();
 
+            // Eğitmen Notları
+            var trainerNotes = await _context.TrainerNotes
+                .Include(tn => tn.Trainer)
+                .Where(tn => tn.MemberId == userId)
+                .OrderByDescending(tn => tn.CreatedAt)
+                .Take(10)
+                .Select(tn => new TrainerNoteDto
+                {
+                    TrainerName = tn.Trainer != null
+                        ? tn.Trainer.FirstName + " " + tn.Trainer.LastName
+                        : "Bilinmeyen",
+                    NoteContent = tn.NoteContent,
+                    CreatedAt = tn.CreatedAt
+                })
+                .ToListAsync();
+
             var viewModel = new MemberDashboardViewModel
             {
                 FullName = $"{user.FirstName} {user.LastName}",
@@ -99,7 +115,8 @@ namespace NfaSporSalonu.Controllers
                     ? $"{trainerRelation.Trainer.FirstName} {trainerRelation.Trainer.LastName}"
                     : null,
                 UnreadNotificationCount = unreadCount,
-                RecentNotifications = recentNotifications
+                RecentNotifications = recentNotifications,
+                TrainerNotes = trainerNotes
             };
 
             return View(viewModel);

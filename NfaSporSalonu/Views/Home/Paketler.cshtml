@@ -1,0 +1,340 @@
+@model List<NfaSporSalonu.Models.MembershipPlan>
+@{
+    ViewData["Title"] = "Üyelik Paketleri";
+    Layout = "_Layout";
+
+    // Kategorilere göre grupla
+    var grouped = Model.GroupBy(p => p.Category ?? "Diğer").ToList();
+
+    // Kategori ikonları & açıklamaları (Item1=Icon, Item2=Color, Item3=Desc)
+    var categoryMeta = new Dictionary<string, Tuple<string, string, string>>
+    {
+        ["Öğrenci"] = Tuple.Create("bi-mortarboard-fill", "oklch(0.62 0.18 250)", "Geçerli öğrenci belgesi ile avantajlı fiyatlar"),
+        ["Sivil"]   = Tuple.Create("bi-person-fill",      "oklch(0.72 0.19 155)", "Herkes için geçerli standart üyelik paketleri"),
+        ["Pilates"] = Tuple.Create("bi-heart-pulse-fill",  "oklch(0.78 0.15 55)",  "Reformer Pilates özel seans paketleri")
+    };
+
+    // "Popüler" olan paketler (6 Aylık + 24 Seans)
+    bool IsPopular(NfaSporSalonu.Models.MembershipPlan p) =>
+        (p.Description ?? "").Contains("En çok tercih edilen");
+}
+
+@section Styles {
+    <style>
+        /* ── Pricing Hero ── */
+        .nfa-pricing-hero {
+            background: linear-gradient(135deg, var(--nfa-secondary) 0%, oklch(0.35 0.02 286) 50%, oklch(0.25 0.04 270) 100%);
+            padding: 5rem 1rem 3rem;
+            text-align: center;
+            color: #fff;
+            margin-top: -1px;
+        }
+        .nfa-pricing-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -.02em;
+            margin-bottom: .5rem;
+        }
+        .nfa-pricing-hero p {
+            font-size: 1.0625rem;
+            opacity: .75;
+            max-width: 540px;
+            margin: 0 auto;
+        }
+
+        /* ── Category Section ── */
+        .nfa-category-section {
+            margin-bottom: 3rem;
+        }
+        .nfa-category-header {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            margin-bottom: 1.5rem;
+        }
+        .nfa-category-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .nfa-category-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--nfa-fg);
+        }
+        .nfa-category-header p {
+            margin: 0;
+            font-size: .8125rem;
+            color: var(--nfa-muted-fg);
+        }
+
+        /* ── Pricing Card ── */
+        .nfa-pricing-card {
+            background: var(--nfa-card);
+            border: 1px solid var(--nfa-border);
+            border-radius: calc(var(--nfa-radius) * 2);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            position: relative;
+            transition: transform .3s ease, box-shadow .3s ease;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .nfa-pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,.12);
+        }
+
+        /* Popüler vurgusu */
+        .nfa-pricing-card.popular {
+            border-color: var(--nfa-primary);
+            border-width: 2px;
+            box-shadow: 0 4px 24px oklch(0.8606 0.1731 91.9357 / .18);
+        }
+        .nfa-pricing-card.popular:hover {
+            box-shadow: 0 20px 50px oklch(0.8606 0.1731 91.9357 / .25);
+        }
+        .nfa-popular-badge {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--nfa-primary), oklch(0.92 0.0651 74.3695));
+            color: var(--nfa-primary-fg);
+            font-size: .6875rem;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            padding: .35rem 1.25rem;
+            border-radius: 0 0 var(--nfa-radius) var(--nfa-radius);
+        }
+
+        /* Card internals */
+        .nfa-pricing-name {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--nfa-fg);
+            margin-bottom: .25rem;
+        }
+        .nfa-pricing-duration {
+            font-size: .8125rem;
+            color: var(--nfa-muted-fg);
+            font-weight: 500;
+            margin-bottom: 1.25rem;
+        }
+        .nfa-pricing-price {
+            font-size: 2.75rem;
+            font-weight: 800;
+            color: var(--nfa-fg);
+            line-height: 1;
+            margin-bottom: .25rem;
+        }
+        .nfa-pricing-price span {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--nfa-muted-fg);
+        }
+        .nfa-pricing-per {
+            font-size: .75rem;
+            color: var(--nfa-muted-fg);
+            margin-bottom: 1.25rem;
+        }
+        .nfa-pricing-desc {
+            font-size: .8125rem;
+            color: var(--nfa-muted-fg);
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        .nfa-pricing-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1.5rem;
+            text-align: left;
+        }
+        .nfa-pricing-features li {
+            font-size: .8125rem;
+            color: var(--nfa-fg);
+            padding: .375rem 0;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+        .nfa-pricing-features li i {
+            color: oklch(0.72 0.19 155);
+            font-size: .875rem;
+        }
+
+        /* divider */
+        .nfa-pricing-divider {
+            height: 1px;
+            background: var(--nfa-border);
+            margin: 1rem 0;
+        }
+    </style>
+}
+
+@* ═══════════ HERO ═══════════ *@
+<div class="nfa-pricing-hero" style="padding-top:8rem;">
+    <div class="nfa-animate-in">
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;background:var(--nfa-primary);color:var(--nfa-primary-fg);font-size:1.5rem;font-weight:800;margin-bottom:1rem;box-shadow:0 4px 20px oklch(0.8606 0.1731 91.9357 / .35);">
+            <i class="bi bi-gem"></i>
+        </span>
+        <h1>Üyelik Paketleri</h1>
+        <p>İhtiyacınıza en uygun paketi seçin ve sağlıklı yaşam yolculuğunuza bugün başlayın.</p>
+    </div>
+</div>
+
+@* ═══════════ PAKETLER ═══════════ *@
+<div class="container" style="padding:3rem 1rem 4rem;">
+
+    @foreach (var group in grouped)
+    {
+        var cat = group.Key;
+        var meta = categoryMeta.ContainsKey(cat)
+            ? categoryMeta[cat]
+            : Tuple.Create("bi-box", "var(--nfa-muted-fg)", "");
+
+        <div class="nfa-category-section nfa-animate-in">
+            @* Kategori Başlığı *@
+            <div class="nfa-category-header">
+                <div class="nfa-category-icon" style="background:@meta.Item2;">
+                    <i class="bi @meta.Item1"></i>
+                </div>
+                <div>
+                    <h2>@cat Paketleri</h2>
+                    <p>@meta.Item3</p>
+                </div>
+            </div>
+
+            @* Kartlar *@
+            <div class="row g-4">
+                @foreach (var plan in group)
+                {
+                    var popular = IsPopular(plan);
+                    var colClass = group.Count() <= 2 ? "col-md-6 col-lg-5" : "col-sm-6 col-lg-3";
+
+                    <div class="@colClass nfa-animate-in">
+                        <div class="nfa-pricing-card @(popular ? "popular" : "")">
+                            @if (popular)
+                            {
+                                <div class="nfa-popular-badge">
+                                    <i class="bi bi-star-fill me-1"></i>En Popüler
+                                </div>
+                            }
+
+                            <div class="nfa-pricing-name" style="@(popular ? "margin-top:1rem;" : "")">
+                                @plan.PlanName
+                            </div>
+
+                            <div class="nfa-pricing-duration">
+                                @if (plan.DurationInDays >= 365)
+                                {
+                                    @:12 Ay
+                                }
+                                else if (plan.DurationInDays >= 180)
+                                {
+                                    @:6 Ay
+                                }
+                                else if (plan.DurationInDays >= 90)
+                                {
+                                    @:3 Ay
+                                }
+                                else if (plan.DurationInDays >= 60)
+                                {
+                                    @($"{plan.DurationInDays} Gün")
+                                }
+                                else
+                                {
+                                    @:1 Ay
+                                }
+                            </div>
+
+                            <div class="nfa-pricing-divider"></div>
+
+                            <div class="nfa-pricing-price">
+                                @plan.Price.ToString("#,0") <span>₺</span>
+                            </div>
+                            <div class="nfa-pricing-per">
+                                @if (cat == "Pilates")
+                                {
+                                    @:seans paketi
+                                }
+                                else
+                                {
+                                    @:/ dönem
+                                }
+                            </div>
+
+                            <div class="nfa-pricing-desc">
+                                @{
+                                    var desc = (plan.Description ?? "").Replace("En çok tercih edilen paket!", "").Trim();
+                                }
+                                @desc
+                            </div>
+
+                            @* Feature listesi *@
+                            <ul class="nfa-pricing-features">
+                                <li><i class="bi bi-check-circle-fill"></i> Serbest ağırlık & makine alanı</li>
+                                <li><i class="bi bi-check-circle-fill"></i> Soyunma odası & duş</li>
+                                @if (plan.DurationInDays >= 90 && cat != "Pilates")
+                                {
+                                    <li><i class="bi bi-check-circle-fill"></i> Vücut analizi (aylık)</li>
+                                }
+                                @if (plan.DurationInDays >= 180)
+                                {
+                                    <li><i class="bi bi-check-circle-fill"></i> Kişisel antrenör desteği</li>
+                                }
+                                @if (cat == "Pilates")
+                                {
+                                    <li><i class="bi bi-check-circle-fill"></i> Reformer Pilates stüdyosu</li>
+                                    <li><i class="bi bi-check-circle-fill"></i> Uzman eğitmen eşliğinde</li>
+                                }
+                            </ul>
+
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                <a asp-controller="Membership" asp-action="Purchase" asp-route-planId="@plan.PlanId"
+                                   class="btn @(popular ? "btn-nfa-primary" : "btn-nfa-outline") w-100"
+                                   style="font-size:.875rem;font-weight:600;">
+                                    <i class="bi bi-bag-check me-1"></i>Satın Al
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Account" asp-action="Register"
+                                   class="btn @(popular ? "btn-nfa-primary" : "btn-nfa-outline") w-100"
+                                   style="font-size:.875rem;font-weight:600;">
+                                    <i class="bi bi-person-plus me-1"></i>Kayıt Ol & Satın Al
+                                </a>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @* ── CTA Alt Bölüm ── *@
+    <div class="text-center nfa-animate-in" style="margin-top:2rem;">
+        <div class="card card-nfa-shadow-lg mx-auto" style="max-width:600px;border-radius:calc(var(--nfa-radius) * 2);padding:2rem;">
+            <h5 class="fw-bold mb-2"><i class="bi bi-headset me-2" style="color:var(--nfa-primary);"></i>Size Özel Teklif mi İstiyorsunuz?</h5>
+            <p class="text-nfa-muted mb-3" style="font-size:.875rem;">
+                Kurumsal üyelik, grup indirimi veya özel paketler için bizimle iletişime geçin.
+            </p>
+            <a href="/#contact" class="btn btn-nfa-secondary btn-sm px-4">
+                <i class="bi bi-chat-dots me-1"></i>İletişime Geç
+            </a>
+        </div>
+    </div>
+
+</div>

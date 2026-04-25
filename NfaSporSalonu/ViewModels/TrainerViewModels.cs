@@ -92,4 +92,24 @@ namespace NfaSporSalonu.ViewModels
         public DateTime? EndDate { get; set; }
         public bool IsActive => EndDate == null || EndDate > DateTime.Now;
     }
+
+    public class AddTrainerNoteViewModel
+    {
+        [Required(ErrorMessage = "Antrenör seçiniz.")]
+        [Display(Name = "Antrenör")]
+        public int TrainerId { get; set; }
+
+        [Required(ErrorMessage = "Üye seçiniz.")]
+        [Display(Name = "Üye")]
+        public int TraineeId { get; set; }
+
+        [Required(ErrorMessage = "Not içeriği zorunludur.")]
+        [Display(Name = "Not İçeriği")]
+        [StringLength(1000, ErrorMessage = "Not en fazla 1000 karakter olabilir.")]
+        public string NoteContent { get; set; } = null!;
+
+        // Dropdown listeleri
+        public List<UserSelectItem> AvailableTrainees { get; set; } = new();
+        public List<UserSelectItem> AvailableTrainers { get; set; } = new();
+    }
 }

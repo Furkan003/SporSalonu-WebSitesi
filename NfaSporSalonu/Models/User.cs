@@ -55,4 +55,8 @@ public partial class User
     public virtual ICollection<WorkoutAndDietProgram> WorkoutAndDietProgramTrainees { get; set; } = new List<WorkoutAndDietProgram>();
 
     public virtual ICollection<WorkoutAndDietProgram> WorkoutAndDietProgramTrainers { get; set; } = new List<WorkoutAndDietProgram>();
+
+    public virtual ICollection<TrainerNote> TrainerNotesAsTrainer { get; set; } = new List<TrainerNote>();
+
+    public virtual ICollection<TrainerNote> TrainerNotesAsMember { get; set; } = new List<TrainerNote>();
 }

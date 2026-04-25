@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NfaSporSalonu.Models;
 
@@ -11,9 +12,11 @@ using NfaSporSalonu.Models;
 namespace NfaSporSalonu.Migrations
 {
     [DbContext(typeof(NfaSporSalonuDbContext))]
-    partial class NfaSporSalonuDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260425114440_AddTrainerNote")]
+    partial class AddTrainerNote
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -156,10 +159,6 @@ namespace NfaSporSalonu.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PlanId"));
 
-                    b.Property<string>("Category")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -183,108 +182,6 @@ namespace NfaSporSalonu.Migrations
                         .HasName("PK__Membersh__755C22B7CE885E94");
 
                     b.ToTable("MembershipPlans");
-
-                    b.HasData(
-                        new
-                        {
-                            PlanId = 1,
-                            Category = "Öğrenci",
-                            Description = "Öğrenci belgesi ile geçerlidir.",
-                            DurationInDays = 30,
-                            IsActive = true,
-                            PlanName = "Öğrenci 1 Ay",
-                            Price = 1100m
-                        },
-                        new
-                        {
-                            PlanId = 2,
-                            Category = "Öğrenci",
-                            Description = "Öğrenci belgesi ile geçerlidir.",
-                            DurationInDays = 90,
-                            IsActive = true,
-                            PlanName = "Öğrenci 3 Ay",
-                            Price = 3000m
-                        },
-                        new
-                        {
-                            PlanId = 3,
-                            Category = "Öğrenci",
-                            Description = "Öğrenci belgesi ile geçerlidir. En çok tercih edilen paket!",
-                            DurationInDays = 180,
-                            IsActive = true,
-                            PlanName = "Öğrenci 6 Ay",
-                            Price = 5500m
-                        },
-                        new
-                        {
-                            PlanId = 4,
-                            Category = "Öğrenci",
-                            Description = "Öğrenci belgesi ile geçerlidir.",
-                            DurationInDays = 365,
-                            IsActive = true,
-                            PlanName = "Öğrenci 12 Ay",
-                            Price = 9000m
-                        },
-                        new
-                        {
-                            PlanId = 5,
-                            Category = "Sivil",
-                            Description = "Tüm spor salonu hizmetlerini kapsar.",
-                            DurationInDays = 30,
-                            IsActive = true,
-                            PlanName = "Sivil 1 Ay",
-                            Price = 1200m
-                        },
-                        new
-                        {
-                            PlanId = 6,
-                            Category = "Sivil",
-                            Description = "Tüm spor salonu hizmetlerini kapsar.",
-                            DurationInDays = 90,
-                            IsActive = true,
-                            PlanName = "Sivil 3 Ay",
-                            Price = 3250m
-                        },
-                        new
-                        {
-                            PlanId = 7,
-                            Category = "Sivil",
-                            Description = "Tüm spor salonu hizmetlerini kapsar. En çok tercih edilen paket!",
-                            DurationInDays = 180,
-                            IsActive = true,
-                            PlanName = "Sivil 6 Ay",
-                            Price = 6000m
-                        },
-                        new
-                        {
-                            PlanId = 8,
-                            Category = "Sivil",
-                            Description = "Tüm spor salonu hizmetlerini kapsar.",
-                            DurationInDays = 365,
-                            IsActive = true,
-                            PlanName = "Sivil 12 Ay",
-                            Price = 10000m
-                        },
-                        new
-                        {
-                            PlanId = 9,
-                            Category = "Pilates",
-                            Description = "Reformer Pilates – 8 seanslık paket.",
-                            DurationInDays = 60,
-                            IsActive = true,
-                            PlanName = "Pilates 8 Seans",
-                            Price = 2500m
-                        },
-                        new
-                        {
-                            PlanId = 10,
-                            Category = "Pilates",
-                            Description = "Reformer Pilates – 24 seanslık paket. En çok tercih edilen paket!",
-                            DurationInDays = 180,
-                            IsActive = true,
-                            PlanName = "Pilates 24 Seans",
-                            Price = 7200m
-                        });
                 });
 
             modelBuilder.Entity("NfaSporSalonu.Models.Notification", b =>

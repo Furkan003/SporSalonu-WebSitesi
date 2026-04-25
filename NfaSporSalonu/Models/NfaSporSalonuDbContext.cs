@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,6 +36,8 @@ public partial class NfaSporSalonuDbContext : DbContext
     public virtual DbSet<UserMembership> UserMemberships { get; set; }
 
     public virtual DbSet<WorkoutAndDietProgram> WorkoutAndDietPrograms { get; set; }
+
+    public virtual DbSet<TrainerNote> TrainerNotes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -103,6 +105,24 @@ public partial class NfaSporSalonuDbContext : DbContext
             entity.Property(e => e.IsActive).HasDefaultValue(true);
             entity.Property(e => e.PlanName).HasMaxLength(100);
             entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.Category).HasMaxLength(50);
+
+            // ── Seed Data ──
+            entity.HasData(
+                // Öğrenci Paketleri
+                new MembershipPlan { PlanId = 1, PlanName = "Öğrenci 1 Ay", DurationInDays = 30, Price = 1100m, Category = "Öğrenci", Description = "Öğrenci belgesi ile geçerlidir.", IsActive = true },
+                new MembershipPlan { PlanId = 2, PlanName = "Öğrenci 3 Ay", DurationInDays = 90, Price = 3000m, Category = "Öğrenci", Description = "Öğrenci belgesi ile geçerlidir.", IsActive = true },
+                new MembershipPlan { PlanId = 3, PlanName = "Öğrenci 6 Ay", DurationInDays = 180, Price = 5500m, Category = "Öğrenci", Description = "Öğrenci belgesi ile geçerlidir. En çok tercih edilen paket!", IsActive = true },
+                new MembershipPlan { PlanId = 4, PlanName = "Öğrenci 12 Ay", DurationInDays = 365, Price = 9000m, Category = "Öğrenci", Description = "Öğrenci belgesi ile geçerlidir.", IsActive = true },
+                // Sivil Paketleri
+                new MembershipPlan { PlanId = 5, PlanName = "Sivil 1 Ay", DurationInDays = 30, Price = 1200m, Category = "Sivil", Description = "Tüm spor salonu hizmetlerini kapsar.", IsActive = true },
+                new MembershipPlan { PlanId = 6, PlanName = "Sivil 3 Ay", DurationInDays = 90, Price = 3250m, Category = "Sivil", Description = "Tüm spor salonu hizmetlerini kapsar.", IsActive = true },
+                new MembershipPlan { PlanId = 7, PlanName = "Sivil 6 Ay", DurationInDays = 180, Price = 6000m, Category = "Sivil", Description = "Tüm spor salonu hizmetlerini kapsar. En çok tercih edilen paket!", IsActive = true },
+                new MembershipPlan { PlanId = 8, PlanName = "Sivil 12 Ay", DurationInDays = 365, Price = 10000m, Category = "Sivil", Description = "Tüm spor salonu hizmetlerini kapsar.", IsActive = true },
+                // Reformer Pilates
+                new MembershipPlan { PlanId = 9, PlanName = "Pilates 8 Seans", DurationInDays = 60, Price = 2500m, Category = "Pilates", Description = "Reformer Pilates – 8 seanslık paket.", IsActive = true },
+                new MembershipPlan { PlanId = 10, PlanName = "Pilates 24 Seans", DurationInDays = 180, Price = 7200m, Category = "Pilates", Description = "Reformer Pilates – 24 seanslık paket. En çok tercih edilen paket!", IsActive = true }
+            );
         });
 
         modelBuilder.Entity<Notification>(entity =>
@@ -231,6 +251,27 @@ public partial class NfaSporSalonuDbContext : DbContext
             entity.HasOne(d => d.Trainer).WithMany(p => p.WorkoutAndDietProgramTrainers)
                 .HasForeignKey(d => d.TrainerId)
                 .HasConstraintName("FK__WorkoutAn__Train__71D1E811");
+        });
+
+        modelBuilder.Entity<TrainerNote>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.NoteContent)
+                .IsRequired()
+                .HasMaxLength(1000);
+
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.Trainer).WithMany(p => p.TrainerNotesAsTrainer)
+                .HasForeignKey(d => d.TrainerId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            entity.HasOne(d => d.Member).WithMany(p => p.TrainerNotesAsMember)
+                .HasForeignKey(d => d.MemberId)
+                .OnDelete(DeleteBehavior.NoAction);
         });
 
         OnModelCreatingPartial(modelBuilder);
