@@ -207,6 +207,70 @@ namespace NfaSporSalonu.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // ───────────── EĞITMEN NOTU EKLE ─────────────
+
+        [HttpGet]
+        public async Task<IActionResult> AddNote()
+        {
+            var model = new AddTrainerNoteViewModel
+            {
+                AvailableTrainees = await GetMembersList(),
+                AvailableTrainers = await GetTrainersList()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddNote(AddTrainerNoteViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.AvailableTrainees = await GetMembersList();
+                model.AvailableTrainers = await GetTrainersList();
+                return View(model);
+            }
+
+            // Eğitmen-öğrenci ilişkisi kontrolü
+            var relationExists = await _context.TrainerTrainees
+                .AnyAsync(tt => tt.TrainerId == model.TrainerId && tt.TraineeId == model.TraineeId);
+
+            if (!relationExists)
+            {
+                ModelState.AddModelError("", "Seçilen üye bu antrenöre atanmamış. Önce atama yapın.");
+                model.AvailableTrainees = await GetMembersList();
+                model.AvailableTrainers = await GetTrainersList();
+                return View(model);
+            }
+
+            var trainerNote = new TrainerNote
+            {
+                TrainerId = model.TrainerId,
+                MemberId = model.TraineeId,
+                NoteContent = model.NoteContent,
+                CreatedAt = DateTime.Now
+            };
+
+            _context.TrainerNotes.Add(trainerNote);
+
+            // Üyeye bildirim gönder
+            var trainer = await _context.Users.FindAsync(model.TrainerId);
+            var notification = new Notification
+            {
+                UserId = model.TraineeId,
+                Message = $"Eğitmeniniz {(trainer != null ? trainer.FirstName + " " + trainer.LastName : "")} yeni bir not ekledi.",
+                NotificationType = "Eğitmen Notu",
+                CreatedDate = DateTime.Now,
+                IsRead = false
+            };
+            _context.Notifications.Add(notification);
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Eğitmen notu başarıyla eklendi.";
+            return RedirectToAction(nameof(Index));
+        }
+
         // ───────────── YARDIMCI METOTLAR ─────────────
 
         private async Task<List<UserSelectItem>> GetMembersList()

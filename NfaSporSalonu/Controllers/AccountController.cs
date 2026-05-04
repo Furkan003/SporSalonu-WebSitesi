@@ -44,9 +44,37 @@ namespace NfaSporSalonu.Controllers
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.Email == model.Email);
 
-            // Kullanıcı bulunamadı veya şifre yanlış
-            if (user == null || !BCrypt.Net.BCrypt.Verify(model.Password, user.PasswordHash))
+            // Kullanıcı bulunamadı
+            if (user == null)
             {
+                ModelState.AddModelError(string.Empty, "E-posta veya şifre hatalı.");
+                return View(model);
+            }
+
+            // Brute-force kilidi kontrolü
+            if (user.LockoutEndTime.HasValue && user.LockoutEndTime > DateTime.Now)
+            {
+                var remaining = (int)(user.LockoutEndTime.Value - DateTime.Now).TotalMinutes;
+                ModelState.AddModelError(string.Empty, $"Hesabınız kilitli. {remaining + 1} dakika sonra tekrar deneyin.");
+                return View(model);
+            }
+
+            // Şifre doğrulama
+            if (!BCrypt.Net.BCrypt.Verify(model.Password, user.PasswordHash))
+            {
+                // Hatalı giriş sayacını artır
+                user.FailedLoginAttempts = (user.FailedLoginAttempts ?? 0) + 1;
+
+                if (user.FailedLoginAttempts >= 5)
+                {
+                    user.LockoutEndTime = DateTime.Now.AddMinutes(15);
+                    user.FailedLoginAttempts = 0;
+                    await _context.SaveChangesAsync();
+                    ModelState.AddModelError(string.Empty, "Çok fazla hatalı giriş. Hesabınız 15 dakika kilitlendi.");
+                    return View(model);
+                }
+
+                await _context.SaveChangesAsync();
                 ModelState.AddModelError(string.Empty, "E-posta veya şifre hatalı.");
                 return View(model);
             }
@@ -57,6 +85,11 @@ namespace NfaSporSalonu.Controllers
                 ModelState.AddModelError(string.Empty, "Hesabınız devre dışı bırakılmıştır. Lütfen yönetici ile iletişime geçin.");
                 return View(model);
             }
+
+            // Başarılı giriş — sayacı sıfırla
+            user.FailedLoginAttempts = 0;
+            user.LockoutEndTime = null;
+            await _context.SaveChangesAsync();
 
             // Claim'leri oluştur
             var claims = new List<Claim>

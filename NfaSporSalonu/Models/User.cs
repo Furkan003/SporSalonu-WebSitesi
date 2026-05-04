@@ -31,6 +31,11 @@ public partial class User
 
     public DateTime? CreatedAt { get; set; }
 
+    // Brute-Force koruması alanları
+    public int? FailedLoginAttempts { get; set; }
+
+    public DateTime? LockoutEndTime { get; set; }
+
     public virtual ICollection<AccessCredential> AccessCredentials { get; set; } = new List<AccessCredential>();
 
     public virtual ICollection<AccessLog> AccessLogs { get; set; } = new List<AccessLog>();
@@ -62,6 +67,10 @@ public partial class User
     public virtual ICollection<WorkoutAndDietProgram> WorkoutAndDietProgramTrainees { get; set; } = new List<WorkoutAndDietProgram>();
 
     public virtual ICollection<WorkoutAndDietProgram> WorkoutAndDietProgramTrainers { get; set; } = new List<WorkoutAndDietProgram>();
+
+    public virtual ICollection<TrainerNote> TrainerNotesAsTrainer { get; set; } = new List<TrainerNote>();
+
+    public virtual ICollection<TrainerNote> TrainerNotesAsMember { get; set; } = new List<TrainerNote>();
 
     /// <summary>
     /// Kullanıcının aktif bir üyeliği olup olmadığını kontrol eder.

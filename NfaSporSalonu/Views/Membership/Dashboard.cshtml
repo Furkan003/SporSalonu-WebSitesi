@@ -4,6 +4,9 @@
     Layout = "_Layout";
 }
 
+@* ── Navbar altı boşluk wrapper ── *@
+<div class="container" style="padding-top:7rem;">
+
 @* ── TempData Alerts ── *@
 @if (TempData["Success"] != null)
 {
@@ -23,20 +26,22 @@
 }
 
 @* ═══════════ PROFİL HEADER ═══════════ *@
-<div class="card card-nfa-shadow-lg mb-4 nfa-animate-in" style="border-radius:calc(var(--nfa-radius) * 2);overflow:hidden;">
+<div class="card card-nfa-shadow-lg mb-4 nfa-animate-in" style="border-radius:calc(var(--nfa-radius) * 2);overflow:visible;">
     @* Banner *@
-    <div style="height:120px;background:linear-gradient(135deg, var(--nfa-secondary) 0%, oklch(0.4 0.02 286) 50%, var(--nfa-primary) 100%);"></div>
+    <div style="height:140px;background:linear-gradient(135deg, var(--nfa-secondary) 0%, oklch(0.4 0.02 286) 50%, var(--nfa-primary) 100%);border-radius:calc(var(--nfa-radius) * 2) calc(var(--nfa-radius) * 2) 0 0;"></div>
 
-    <div class="card-body position-relative" style="margin-top:-50px;">
+    <div class="card-body position-relative" style="padding-top:3.5rem;">
+        @* Avatar – banner ile card-body arasına oturuyor *@
         <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-end gap-3">
-            @* Avatar *@
             @if (!string.IsNullOrEmpty(Model.ProfileImageUrl))
             {
-                <img src="@Model.ProfileImageUrl" alt="Profil" class="nfa-avatar" />
+                <img src="@Model.ProfileImageUrl" alt="Profil" class="nfa-avatar"
+                     style="margin-top:-70px;border:4px solid var(--nfa-card-bg, #fff);position:relative;z-index:2;" />
             }
             else
             {
-                <div class="nfa-avatar-placeholder">
+                <div class="nfa-avatar-placeholder"
+                     style="margin-top:-70px;border:4px solid var(--nfa-card-bg, #fff);position:relative;z-index:2;">
                     @Model.FullName?.FirstOrDefault()
                 </div>
             }
@@ -163,7 +168,7 @@
         </div>
 
         @* Son Bildirimler *@
-        <div class="card card-nfa-shadow nfa-animate-in">
+        <div class="card card-nfa-shadow nfa-animate-in mb-4">
             <div class="card-body p-0">
                 <div class="px-4 pt-4 pb-2">
                     <h6 class="nfa-section-title">Son Bildirimler</h6>
@@ -201,6 +206,47 @@
                 {
                     <div class="text-center text-nfa-muted py-4" style="font-size:.875rem;">
                         <i class="bi bi-bell-slash me-1"></i>Bildiriminiz bulunmuyor.
+                    </div>
+                }
+            </div>
+        </div>
+
+        @* Eğitmen Notları *@
+        <div class="card card-nfa-shadow nfa-animate-in">
+            <div class="card-body p-0">
+                <div class="px-4 pt-4 pb-2 d-flex align-items-center gap-2">
+                    <h6 class="nfa-section-title mb-0">
+                        <i class="bi bi-journal-text me-1" style="color:var(--nfa-primary);"></i>Eğitmen Notları
+                    </h6>
+                </div>
+
+                @if (Model.TrainerNotes.Any())
+                {
+                    @foreach (var note in Model.TrainerNotes)
+                    {
+                        <div class="d-flex align-items-start gap-3 px-4 py-3" style="border-top:1px solid oklch(0.5 0 0 / .1);">
+                            <div style="min-width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg, var(--nfa-primary), oklch(0.55 0.15 270));display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <i class="bi bi-pencil-square" style="color:#fff;font-size:.85rem;"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <span class="fw-semibold" style="font-size:.875rem;">@note.TrainerName</span>
+                                    <span class="badge rounded-pill" style="font-size:.6875rem;background:oklch(0.55 0.15 150 / .15);color:oklch(0.45 0.15 150);">Eğitmen</span>
+                                </div>
+                                <div style="font-size:.875rem;line-height:1.5;color:var(--nfa-fg, #333);">
+                                    @note.NoteContent
+                                </div>
+                                <div class="text-nfa-muted mt-1" style="font-size:.75rem;">
+                                    <i class="bi bi-calendar3 me-1"></i>@note.CreatedAt.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("tr-TR"))
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center text-nfa-muted py-4" style="font-size:.875rem;">
+                        <i class="bi bi-journal-x me-1"></i>Henüz bir eğitmen notunuz bulunmuyor.
                     </div>
                 }
             </div>
@@ -274,6 +320,8 @@
         </div>
     </div>
 </div>
+
+</div>@* ── /container wrapper ── *@
 
 @section Scripts {
     <link rel="stylesheet" href="~/css/custom-theme.css" asp-append-version="true" />

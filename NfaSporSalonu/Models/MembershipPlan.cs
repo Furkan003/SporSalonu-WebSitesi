@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace NfaSporSalonu.Models;
@@ -14,6 +14,8 @@ public partial class MembershipPlan
     public decimal Price { get; set; }
 
     public string? Description { get; set; }
+
+    public string? Category { get; set; }
 
     public bool? IsActive { get; set; }
 

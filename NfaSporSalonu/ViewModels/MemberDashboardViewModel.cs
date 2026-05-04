@@ -26,6 +26,9 @@ namespace NfaSporSalonu.ViewModels
         // Bildirimler
         public int UnreadNotificationCount { get; set; }
         public List<NotificationDto> RecentNotifications { get; set; } = new();
+
+        // Eğitmen Notları
+        public List<TrainerNoteDto> TrainerNotes { get; set; } = new();
     }
 
     public class NotificationDto
@@ -35,5 +38,12 @@ namespace NfaSporSalonu.ViewModels
         public string? NotificationType { get; set; }
         public DateTime? CreatedDate { get; set; }
         public bool IsRead { get; set; }
+    }
+
+    public class TrainerNoteDto
+    {
+        public string TrainerName { get; set; } = null!;
+        public string NoteContent { get; set; } = null!;
+        public DateTime CreatedAt { get; set; }
     }
 }
