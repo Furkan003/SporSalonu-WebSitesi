@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace NfaSporSalonu.Models;
 
@@ -38,6 +40,16 @@ public partial class User
 
     public virtual ICollection<AccessLog> AccessLogs { get; set; } = new List<AccessLog>();
 
+    /// <summary>
+    /// Bu kullanıcının admin olarak gerçekleştirdiği işlem logları.
+    /// </summary>
+    public virtual ICollection<AdminActivityLog> AdminActivityLogsAsAdmin { get; set; } = new List<AdminActivityLog>();
+
+    /// <summary>
+    /// Bu kullanıcının hedef üye olarak yer aldığı işlem logları.
+    /// </summary>
+    public virtual ICollection<AdminActivityLog> AdminActivityLogsAsTarget { get; set; } = new List<AdminActivityLog>();
+
     public virtual ICollection<MemberMeasurement> MemberMeasurements { get; set; } = new List<MemberMeasurement>();
 
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
@@ -59,4 +71,11 @@ public partial class User
     public virtual ICollection<TrainerNote> TrainerNotesAsTrainer { get; set; } = new List<TrainerNote>();
 
     public virtual ICollection<TrainerNote> TrainerNotesAsMember { get; set; } = new List<TrainerNote>();
+
+    /// <summary>
+    /// Kullanıcının aktif bir üyeliği olup olmadığını kontrol eder.
+    /// </summary>
+    [NotMapped]
+    public bool HasActiveSubscription =>
+        UserMemberships?.Any(m => m.IsActive) ?? false;
 }

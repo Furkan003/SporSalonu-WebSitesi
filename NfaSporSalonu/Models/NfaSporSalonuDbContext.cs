@@ -19,6 +19,8 @@ public partial class NfaSporSalonuDbContext : DbContext
 
     public virtual DbSet<AccessLog> AccessLogs { get; set; }
 
+    public virtual DbSet<AdminActivityLog> AdminActivityLogs { get; set; }
+
     public virtual DbSet<MemberMeasurement> MemberMeasurements { get; set; }
 
     public virtual DbSet<MembershipPlan> MembershipPlans { get; set; }
@@ -170,6 +172,13 @@ public partial class NfaSporSalonuDbContext : DbContext
 
             entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.RoleName).HasMaxLength(50);
+
+            // Seed Data: Varsayılan roller
+            entity.HasData(
+                new Role { RoleId = 1, RoleName = "Admin", Description = "Sistem yöneticisi. Tüm yetkilere sahiptir." },
+                new Role { RoleId = 2, RoleName = "Trainer", Description = "Antrenör. Üyelere program atayabilir." },
+                new Role { RoleId = 3, RoleName = "Member", Description = "Standart üye. Spor salonu hizmetlerini kullanır." }
+            );
         });
 
         modelBuilder.Entity<TrainerTrainee>(entity =>
@@ -251,6 +260,38 @@ public partial class NfaSporSalonuDbContext : DbContext
             entity.HasOne(d => d.Trainer).WithMany(p => p.WorkoutAndDietProgramTrainers)
                 .HasForeignKey(d => d.TrainerId)
                 .HasConstraintName("FK__WorkoutAn__Train__71D1E811");
+        });
+
+        modelBuilder.Entity<AdminActivityLog>(entity =>
+        {
+            entity.HasKey(e => e.LogId);
+
+            entity.ToTable("AdminActivityLogs");
+
+            entity.Property(e => e.ActionType)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.Property(e => e.Description)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.ActionDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            // Admin -> AdminActivityLog (1:N)
+            entity.HasOne(d => d.AdminUser)
+                .WithMany(p => p.AdminActivityLogsAsAdmin)
+                .HasForeignKey(d => d.AdminUserId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_AdminActivityLogs_AdminUser");
+
+            // TargetUser -> AdminActivityLog (1:N)
+            entity.HasOne(d => d.TargetUser)
+                .WithMany(p => p.AdminActivityLogsAsTarget)
+                .HasForeignKey(d => d.TargetUserId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_AdminActivityLogs_TargetUser");
         });
 
         modelBuilder.Entity<TrainerNote>(entity =>
