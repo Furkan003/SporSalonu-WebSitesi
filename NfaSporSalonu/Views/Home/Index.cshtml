@@ -525,9 +525,76 @@
 </section>
 
 @* ═══════════════════════════════════════════
+   PHASE 3.2 – ANTRENMAN TAKVİMİ
+   ═══════════════════════════════════════════ *@
+<section class="nfa-section" id="calendar" style="background:var(--nfa-bg);">
+    <div class="container">
+        <div class="text-center mb-5 nfa-reveal">
+            <div class="nfa-section-badge">Haftalık Program</div>
+            <h2 class="nfa-heading">Antrenman <span style="color:var(--nfa-primary);">Takvimi</span></h2>
+            <p class="text-nfa-muted mx-auto mt-2" style="max-width:520px;font-size:.9375rem;">
+                Haftanın her günü için planlanmış profesyonel antrenman programlarımız.
+            </p>
+        </div>
+
+        <div class="nfa-calendar-grid nfa-reveal" id="weeklyCalendar">
+            @* Pazartesi *@
+            <div class="nfa-cal-day" data-day="1">
+                <div class="nfa-cal-day-name">Pazartesi</div>
+                <div class="nfa-cal-day-icon cal-icon-fitness"><i class="bi bi-activity"></i></div>
+                <div class="nfa-cal-workout">Göğüs & Triceps</div>
+                <div class="nfa-cal-time">09:00 – 22:00</div>
+            </div>
+            @* Salı *@
+            <div class="nfa-cal-day" data-day="2">
+                <div class="nfa-cal-day-name">Salı</div>
+                <div class="nfa-cal-day-icon cal-icon-cardio"><i class="bi bi-heart-pulse"></i></div>
+                <div class="nfa-cal-workout">Sırt & Biceps</div>
+                <div class="nfa-cal-time">09:00 – 22:00</div>
+            </div>
+            @* Çarşamba *@
+            <div class="nfa-cal-day" data-day="3">
+                <div class="nfa-cal-day-name">Çarşamba</div>
+                <div class="nfa-cal-day-icon cal-icon-cross"><i class="bi bi-lightning-charge"></i></div>
+                <div class="nfa-cal-workout">Bacak & Omuz</div>
+                <div class="nfa-cal-time">09:00 – 22:00</div>
+            </div>
+            @* Perşembe *@
+            <div class="nfa-cal-day" data-day="4">
+                <div class="nfa-cal-day-name">Perşembe</div>
+                <div class="nfa-cal-day-icon cal-icon-box"><i class="bi bi-fire"></i></div>
+                <div class="nfa-cal-workout">Cross & Fonksiyonel</div>
+                <div class="nfa-cal-time">09:00 – 22:00</div>
+            </div>
+            @* Cuma *@
+            <div class="nfa-cal-day" data-day="5">
+                <div class="nfa-cal-day-name">Cuma</div>
+                <div class="nfa-cal-day-icon cal-icon-yoga"><i class="bi bi-bullseye"></i></div>
+                <div class="nfa-cal-workout">Boks & Kick Box</div>
+                <div class="nfa-cal-time">09:00 – 22:00</div>
+            </div>
+            @* Cumartesi *@
+            <div class="nfa-cal-day rest" data-day="6">
+                <div class="nfa-cal-day-name">Cumartesi</div>
+                <div class="nfa-cal-day-icon cal-icon-rest"><i class="bi bi-cup-hot"></i></div>
+                <div class="nfa-cal-workout">Dinlenme</div>
+                <div class="nfa-cal-time">Kapalı</div>
+            </div>
+            @* Pazar *@
+            <div class="nfa-cal-day rest" data-day="0">
+                <div class="nfa-cal-day-name">Pazar</div>
+                <div class="nfa-cal-day-icon cal-icon-rest"><i class="bi bi-cup-hot"></i></div>
+                <div class="nfa-cal-workout">Dinlenme</div>
+                <div class="nfa-cal-time">Kapalı</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@* ═══════════════════════════════════════════
    PHASE 3.5 – ÜRÜN LİSTELEME (Antigravity Grid)
    ═══════════════════════════════════════════ *@
-<section class="nfa-section" id="products" style="background:var(--nfa-bg);">
+<section class="nfa-section" id="products" style="background:var(--nfa-muted);">
     <div class="container">
         <div class="text-center mb-5 nfa-reveal">
             <div class="nfa-section-badge">E-Ticaret</div>
@@ -630,6 +697,151 @@
 </section>
 
 @* ═══════════════════════════════════════════
+   PHASE 3.8 – KULLANICI YORUMLARI (Testimonials)
+   ═══════════════════════════════════════════ *@
+<section class="nfa-section" id="testimonials" style="background:var(--nfa-bg);">
+    <div class="container">
+        <div class="text-center mb-5 nfa-reveal">
+            <div class="nfa-section-badge">Yorumlar</div>
+            <h2 class="nfa-heading">Üyelerimiz <span style="color:var(--nfa-primary);">Ne Diyor?</span></h2>
+            <p class="text-nfa-muted mx-auto mt-2" style="max-width:520px;font-size:.9375rem;">
+                NFA Spor Merkezi ailesinin deneyimlerini kendi ağızlarından dinleyin.
+            </p>
+        </div>
+
+        <div class="nfa-testimonials-wrap nfa-reveal">
+            <div class="nfa-testimonials-track" id="testimonialsTrack">
+                @* Yorum 1 *@
+                <div class="nfa-testimonial-card">
+                    <div class="nfa-testimonial-inner">
+                        <div class="nfa-testimonial-quote">"</div>
+                        <div class="nfa-testimonial-stars">
+                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="nfa-testimonial-text">
+                            "NFA'ya başladığımdan beri hayatım değişti. Eğitmenler çok profesyonel, ortam çok motive edici. 6 ayda hedef kiloma ulaştım!"
+                        </p>
+                        <div class="nfa-testimonial-author">
+                            <div class="nfa-testimonial-avatar">AY</div>
+                            <div>
+                                <div class="nfa-testimonial-name">Ahmet Yılmaz</div>
+                                <div class="nfa-testimonial-role">2 yıldır üye</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* Yorum 2 *@
+                <div class="nfa-testimonial-card">
+                    <div class="nfa-testimonial-inner">
+                        <div class="nfa-testimonial-quote">"</div>
+                        <div class="nfa-testimonial-stars">
+                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="nfa-testimonial-text">
+                            "Cross antrenman programları inanılmaz! Hem dayanıklılığımı artırdım hem de stresimi attım. Herkese tavsiye ederim."
+                        </p>
+                        <div class="nfa-testimonial-author">
+                            <div class="nfa-testimonial-avatar">ZK</div>
+                            <div>
+                                <div class="nfa-testimonial-name">Zeynep Kaya</div>
+                                <div class="nfa-testimonial-role">1 yıldır üye</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* Yorum 3 *@
+                <div class="nfa-testimonial-card">
+                    <div class="nfa-testimonial-inner">
+                        <div class="nfa-testimonial-quote">"</div>
+                        <div class="nfa-testimonial-stars">
+                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+                        </div>
+                        <p class="nfa-testimonial-text">
+                            "Boks eğitimi için geldim ama tüm branşları denedim. Ekipmanlar yeni ve bakımlı, salon çok temiz."
+                        </p>
+                        <div class="nfa-testimonial-author">
+                            <div class="nfa-testimonial-avatar">MÖ</div>
+                            <div>
+                                <div class="nfa-testimonial-name">Mehmet Özdemir</div>
+                                <div class="nfa-testimonial-role">3 yıldır üye</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* Yorum 4 *@
+                <div class="nfa-testimonial-card">
+                    <div class="nfa-testimonial-inner">
+                        <div class="nfa-testimonial-quote">"</div>
+                        <div class="nfa-testimonial-stars">
+                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="nfa-testimonial-text">
+                            "Kişisel eğitmenim sayesinde doğru form öğrendim ve sakatlık riskimi minimuma indirdim. NFA ailesi gerçekten fark yaratıyor."
+                        </p>
+                        <div class="nfa-testimonial-author">
+                            <div class="nfa-testimonial-avatar">EŞ</div>
+                            <div>
+                                <div class="nfa-testimonial-name">Elif Şahin</div>
+                                <div class="nfa-testimonial-role">1.5 yıldır üye</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* Yorum 5 *@
+                <div class="nfa-testimonial-card">
+                    <div class="nfa-testimonial-inner">
+                        <div class="nfa-testimonial-quote">"</div>
+                        <div class="nfa-testimonial-stars">
+                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="nfa-testimonial-text">
+                            "Kick Box derslerine bayılıyorum! Hem savunma öğrendim hem de kondisyonumu inanılmaz geliştirdim. Eğitmenler harika!"
+                        </p>
+                        <div class="nfa-testimonial-author">
+                            <div class="nfa-testimonial-avatar">CA</div>
+                            <div>
+                                <div class="nfa-testimonial-name">Can Arslan</div>
+                                <div class="nfa-testimonial-role">6 aydır üye</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* Yorum 6 *@
+                <div class="nfa-testimonial-card">
+                    <div class="nfa-testimonial-inner">
+                        <div class="nfa-testimonial-quote">"</div>
+                        <div class="nfa-testimonial-stars">
+                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="nfa-testimonial-text">
+                            "Supplement ürünleri de burada bulabilmek büyük kolaylık. HardLine ürünlerini güvenle kullanıyorum. Teşekkürler NFA!"
+                        </p>
+                        <div class="nfa-testimonial-author">
+                            <div class="nfa-testimonial-avatar">SD</div>
+                            <div>
+                                <div class="nfa-testimonial-name">Selin Demir</div>
+                                <div class="nfa-testimonial-role">8 aydır üye</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @* Slider nav *@
+            <div class="nfa-slider-nav">
+                <button class="nfa-slider-btn" id="testimonialPrev" aria-label="Önceki">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <div class="nfa-slider-dots" id="testimonialDots"></div>
+                <button class="nfa-slider-btn" id="testimonialNext" aria-label="Sonraki">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+@* ═══════════════════════════════════════════
    PHASE 4 – İLETİŞİM & SAATLER
    ═══════════════════════════════════════════ *@
 <section class="nfa-contact-band" id="contact">
@@ -710,5 +922,77 @@
                 if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
+
+        // ═══════ Highlight Today in Calendar ═══════
+        (function () {
+            const todayIndex = new Date().getDay(); // 0=Pazar, 1=Pazartesi ...
+            document.querySelectorAll('#weeklyCalendar .nfa-cal-day').forEach(day => {
+                if (parseInt(day.dataset.day) === todayIndex) {
+                    day.classList.add('today');
+                }
+            });
+        })();
+
+        // ═══════ Testimonials Slider ═══════
+        (function () {
+            const track = document.getElementById('testimonialsTrack');
+            const cards = track.querySelectorAll('.nfa-testimonial-card');
+            const prevBtn = document.getElementById('testimonialPrev');
+            const nextBtn = document.getElementById('testimonialNext');
+            const dotsWrap = document.getElementById('testimonialDots');
+            let current = 0;
+            let perView = 3;
+
+            function getPerView() {
+                if (window.innerWidth < 768) return 1;
+                if (window.innerWidth < 992) return 2;
+                return 3;
+            }
+
+            function getMaxSlide() {
+                return Math.max(0, cards.length - perView);
+            }
+
+            function buildDots() {
+                dotsWrap.innerHTML = '';
+                const total = getMaxSlide() + 1;
+                for (let i = 0; i < total; i++) {
+                    const dot = document.createElement('button');
+                    dot.className = 'nfa-slider-dot' + (i === current ? ' active' : '');
+                    dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+                    dot.addEventListener('click', () => { current = i; slide(); });
+                    dotsWrap.appendChild(dot);
+                }
+            }
+
+            function slide() {
+                const cardWidth = 100 / perView;
+                track.style.transform = `translateX(-${current * cardWidth}%)`;
+                dotsWrap.querySelectorAll('.nfa-slider-dot').forEach((d, i) => {
+                    d.classList.toggle('active', i === current);
+                });
+            }
+
+            prevBtn.addEventListener('click', () => { current = Math.max(0, current - 1); slide(); });
+            nextBtn.addEventListener('click', () => { current = Math.min(getMaxSlide(), current + 1); slide(); });
+
+            // Auto-slide
+            let autoSlide = setInterval(() => { current = current >= getMaxSlide() ? 0 : current + 1; slide(); }, 5000);
+            track.addEventListener('mouseenter', () => clearInterval(autoSlide));
+            track.addEventListener('mouseleave', () => {
+                autoSlide = setInterval(() => { current = current >= getMaxSlide() ? 0 : current + 1; slide(); }, 5000);
+            });
+
+            // Responsive
+            function handleResize() {
+                perView = getPerView();
+                current = Math.min(current, getMaxSlide());
+                buildDots();
+                slide();
+            }
+
+            window.addEventListener('resize', handleResize);
+            handleResize();
+        })();
     </script>
 }

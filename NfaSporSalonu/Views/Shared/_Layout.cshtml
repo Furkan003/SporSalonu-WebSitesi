@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -57,8 +57,14 @@
                         </li>
                     </ul>
 
-                    @* Auth Buttons *@
+                    @* Auth Buttons + Dark Mode Toggle *@
                     <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                        @* Dark Mode Toggle *@
+                        <div class="nfa-theme-toggle" id="themeToggle" data-active="false" title="Tema Değiştir" role="button" tabindex="0" aria-label="Karanlık mod">
+                            <div class="nfa-theme-toggle-knob">
+                                <i class="bi bi-sun-fill" id="themeIcon" style="color:#f59e0b;"></i>
+                            </div>
+                        </div>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <span class="text-white me-2" style="font-size:.875rem;">
@@ -116,6 +122,37 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // ═══════ Dark Mode Toggle ═══════
+        (function () {
+            const html = document.documentElement;
+            const toggle = document.getElementById('themeToggle');
+            const icon = document.getElementById('themeIcon');
+            const saved = localStorage.getItem('nfa-theme');
+
+            function applyTheme(dark) {
+                html.setAttribute('data-bs-theme', dark ? 'dark' : 'light');
+                if (dark) html.classList.add('dark'); else html.classList.remove('dark');
+                toggle.setAttribute('data-active', dark ? 'true' : 'false');
+                icon.className = dark ? 'bi bi-moon-stars-fill' : 'bi bi-sun-fill';
+                icon.style.color = dark ? '#a5b4fc' : '#f59e0b';
+                localStorage.setItem('nfa-theme', dark ? 'dark' : 'light');
+            }
+
+            // Init
+            const prefersDark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            applyTheme(prefersDark);
+
+            toggle.addEventListener('click', () => {
+                const isDark = html.getAttribute('data-bs-theme') === 'dark';
+                applyTheme(!isDark);
+            });
+
+            toggle.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle.click(); }
+            });
+        })();
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
