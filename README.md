@@ -6,7 +6,7 @@ Bu proje, bir spor salonunun işleyişini dijital ortama taşıyan, üyelerin ve
 
 ## 🚀 Kullanılan Teknolojiler
 
-* **Backend:** C# (.NET) / Python *(Kullanmadığınızı silebilirsiniz)*
+* **Backend:** C# (.NET) /
 * **Veritabanı:** Microsoft SQL Server (SSMS)
 * **Frontend:** HTML, CSS, JavaScript 
 
