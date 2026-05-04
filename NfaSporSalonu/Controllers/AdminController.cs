@@ -97,6 +97,138 @@ namespace NfaSporSalonu.Controllers
             return View(viewModel);
         }
 
+        // ═══════════════ KULLANICI YÖNETİMİ ═══════════════
+
+        public async Task<IActionResult> Users()
+        {
+            var now = DateTime.Now;
+            var roles = await _context.Roles
+                .Select(r => new RoleSelectItem { RoleId = r.RoleId, RoleName = r.RoleName })
+                .ToListAsync();
+
+            var users = await _context.Users
+                .Include(u => u.Role)
+                .Include(u => u.UserMemberships)
+                .OrderByDescending(u => u.CreatedAt)
+                .Select(u => new AdminUserItemDto
+                {
+                    UserId = u.UserId,
+                    FullName = u.FirstName + " " + u.LastName,
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
+                    RoleName = u.Role != null ? u.Role.RoleName : null,
+                    RoleId = u.RoleId,
+                    IsActive = u.IsActive == true,
+                    CreatedAt = u.CreatedAt,
+                    HasActiveMembership = u.UserMemberships.Any(um => um.Status == "Active" && um.EndDate > now),
+                    MembershipEndDate = u.UserMemberships
+                        .Where(um => um.Status == "Active" && um.EndDate > now)
+                        .OrderByDescending(um => um.EndDate)
+                        .Select(um => (DateTime?)um.EndDate)
+                        .FirstOrDefault()
+                })
+                .ToListAsync();
+
+            var viewModel = new AdminUserListViewModel
+            {
+                Users = users,
+                AvailableRoles = roles,
+                TotalCount = users.Count,
+                ActiveCount = users.Count(u => u.IsActive)
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeRole(ChangeRoleViewModel model)
+        {
+            var user = await _context.Users.FindAsync(model.UserId);
+            if (user == null)
+            {
+                TempData["Error"] = "Kullanıcı bulunamadı.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            var role = await _context.Roles.FindAsync(model.NewRoleId);
+            if (role == null)
+            {
+                TempData["Error"] = "Seçilen rol bulunamadı.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            user.RoleId = model.NewRoleId;
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = $"{user.FirstName} {user.LastName} kullanıcısının rolü \"{role.RoleName}\" olarak güncellendi.";
+            return RedirectToAction(nameof(Users));
+        }
+
+        // ═══════════════ ÜYELİK ATAMA ═══════════════
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GrantMembership(GrantMembershipViewModel model)
+        {
+            var user = await _context.Users.FindAsync(model.UserId);
+            if (user == null)
+            {
+                TempData["Error"] = "Kullanıcı bulunamadı.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            if (model.DurationMonths != 1 && model.DurationMonths != 3)
+            {
+                TempData["Error"] = "Geçersiz üyelik süresi.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            var now = DateTime.Now;
+
+            // Mevcut aktif üyelik var mı? Varsa onun EndDate'ine ekle, yoksa bugünden başla
+            var existingMembership = await _context.UserMemberships
+                .Where(um => um.UserId == model.UserId && um.Status == "Active" && um.EndDate > now)
+                .OrderByDescending(um => um.EndDate)
+                .FirstOrDefaultAsync();
+
+            if (existingMembership != null)
+            {
+                // Mevcut üyeliğin bitiş tarihine ekle
+                existingMembership.EndDate = existingMembership.EndDate.AddMonths(model.DurationMonths);
+                _context.UserMemberships.Update(existingMembership);
+            }
+            else
+            {
+                // Yeni üyelik oluştur
+                var newMembership = new UserMembership
+                {
+                    UserId = model.UserId,
+                    StartDate = now,
+                    EndDate = now.AddMonths(model.DurationMonths),
+                    PurchaseDate = now,
+                    Status = "Active"
+                };
+                _context.UserMemberships.Add(newMembership);
+            }
+
+            // Otomatik bildirim gönder
+            var durationText = model.DurationMonths == 1 ? "1 Aylık" : "3 Aylık";
+            _context.Notifications.Add(new Notification
+            {
+                UserId = model.UserId,
+                Message = $"🎉 Tebrikler! Size {durationText} üyelik tanımlandı. Spor salonumuza hoş geldiniz!",
+                NotificationType = "Membership",
+                CreatedDate = now,
+                IsRead = false
+            });
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = $"{user.FirstName} {user.LastName} kullanıcısına {durationText} üyelik başarıyla tanımlandı.";
+            return RedirectToAction(nameof(Users));
+        }
+
         // ═══════════════ ÖDEME YÖNETİMİ ═══════════════
 
         public async Task<IActionResult> Payments(string? status = null)

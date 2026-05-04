@@ -586,3 +586,77 @@ a.nfa-link:hover {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--nfa-muted-fg);
 }
+
+/* ─── Role Badges (Admin Panel) ─── */
+.badge-nfa-role-admin {
+    background-color: oklch(0.6271 0.1936 33.339 / .15);
+    color: oklch(0.5 0.18 33);
+    font-weight: 600;
+    font-size: .75rem;
+}
+
+.badge-nfa-role-trainer {
+    background-color: oklch(0.62 0.18 250 / .15);
+    color: oklch(0.5 0.14 250);
+    font-weight: 600;
+    font-size: .75rem;
+}
+
+.badge-nfa-role-member {
+    background-color: oklch(0.72 0.19 155 / .15);
+    color: oklch(0.5 0.15 155);
+    font-weight: 600;
+    font-size: .75rem;
+}
+
+.badge-nfa-role-default {
+    background-color: var(--nfa-muted);
+    color: var(--nfa-muted-fg);
+    font-weight: 600;
+    font-size: .75rem;
+}
+
+/* ─── Membership Grant Buttons ─── */
+.btn-nfa-grant-1 {
+    background: linear-gradient(135deg, oklch(0.72 0.19 155) 0%, oklch(0.8 0.15 150) 100%);
+    color: #fff;
+    border: none;
+    border-radius: var(--nfa-radius);
+    font-weight: 600;
+    font-size: .75rem;
+    transition: filter .2s, box-shadow .2s, transform .15s;
+}
+
+.btn-nfa-grant-1:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 3px 12px oklch(0.72 0.19 155 / .3);
+    transform: translateY(-1px);
+    color: #fff;
+}
+
+.btn-nfa-grant-3 {
+    background: linear-gradient(135deg, oklch(0.62 0.18 250) 0%, oklch(0.72 0.14 245) 100%);
+    color: #fff;
+    border: none;
+    border-radius: var(--nfa-radius);
+    font-weight: 600;
+    font-size: .75rem;
+    transition: filter .2s, box-shadow .2s, transform .15s;
+}
+
+.btn-nfa-grant-3:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 3px 12px oklch(0.62 0.18 250 / .3);
+    transform: translateY(-1px);
+    color: #fff;
+}
+
+/* ─── Modal Enhancements ─── */
+.modal-backdrop {
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    box-shadow: 0 16px 48px rgba(0, 0, 0, .15);
+}
+

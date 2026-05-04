@@ -1,0 +1,247 @@
+@model AdminUserListViewModel
+@{
+    ViewData["Title"] = "Kullanıcı Yönetimi";
+    Layout = "_AdminLayout";
+}
+
+@* ═══════════ ÖZET KARTLARI ═══════════ *@
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card nfa-stat-card nfa-stat-primary nfa-animate-in">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="stat-icon" style="background:rgba(255,255,255,.2);">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+            </div>
+            <div class="stat-value">@Model.TotalCount</div>
+            <div class="stat-label">Toplam Kullanıcı</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card nfa-stat-card nfa-stat-success nfa-animate-in">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="stat-icon" style="background:rgba(255,255,255,.2);">
+                    <i class="bi bi-person-check-fill"></i>
+                </div>
+            </div>
+            <div class="stat-value">@Model.ActiveCount</div>
+            <div class="stat-label">Aktif Kullanıcı</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card nfa-stat-card nfa-stat-info nfa-animate-in">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="stat-icon" style="background:rgba(255,255,255,.2);">
+                    <i class="bi bi-shield-lock-fill"></i>
+                </div>
+            </div>
+            <div class="stat-value">@Model.Users.Count(u => u.RoleName == "Admin")</div>
+            <div class="stat-label">Admin</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card nfa-stat-card nfa-stat-warning nfa-animate-in">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="stat-icon" style="background:rgba(0,0,0,.08);">
+                    <i class="bi bi-person-badge-fill"></i>
+                </div>
+            </div>
+            <div class="stat-value">@Model.Users.Count(u => u.RoleName == "Trainer")</div>
+            <div class="stat-label">Eğitmen</div>
+        </div>
+    </div>
+</div>
+
+@* ═══════════ KULLANICI TABLOSU ═══════════ *@
+<div class="card card-nfa-shadow nfa-animate-in">
+    <div class="card-body p-0">
+        <div class="px-4 pt-4 pb-2 d-flex justify-content-between align-items-center">
+            <h6 class="nfa-section-title mb-0">Tüm Kullanıcılar</h6>
+            <div>
+                <input type="text" id="userSearchInput" class="form-control-nfa" placeholder="Ara..." style="width:220px;font-size:.8125rem;padding:.4rem .75rem;" />
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-nfa mb-0" id="usersTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Ad Soyad</th>
+                        <th>E-posta</th>
+                        <th>Telefon</th>
+                        <th>Rol</th>
+                        <th>Durum</th>
+                        <th>Üyelik</th>
+                        <th>Kayıt Tarihi</th>
+                        <th style="text-align:center;">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Users.Any())
+                    {
+                        @foreach (var user in Model.Users)
+                        {
+                            <tr>
+                                <td class="text-nfa-muted">@user.UserId</td>
+                                <td class="fw-semibold">@user.FullName</td>
+                                <td class="text-nfa-muted">@user.Email</td>
+                                <td class="text-nfa-muted">@(user.PhoneNumber ?? "–")</td>
+                                <td>
+                                    @{
+                                        var roleBadgeClass = user.RoleName switch
+                                        {
+                                            "Admin" => "badge-nfa-role-admin",
+                                            "Trainer" => "badge-nfa-role-trainer",
+                                            "Member" => "badge-nfa-role-member",
+                                            _ => "badge-nfa-role-default"
+                                        };
+                                    }
+                                    <span class="badge rounded-pill px-2 py-1 @roleBadgeClass">
+                                        @(user.RoleName ?? "Atanmadı")
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (user.IsActive)
+                                    {
+                                        <span class="badge rounded-pill badge-nfa-active px-2 py-1">Aktif</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge rounded-pill badge-nfa-expired px-2 py-1">Pasif</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (user.HasActiveMembership)
+                                    {
+                                        <span class="badge rounded-pill badge-nfa-active px-2 py-1" title="Bitiş: @(user.MembershipEndDate?.ToString("dd.MM.yyyy"))">
+                                            <i class="bi bi-check-circle me-1"></i>@(user.MembershipEndDate?.ToString("dd.MM.yyyy"))
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-nfa-muted" style="font-size:.8125rem;">Yok</span>
+                                    }
+                                </td>
+                                <td class="text-nfa-muted">@(user.CreatedAt?.ToString("dd.MM.yyyy") ?? "–")</td>
+                                <td style="text-align:center;">
+                                    <div class="d-flex gap-1 justify-content-center">
+                                        @* Rol Değiştir Butonu *@
+                                        <button type="button"
+                                                class="btn btn-nfa-outline btn-sm px-2 py-1"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#roleModal"
+                                                data-user-id="@user.UserId"
+                                                data-user-name="@user.FullName"
+                                                data-current-role="@user.RoleId"
+                                                title="Rol Değiştir">
+                                            <i class="bi bi-person-gear"></i>
+                                        </button>
+
+                                        @* Üyelik Tanımla Butonları *@
+                                        <form asp-action="GrantMembership" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="UserId" value="@user.UserId" />
+                                            <input type="hidden" name="DurationMonths" value="1" />
+                                            <button type="submit" class="btn btn-nfa-grant-1 btn-sm px-2 py-1" title="1 Aylık Üyelik Tanımla">
+                                                <i class="bi bi-calendar-plus me-1"></i>1 Ay
+                                            </button>
+                                        </form>
+                                        <form asp-action="GrantMembership" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="UserId" value="@user.UserId" />
+                                            <input type="hidden" name="DurationMonths" value="3" />
+                                            <button type="submit" class="btn btn-nfa-grant-3 btn-sm px-2 py-1" title="3 Aylık Üyelik Tanımla">
+                                                <i class="bi bi-calendar-plus me-1"></i>3 Ay
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="9" class="text-center text-nfa-muted py-4">
+                                <i class="bi bi-people me-1"></i>Henüz kayıtlı kullanıcı bulunmuyor.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@* ═══════════ ROL DEĞİŞTİR MODAL ═══════════ *@
+<div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="roleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:var(--nfa-card);border:1px solid var(--nfa-border);border-radius:calc(var(--nfa-radius) * 2);">
+            <div class="modal-header" style="border-bottom:1px solid var(--nfa-border);padding:1.25rem 1.5rem;">
+                <h5 class="modal-title fw-bold" id="roleModalLabel">
+                    <i class="bi bi-person-gear me-2" style="color:var(--nfa-primary);"></i>Rol Değiştir
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <form asp-action="ChangeRole" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body" style="padding:1.5rem;">
+                    <input type="hidden" name="UserId" id="modalUserId" />
+
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center gap-2 mb-3 p-3 rounded" style="background:var(--nfa-muted);border:1px solid var(--nfa-border);">
+                            <i class="bi bi-person-circle" style="font-size:1.5rem;color:var(--nfa-primary);"></i>
+                            <div>
+                                <div class="fw-semibold" id="modalUserName" style="font-size:.9375rem;"></div>
+                                <div class="text-nfa-muted" style="font-size:.75rem;">Kullanıcının rolü değiştirilecek</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" style="font-size:.875rem;">
+                            <i class="bi bi-shield me-1"></i>Yeni Rol
+                        </label>
+                        <select name="NewRoleId" id="modalRoleSelect" class="form-control-nfa w-100" required>
+                            @foreach (var role in Model.AvailableRoles)
+                            {
+                                <option value="@role.RoleId">@role.RoleName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top:1px solid var(--nfa-border);padding:1rem 1.5rem;">
+                    <button type="button" class="btn btn-nfa-outline btn-sm px-3" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-nfa-primary btn-sm px-4">
+                        <i class="bi bi-check-lg me-1"></i>Rolü Güncelle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Rol modal – kullanıcı bilgilerini doldur
+        document.getElementById('roleModal').addEventListener('show.bs.modal', function (e) {
+            var btn = e.relatedTarget;
+            document.getElementById('modalUserId').value = btn.getAttribute('data-user-id');
+            document.getElementById('modalUserName').textContent = btn.getAttribute('data-user-name');
+            var currentRole = btn.getAttribute('data-current-role');
+            if (currentRole) {
+                document.getElementById('modalRoleSelect').value = currentRole;
+            }
+        });
+
+        // Tablo arama
+        document.getElementById('userSearchInput').addEventListener('input', function () {
+            var filter = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#usersTable tbody tr');
+            rows.forEach(function (row) {
+                var text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filter) ? '' : 'none';
+            });
+        });
+    </script>
+}
