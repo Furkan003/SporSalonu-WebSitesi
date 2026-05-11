@@ -10,55 +10,63 @@
     <link rel="stylesheet" href="~/css/custom-theme.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/NfaSporSalonu.styles.css" asp-append-version="true" />
+
+    @* ═══════ Early Dark Mode Init (prevents FOUC) ═══════ *@
+    <script>
+        (function(){
+            var s=localStorage.getItem('nfa-theme');
+            var d=s==='dark'||(!s&&window.matchMedia('(prefers-color-scheme:dark)').matches);
+            if(d){document.documentElement.setAttribute('data-bs-theme','dark');document.documentElement.classList.add('dark');}
+        })();
+    </script>
+
     @await RenderSectionAsync("Styles", required: false)
 </head>
-<body style="display:flex;flex-direction:column;min-height:100vh;">
+<body class="nfa-body-flex">
     @* ═══════ Navbar ═══════ *@
     <header>
-        <nav class="navbar navbar-expand-lg fixed-top"
-             style="background:oklch(0.2739 0.0055 286.0326 / .92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid oklch(1 0 0 / .06);"
-             id="mainNavbar">
+        <nav class="navbar navbar-expand-lg fixed-top nfa-navbar-glass" id="mainNavbar">
             <div class="container">
                 @* Brand *@
-                <a class="navbar-brand d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index"
-                   style="color:#fff;font-weight:800;font-size:1.15rem;letter-spacing:-.01em;">
-                    <span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--nfa-primary);color:var(--nfa-primary-fg);font-size:.85rem;font-weight:800;">NFA</span>
+                <a class="navbar-brand d-flex align-items-center gap-2 nfa-navbar-brand" asp-controller="Home" asp-action="Index">
+                    <span class="nfa-navbar-brand-circle">NFA</span>
                     Spor Merkezi
                 </a>
 
-                @* Toggler *@
-                <button class="navbar-toggler border-0" type="button"
+                @* Toggler (Hamburger) *@
+                <button class="navbar-toggler nfa-navbar-toggler border-0" type="button"
                         data-bs-toggle="collapse" data-bs-target="#navbarMain"
-                        aria-controls="navbarMain" aria-expanded="false" aria-label="Menüyü aç"
-                        style="color:rgba(255,255,255,.7);">
-                    <i class="bi bi-list" style="font-size:1.5rem;"></i>
+                        aria-controls="navbarMain" aria-expanded="false" aria-label="Menüyü aç/kapat">
+                    <span class="nfa-hamburger-icon">
+                        <span></span><span></span><span></span>
+                    </span>
                 </button>
 
                 @* Links *@
-                <div class="collapse navbar-collapse" id="navbarMain">
-                    <ul class="navbar-nav mx-auto gap-1">
+                <div class="collapse navbar-collapse nfa-navbar-collapse" id="navbarMain">
+                    <ul class="navbar-nav mx-auto gap-1 nfa-nav-links">
                         <li class="nav-item">
-                            <a class="nav-link px-3" href="/#hero" style="color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;transition:color .2s;">Ana Sayfa</a>
+                            <a class="nav-link nfa-nav-link px-3" href="/#hero">Ana Sayfa</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" href="/#about" style="color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;transition:color .2s;">Hakkımızda</a>
+                            <a class="nav-link nfa-nav-link px-3" href="/#about">Hakkımızda</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" href="/#services" style="color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;transition:color .2s;">Hizmetler</a>
+                            <a class="nav-link nfa-nav-link px-3" href="/#services">Hizmetler</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" href="/#products" style="color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;transition:color .2s;">Ürünler</a>
+                            <a class="nav-link nfa-nav-link px-3" href="/#products">Ürünler</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" asp-controller="Home" asp-action="Paketler" style="color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;transition:color .2s;">Paketler</a>
+                            <a class="nav-link nfa-nav-link px-3" asp-controller="Home" asp-action="Paketler">Paketler</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" href="/#contact" style="color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;transition:color .2s;">İletişim</a>
+                            <a class="nav-link nfa-nav-link px-3" href="/#contact">İletişim</a>
                         </li>
                     </ul>
 
                     @* Auth Buttons + Dark Mode Toggle *@
-                    <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                    <div class="nfa-navbar-actions">
                         @* Dark Mode Toggle *@
                         <div class="nfa-theme-toggle" id="themeToggle" data-active="false" title="Tema Değiştir" role="button" tabindex="0" aria-label="Karanlık mod">
                             <div class="nfa-theme-toggle-knob">
@@ -67,7 +75,7 @@
                         </div>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <span class="text-white me-2" style="font-size:.875rem;">
+                            <span class="nfa-navbar-user">
                                 <i class="bi bi-person-circle me-1"></i>@User.Identity.Name
                             </span>
                             @if (User.IsInRole("Admin"))
@@ -83,19 +91,17 @@
                                 </a>
                             }
                             <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-sm px-3" style="border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:var(--nfa-radius);font-weight:500;font-size:.8125rem;">
+                                <button type="submit" class="btn btn-sm px-3 nfa-navbar-btn-outline">
                                     <i class="bi bi-box-arrow-left me-1"></i>Çıkış
                                 </button>
                             </form>
                         }
                         else
                         {
-                            <a asp-controller="Account" asp-action="Login"
-                               class="btn btn-sm px-3" style="border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:var(--nfa-radius);font-weight:500;font-size:.8125rem;transition:background .2s;">
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-sm px-3 nfa-navbar-btn-outline">
                                 Giriş Yap
                             </a>
-                            <a asp-controller="Account" asp-action="Register"
-                               class="btn btn-nfa-primary btn-sm px-3" style="font-size:.8125rem;">
+                            <a asp-controller="Account" asp-action="Register" class="btn btn-nfa-primary btn-sm px-3" style="font-size:.8125rem;">
                                 Kayıt Ol
                             </a>
                         }
@@ -106,16 +112,16 @@
     </header>
 
     @* ═══════ Main ═══════ *@
-    <main role="main" style="flex-grow:1;">
+    <main role="main" class="nfa-main-grow">
         @RenderBody()
     </main>
 
-    @* ═══════ Footer ═══════ *@
-    <footer style="background:var(--nfa-secondary);color:rgba(255,255,255,.6);padding:1.5rem 0;font-size:.8125rem;">
+    @* ═══════ Footer — always at bottom ═══════ *@
+    <footer class="nfa-footer">
         <div class="container text-center">
             <span>&copy; @DateTime.Now.Year NFA Spor Merkezi. Tüm hakları saklıdır.</span>
             <span class="mx-2">|</span>
-            <a asp-controller="Home" asp-action="Privacy" style="color:rgba(255,255,255,.6);text-decoration:none;">Gizlilik Politikası</a>
+            <a asp-controller="Home" asp-action="Privacy" class="nfa-footer-link">Gizlilik Politikası</a>
         </div>
     </footer>
 
@@ -150,6 +156,20 @@
 
             toggle.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle.click(); }
+            });
+        })();
+
+        // ═══════ Mobile Menu — Close on link click ═══════
+        (function () {
+            const navCollapse = document.getElementById('navbarMain');
+            if (!navCollapse) return;
+            const bsCollapse = new bootstrap.Collapse(navCollapse, { toggle: false });
+            navCollapse.querySelectorAll('.nfa-nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 992 && navCollapse.classList.contains('show')) {
+                        bsCollapse.hide();
+                    }
+                });
             });
         })();
     </script>

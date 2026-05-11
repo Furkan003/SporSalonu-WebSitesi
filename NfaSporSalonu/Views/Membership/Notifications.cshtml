@@ -50,7 +50,7 @@
                                     <i class="bi bi-clock me-1"></i>@(n.CreatedDate?.ToString("dd MMM yyyy HH:mm") ?? "–")
                                     @if (!string.IsNullOrEmpty(n.NotificationType))
                                     {
-                                        <span class="ms-2 badge bg-nfa-muted rounded-pill" style="font-size:.6875rem;">@n.NotificationType</span>
+                                        <span class="ms-2 badge badge-nfa-type rounded-pill" style="font-size:.6875rem;">@n.NotificationType</span>
                                     }
                                 </div>
                             </div>

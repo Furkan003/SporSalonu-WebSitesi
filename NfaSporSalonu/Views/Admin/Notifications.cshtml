@@ -24,7 +24,7 @@
                         <div class="text-nfa-muted" style="font-size:.75rem;">
                             <i class="bi bi-person me-1"></i>@(n.UserFullName ?? "–") (@(n.UserEmail ?? "–"))
                             <span class="ms-2"><i class="bi bi-clock me-1"></i>@(n.CreatedDate?.ToString("dd.MM.yyyy HH:mm") ?? "–")</span>
-                            @if (!string.IsNullOrEmpty(n.NotificationType)){<span class="ms-2 badge bg-nfa-muted rounded-pill" style="font-size:.6875rem;">@n.NotificationType</span>}
+                            @if (!string.IsNullOrEmpty(n.NotificationType)){<span class="ms-2 badge badge-nfa-type rounded-pill" style="font-size:.6875rem;">@n.NotificationType</span>}
                         </div>
                     </div>
                     <form asp-action="DeleteNotification" asp-route-id="@n.NotificationId" method="post">

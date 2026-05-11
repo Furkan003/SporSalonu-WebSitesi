@@ -109,8 +109,23 @@ body {
 
 /* ─── Primary Button ─── */
 .btn-nfa-primary {
+    /* Bootstrap 5.3 CSS variable overrides — prevents invisible text on :active/:focus */
+    --bs-btn-color: var(--nfa-primary-fg);
+    --bs-btn-bg: var(--nfa-primary);
+    --bs-btn-border-color: var(--nfa-primary);
+    --bs-btn-hover-color: var(--nfa-primary-fg);
+    --bs-btn-hover-bg: var(--nfa-primary);
+    --bs-btn-hover-border-color: var(--nfa-primary);
+    --bs-btn-active-color: var(--nfa-primary-fg);
+    --bs-btn-active-bg: var(--nfa-primary);
+    --bs-btn-active-border-color: var(--nfa-primary);
+    --bs-btn-focus-shadow-rgb: 200, 170, 50;
+    --bs-btn-disabled-color: var(--nfa-primary-fg);
+    --bs-btn-disabled-bg: var(--nfa-primary);
+    --bs-btn-disabled-border-color: var(--nfa-primary);
+
     background-color: var(--nfa-primary);
-    color: var(--nfa-primary-fg);
+    color: var(--nfa-primary-fg) !important;
     border: none;
     border-radius: var(--nfa-radius);
     font-weight: 600;
@@ -123,17 +138,42 @@ body {
     filter: brightness(1.06);
     box-shadow: 0 4px 14px rgba(0, 0, 0, .12);
     transform: translateY(-1px);
-    color: var(--nfa-primary-fg);
+    color: var(--nfa-primary-fg) !important;
+    background-color: var(--nfa-primary);
 }
 
-.btn-nfa-primary:active {
+.btn-nfa-primary:active,
+.btn-nfa-primary.active,
+.btn-nfa-primary:first-child:active {
     transform: translateY(0);
+    filter: brightness(.95);
+    color: var(--nfa-primary-fg) !important;
+    background-color: var(--nfa-primary) !important;
 }
 
-/* ─── Secondary / Outline ─── */
+.btn-nfa-primary:focus,
+.btn-nfa-primary:focus-visible {
+    color: var(--nfa-primary-fg) !important;
+    background-color: var(--nfa-primary);
+    box-shadow: 0 0 0 3px oklch(0.8606 0.1731 91.9357 / .35);
+    outline: none;
+}
+
+/* ─── Secondary Button ─── */
 .btn-nfa-secondary {
+    --bs-btn-color: var(--nfa-secondary-fg);
+    --bs-btn-bg: var(--nfa-secondary);
+    --bs-btn-border-color: var(--nfa-secondary);
+    --bs-btn-hover-color: var(--nfa-secondary-fg);
+    --bs-btn-hover-bg: var(--nfa-secondary);
+    --bs-btn-hover-border-color: var(--nfa-secondary);
+    --bs-btn-active-color: var(--nfa-secondary-fg);
+    --bs-btn-active-bg: var(--nfa-secondary);
+    --bs-btn-active-border-color: var(--nfa-secondary);
+    --bs-btn-focus-shadow-rgb: 60, 60, 75;
+
     background-color: var(--nfa-secondary);
-    color: var(--nfa-secondary-fg);
+    color: var(--nfa-secondary-fg) !important;
     border: none;
     border-radius: var(--nfa-radius);
     font-weight: 600;
@@ -143,22 +183,66 @@ body {
 
 .btn-nfa-secondary:hover {
     filter: brightness(1.2);
-    color: var(--nfa-secondary-fg);
+    color: var(--nfa-secondary-fg) !important;
 }
 
+.btn-nfa-secondary:active,
+.btn-nfa-secondary.active,
+.btn-nfa-secondary:first-child:active {
+    filter: brightness(.9);
+    color: var(--nfa-secondary-fg) !important;
+    background-color: var(--nfa-secondary) !important;
+}
+
+.btn-nfa-secondary:focus,
+.btn-nfa-secondary:focus-visible {
+    color: var(--nfa-secondary-fg) !important;
+    background-color: var(--nfa-secondary);
+    box-shadow: 0 0 0 3px oklch(0.2739 0.0055 286.0326 / .35);
+    outline: none;
+}
+
+/* ─── Outline Button ─── */
 .btn-nfa-outline {
+    --bs-btn-color: var(--nfa-fg);
+    --bs-btn-bg: transparent;
+    --bs-btn-border-color: var(--nfa-border);
+    --bs-btn-hover-color: var(--nfa-fg);
+    --bs-btn-hover-bg: var(--nfa-accent);
+    --bs-btn-hover-border-color: var(--nfa-ring);
+    --bs-btn-active-color: var(--nfa-fg);
+    --bs-btn-active-bg: var(--nfa-accent);
+    --bs-btn-active-border-color: var(--nfa-ring);
+    --bs-btn-focus-shadow-rgb: 100, 90, 60;
+
     background-color: transparent;
-    color: var(--nfa-fg);
+    color: var(--nfa-fg) !important;
     border: 1px solid var(--nfa-border);
     border-radius: var(--nfa-radius);
     font-weight: 500;
     padding: .625rem 1.5rem;
-    transition: background-color .2s, border-color .2s;
+    transition: background-color .2s, border-color .2s, color .2s;
 }
 
 .btn-nfa-outline:hover {
     background-color: var(--nfa-accent);
     border-color: var(--nfa-ring);
+    color: var(--nfa-fg) !important;
+}
+
+.btn-nfa-outline:active,
+.btn-nfa-outline.active,
+.btn-nfa-outline:first-child:active {
+    background-color: var(--nfa-accent) !important;
+    border-color: var(--nfa-ring) !important;
+    color: var(--nfa-fg) !important;
+}
+
+.btn-nfa-outline:focus,
+.btn-nfa-outline:focus-visible {
+    color: var(--nfa-fg) !important;
+    box-shadow: 0 0 0 3px oklch(0.4341 0.0392 41.9938 / .25);
+    outline: none;
 }
 
 /* ─── Form Controls ─── */
@@ -510,6 +594,7 @@ body {
         opacity: 0;
         transform: translateY(16px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -520,11 +605,25 @@ body {
     animation: fadeInUp .45s ease forwards;
 }
 
-.nfa-animate-in:nth-child(2) { animation-delay: .08s; }
-.nfa-animate-in:nth-child(3) { animation-delay: .16s; }
-.nfa-animate-in:nth-child(4) { animation-delay: .24s; }
-.nfa-animate-in:nth-child(5) { animation-delay: .32s; }
-.nfa-animate-in:nth-child(6) { animation-delay: .40s; }
+.nfa-animate-in:nth-child(2) {
+    animation-delay: .08s;
+}
+
+.nfa-animate-in:nth-child(3) {
+    animation-delay: .16s;
+}
+
+.nfa-animate-in:nth-child(4) {
+    animation-delay: .24s;
+}
+
+.nfa-animate-in:nth-child(5) {
+    animation-delay: .32s;
+}
+
+.nfa-animate-in:nth-child(6) {
+    animation-delay: .40s;
+}
 
 /* ─── Alert Enhancements ─── */
 .alert-nfa {
@@ -551,6 +650,21 @@ body {
 
 .bg-nfa-muted {
     background-color: var(--nfa-muted) !important;
+}
+
+/* Notification type badge — high contrast in both themes */
+.badge-nfa-type {
+    background-color: oklch(0.8606 0.1731 91.9357 / .12);
+    color: oklch(0.5 0.12 90);
+    font-weight: 600;
+    border: 1px solid oklch(0.8606 0.1731 91.9357 / .15);
+}
+
+.dark .badge-nfa-type,
+[data-bs-theme="dark"] .badge-nfa-type {
+    background-color: oklch(0.8606 0.1731 91.9357 / .1);
+    color: oklch(0.78 0.12 90);
+    border-color: oklch(0.8606 0.1731 91.9357 / .2);
 }
 
 .border-nfa {
@@ -618,8 +732,14 @@ a.nfa-link:hover {
 
 /* ─── Membership Grant Buttons ─── */
 .btn-nfa-grant-1 {
+    --bs-btn-color: #fff;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: oklch(0.72 0.19 155);
+    --bs-btn-active-border-color: oklch(0.72 0.19 155);
+
     background: linear-gradient(135deg, oklch(0.72 0.19 155) 0%, oklch(0.8 0.15 150) 100%);
-    color: #fff;
+    color: #fff !important;
     border: none;
     border-radius: var(--nfa-radius);
     font-weight: 600;
@@ -631,12 +751,25 @@ a.nfa-link:hover {
     filter: brightness(1.08);
     box-shadow: 0 3px 12px oklch(0.72 0.19 155 / .3);
     transform: translateY(-1px);
-    color: #fff;
+    color: #fff !important;
+}
+
+.btn-nfa-grant-1:active,
+.btn-nfa-grant-1:first-child:active,
+.btn-nfa-grant-1:focus {
+    color: #fff !important;
+    filter: brightness(.95);
 }
 
 .btn-nfa-grant-3 {
+    --bs-btn-color: #fff;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: oklch(0.62 0.18 250);
+    --bs-btn-active-border-color: oklch(0.62 0.18 250);
+
     background: linear-gradient(135deg, oklch(0.62 0.18 250) 0%, oklch(0.72 0.14 245) 100%);
-    color: #fff;
+    color: #fff !important;
     border: none;
     border-radius: var(--nfa-radius);
     font-weight: 600;
@@ -648,7 +781,14 @@ a.nfa-link:hover {
     filter: brightness(1.08);
     box-shadow: 0 3px 12px oklch(0.62 0.18 250 / .3);
     transform: translateY(-1px);
-    color: #fff;
+    color: #fff !important;
+}
+
+.btn-nfa-grant-3:active,
+.btn-nfa-grant-3:first-child:active,
+.btn-nfa-grant-3:focus {
+    color: #fff !important;
+    filter: brightness(.95);
 }
 
 /* ─── Modal Enhancements ─── */
@@ -688,12 +828,12 @@ a.nfa-link:hover {
     height: 20px;
     border-radius: 50%;
     background: #fff;
-    box-shadow: 0 1px 4px rgba(0,0,0,.2);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: .65rem;
-    transition: transform .35s cubic-bezier(.68,-.55,.27,1.55);
+    transition: transform .35s cubic-bezier(.68, -.55, .27, 1.55);
 }
 
 .nfa-theme-toggle[data-active="true"] .nfa-theme-toggle-knob {
@@ -718,10 +858,8 @@ a.nfa-link:hover {
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    background: conic-gradient(
-        oklch(0.62 0.18 250) var(--water-pct, 0%),
-        oklch(0.9 0 0 / .15) var(--water-pct, 0%)
-    );
+    background: conic-gradient(oklch(0.62 0.18 250) var(--water-pct, 0%),
+            oklch(0.9 0 0 / .15) var(--water-pct, 0%));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -737,7 +875,7 @@ a.nfa-link:hover {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: inset 0 2px 8px rgba(0,0,0,.05);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, .05);
 }
 
 .nfa-water-count {
@@ -810,9 +948,19 @@ a.nfa-link:hover {
 }
 
 @keyframes dropFill {
-    0%   { transform: scale(0) translateY(6px); opacity: 0; }
-    60%  { transform: scale(1.3); }
-    100% { transform: scale(1) translateY(0); opacity: 1; }
+    0% {
+        transform: scale(0) translateY(6px);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.3);
+    }
+
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
 }
 
 .nfa-water-reset {
@@ -866,7 +1014,7 @@ a.nfa-link:hover {
 
 .nfa-cal-day:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .08);
 }
 
 .nfa-cal-day.today {
@@ -923,12 +1071,35 @@ a.nfa-link:hover {
 }
 
 /* Calendar icon colors */
-.cal-icon-fitness { background: linear-gradient(135deg, oklch(0.8606 0.1731 91.9357 / .15), oklch(0.92 0.065 74 / .1)); color: oklch(0.7 0.15 90); }
-.cal-icon-cardio  { background: linear-gradient(135deg, oklch(0.6271 0.1936 33 / .15), oklch(0.72 0.15 30 / .1)); color: oklch(0.55 0.17 33); }
-.cal-icon-cross   { background: linear-gradient(135deg, oklch(0.72 0.19 155 / .15), oklch(0.8 0.15 150 / .1)); color: oklch(0.55 0.17 155); }
-.cal-icon-box     { background: linear-gradient(135deg, oklch(0.62 0.18 250 / .15), oklch(0.72 0.14 245 / .1)); color: oklch(0.5 0.16 250); }
-.cal-icon-rest    { background: oklch(0.92 0 0); color: var(--nfa-muted-fg); }
-.cal-icon-yoga    { background: linear-gradient(135deg, oklch(0.72 0.15 320 / .15), oklch(0.8 0.12 310 / .1)); color: oklch(0.55 0.14 320); }
+.cal-icon-fitness {
+    background: linear-gradient(135deg, oklch(0.8606 0.1731 91.9357 / .15), oklch(0.92 0.065 74 / .1));
+    color: oklch(0.7 0.15 90);
+}
+
+.cal-icon-cardio {
+    background: linear-gradient(135deg, oklch(0.6271 0.1936 33 / .15), oklch(0.72 0.15 30 / .1));
+    color: oklch(0.55 0.17 33);
+}
+
+.cal-icon-cross {
+    background: linear-gradient(135deg, oklch(0.72 0.19 155 / .15), oklch(0.8 0.15 150 / .1));
+    color: oklch(0.55 0.17 155);
+}
+
+.cal-icon-box {
+    background: linear-gradient(135deg, oklch(0.62 0.18 250 / .15), oklch(0.72 0.14 245 / .1));
+    color: oklch(0.5 0.16 250);
+}
+
+.cal-icon-rest {
+    background: oklch(0.92 0 0);
+    color: var(--nfa-muted-fg);
+}
+
+.cal-icon-yoga {
+    background: linear-gradient(135deg, oklch(0.72 0.15 320 / .15), oklch(0.8 0.12 310 / .1));
+    color: oklch(0.55 0.14 320);
+}
 
 /* ═══════════════════════════════════════════
    Testimonials Slider
@@ -973,7 +1144,7 @@ a.nfa-link:hover {
 
 .nfa-testimonial-inner:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 36px rgba(0,0,0,.08);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, .08);
 }
 
 .nfa-testimonial-quote {
@@ -1087,30 +1258,482 @@ a.nfa-link:hover {
     border-radius: 999px;
 }
 
-/* ═══════════════════════════════════════════
-   Dark mode — Additional Component Overrides
-   ═══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   LAYOUT: Body Flex + Sticky Footer
+   ═══════════════════════════════════════════════════ */
+.nfa-body-flex {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.nfa-main-grow {
+    flex: 1 0 auto;
+}
+
+.nfa-footer {
+    flex-shrink: 0;
+    margin-top: auto;
+    background: var(--nfa-secondary);
+    color: rgba(255, 255, 255, .6);
+    padding: 1.5rem 0;
+    font-size: .8125rem;
+}
+
+.nfa-footer-link {
+    color: rgba(255, 255, 255, .6);
+    text-decoration: none;
+    transition: color .2s;
+}
+
+.nfa-footer-link:hover {
+    color: var(--nfa-primary);
+}
+
+/* ═══════════════════════════════════════════════════
+   NAVBAR: Glass morphism + Responsive
+   ═══════════════════════════════════════════════════ */
+.nfa-navbar-glass {
+    background: oklch(0.2739 0.0055 286.0326 / .92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid oklch(1 0 0 / .06);
+}
+
+.nfa-navbar-brand {
+    color: #fff !important;
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: -.01em;
+    text-decoration: none;
+}
+
+.nfa-navbar-brand:hover {
+    color: var(--nfa-primary) !important;
+}
+
+.nfa-navbar-brand-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--nfa-primary);
+    color: var(--nfa-primary-fg);
+    font-size: .85rem;
+    font-weight: 800;
+}
+
+.nfa-nav-link {
+    color: rgba(255, 255, 255, .8) !important;
+    font-weight: 500;
+    font-size: .9rem;
+    transition: color .2s, background-color .2s;
+    border-radius: var(--nfa-radius);
+}
+
+.nfa-nav-link:hover,
+.nfa-nav-link:focus {
+    color: var(--nfa-primary) !important;
+    background-color: oklch(1 0 0 / .06);
+}
+
+
+
+.nfa-navbar-btn-outline {
+    --bs-btn-color: #fff;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: oklch(1 0 0 / .12);
+    --bs-btn-active-border-color: rgba(255, 255, 255, .5);
+
+    border: 1px solid rgba(255, 255, 255, .25);
+    color: #fff !important;
+    border-radius: var(--nfa-radius);
+    font-weight: 500;
+    font-size: .8125rem;
+    transition: background .2s, border-color .2s, color .2s;
+}
+
+.nfa-navbar-btn-outline:hover {
+    background: oklch(1 0 0 / .1);
+    border-color: rgba(255, 255, 255, .45);
+    color: #fff !important;
+}
+
+.nfa-navbar-btn-outline:active,
+.nfa-navbar-btn-outline:first-child:active,
+.nfa-navbar-btn-outline:focus {
+    background: oklch(1 0 0 / .15) !important;
+    border-color: rgba(255, 255, 255, .5) !important;
+    color: #fff !important;
+    box-shadow: none;
+}
+
+.nfa-navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.nfa-navbar-user {
+    color: rgba(255, 255, 255, .85);
+    font-size: .8125rem;
+    font-weight: 500;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1.4;
+}
+
+/* ─── Hero Ghost Button (glass CTA) ─── */
+.nfa-hero-btn-ghost {
+    --bs-btn-color: #fff;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: rgba(255, 255, 255, .08);
+    --bs-btn-active-border-color: rgba(255, 255, 255, .5);
+
+    border: 1px solid rgba(255, 255, 255, .25);
+    color: #fff !important;
+    border-radius: var(--nfa-radius);
+    font-weight: 600;
+    font-size: .9375rem;
+    transition: background .2s, border-color .2s;
+    backdrop-filter: blur(6px);
+    background: rgba(255, 255, 255, .04);
+}
+
+.nfa-hero-btn-ghost:hover {
+    background: rgba(255, 255, 255, .1);
+    border-color: rgba(255, 255, 255, .45);
+    color: #fff !important;
+}
+
+.nfa-hero-btn-ghost:active,
+.nfa-hero-btn-ghost:first-child:active,
+.nfa-hero-btn-ghost:focus {
+    background: rgba(255, 255, 255, .12) !important;
+    border-color: rgba(255, 255, 255, .5) !important;
+    color: #fff !important;
+    box-shadow: none;
+}
+
+/* ─── Animated Hamburger Icon ─── */
+.nfa-navbar-toggler {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.nfa-hamburger-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 24px;
+}
+
+.nfa-hamburger-icon span {
+    display: block;
+    height: 2px;
+    background: rgba(255, 255, 255, .85);
+    border-radius: 2px;
+    transition: transform .3s ease, opacity .2s ease;
+    transform-origin: center;
+}
+
+/* Open state — X animation */
+.nfa-navbar-toggler[aria-expanded="true"] .nfa-hamburger-icon span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.nfa-navbar-toggler[aria-expanded="true"] .nfa-hamburger-icon span:nth-child(2) {
+    opacity: 0;
+}
+
+.nfa-navbar-toggler[aria-expanded="true"] .nfa-hamburger-icon span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ─── Mobile Collapse ─── */
+@media (max-width: 991.98px) {
+    .nfa-navbar-collapse {
+        background: oklch(0.2 0.005 286 / .98);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 0 0 calc(var(--nfa-radius) * 2) calc(var(--nfa-radius) * 2);
+        margin: .5rem -.75rem 0;
+        padding: 1rem 1.25rem 1.25rem;
+        border-top: 1px solid oklch(1 0 0 / .06);
+        box-shadow: 0 16px 48px rgba(0, 0, 0, .25);
+    }
+
+    .nfa-nav-links {
+        gap: .25rem !important;
+        margin-bottom: 1rem;
+    }
+
+    .nfa-nav-link {
+        padding: .625rem 1rem !important;
+        border-radius: var(--nfa-radius);
+    }
+
+    .nfa-nav-link:hover {
+        background-color: oklch(1 0 0 / .08) !important;
+    }
+
+    .nfa-navbar-actions {
+        flex-wrap: wrap;
+        gap: .5rem;
+        padding-top: .75rem;
+        border-top: 1px solid oklch(1 0 0 / .08);
+    }
+
+    .nfa-navbar-user {
+        width: 100%;
+        max-width: none;
+        padding-bottom: .5rem;
+        font-size: .875rem;
+    }
+}
+
+/* ═══════════════════════════════════════════════════
+   Dark mode — Component Overrides (Comprehensive)
+   ═══════════════════════════════════════════════════ */
+
+/* Smooth theme transition for body */
+body {
+    transition: background-color .35s ease, color .35s ease;
+}
+
+/* Smooth theme transition for cards & components */
+.card,
+.nfa-service-card,
+.nfa-product-card,
+.nfa-testimonial-inner,
+.nfa-pricing-card,
+.nfa-cal-day,
+.nfa-auth-card,
+.nfa-auth-body,
+.nfa-auth-wrapper,
+.nfa-qr-wrapper,
+.nfa-water-btn,
+.nfa-notification-item {
+    transition: background-color .35s ease, color .35s ease, box-shadow .25s ease, transform .25s ease, border-color .35s ease;
+}
+
+/* ─── Water Tracker ─── */
 .dark .nfa-water-count,
 [data-bs-theme="dark"] .nfa-water-count {
     color: oklch(0.72 0.16 250);
 }
 
+/* ─── Calendar Rest Day ─── */
 .dark .nfa-cal-day.rest,
 [data-bs-theme="dark"] .nfa-cal-day.rest {
     background: oklch(0.22 0 0);
 }
 
+/* ─── Calendar Rest Icon (was hardcoded light) ─── */
+.dark .cal-icon-rest,
+[data-bs-theme="dark"] .cal-icon-rest {
+    background: oklch(0.28 0 0);
+    color: var(--nfa-muted-fg);
+}
+
+/* ─── Contact Band ─── */
 .dark .nfa-contact-band,
 [data-bs-theme="dark"] .nfa-contact-band {
     background: linear-gradient(160deg, oklch(0.16 0.01 286), oklch(0.12 0.02 286));
 }
 
-/* Dark mode transition for body */
-body {
-    transition: background-color .35s ease, color .35s ease;
+/* ─── Product Image Wrap (prevent light bg leaking in dark) ─── */
+.dark .nfa-product-img-wrap,
+[data-bs-theme="dark"] .nfa-product-img-wrap {
+    background: linear-gradient(135deg, oklch(0.25 0 0), oklch(0.22 0.005 90));
 }
 
-.card, .nfa-service-card, .nfa-product-card, .nfa-testimonial-inner {
-    transition: background-color .35s ease, color .35s ease, box-shadow .25s ease, transform .25s ease, border-color .35s ease;
+/* ─── Product Cards — shadow adaptation ─── */
+.dark .nfa-product-card:hover,
+[data-bs-theme="dark"] .nfa-product-card:hover {
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, .35),
+        0 0 0 1px oklch(0.8606 0.1731 91.9357 / .25),
+        0 4px 30px oklch(0.8606 0.1731 91.9357 / .15);
 }
 
+/* ─── Service Card hover shadow ─── */
+.dark .nfa-service-card:hover,
+[data-bs-theme="dark"] .nfa-service-card:hover {
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .3);
+}
+
+/* ─── Generic Card hover shadow ─── */
+.dark .card:hover,
+[data-bs-theme="dark"] .card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+}
+
+/* ─── Pricing Card popular glow in dark ─── */
+.dark .nfa-pricing-card.popular,
+[data-bs-theme="dark"] .nfa-pricing-card.popular {
+    box-shadow: 0 4px 24px oklch(0.8606 0.1731 91.9357 / .12);
+}
+
+.dark .nfa-pricing-card.popular:hover,
+[data-bs-theme="dark"] .nfa-pricing-card.popular:hover {
+    box-shadow: 0 20px 50px oklch(0.8606 0.1731 91.9357 / .18);
+}
+
+/* ─── Stat Cards shadow in dark ─── */
+.dark .nfa-stat-card:hover,
+[data-bs-theme="dark"] .nfa-stat-card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .3);
+}
+
+/* ─── Table hover in dark ─── */
+.dark .table-nfa tbody tr:hover,
+[data-bs-theme="dark"] .table-nfa tbody tr:hover {
+    background-color: oklch(0.25 0 0);
+}
+
+/* ─── Auth wrapper gradient in dark ─── */
+.dark .nfa-auth-wrapper,
+[data-bs-theme="dark"] .nfa-auth-wrapper {
+    background: linear-gradient(135deg, oklch(0.14 0 0) 0%, oklch(0.18 0.005 286) 50%, oklch(0.22 0.01 270) 100%);
+}
+
+/* ─── Modal content dark bg ─── */
+.dark .modal-content,
+[data-bs-theme="dark"] .modal-content {
+    background-color: var(--nfa-card);
+    border-color: var(--nfa-border);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, .4);
+}
+
+/* ─── Notification item unread dark ─── */
+.dark .nfa-notification-item.unread,
+[data-bs-theme="dark"] .nfa-notification-item.unread {
+    background-color: oklch(0.8606 0.1731 91.9357 / .04);
+}
+
+/* ─── Scrollbar in dark ─── */
+.dark ::-webkit-scrollbar-track,
+[data-bs-theme="dark"] ::-webkit-scrollbar-track {
+    background: oklch(0.18 0 0);
+}
+
+.dark ::-webkit-scrollbar-thumb,
+[data-bs-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: oklch(0.3 0 0);
+}
+
+/* ─── Badge overrides for dark ─── */
+.dark .badge-nfa-active,
+[data-bs-theme="dark"] .badge-nfa-active {
+    background-color: oklch(0.72 0.19 155 / .12);
+    color: oklch(0.65 0.17 155);
+}
+
+.dark .badge-nfa-expired,
+[data-bs-theme="dark"] .badge-nfa-expired {
+    background-color: oklch(0.6271 0.1936 33.339 / .12);
+    color: oklch(0.6 0.17 33);
+}
+
+.dark .badge-nfa-pending,
+[data-bs-theme="dark"] .badge-nfa-pending {
+    background-color: oklch(0.78 0.15 55 / .12);
+    color: oklch(0.65 0.14 55);
+}
+
+/* ─── Dark mode Bootstrap overrides ─── */
+.dark .form-control,
+[data-bs-theme="dark"] .form-control {
+    background-color: var(--nfa-card);
+    border-color: var(--nfa-input);
+    color: var(--nfa-fg);
+}
+
+.dark .input-group-text,
+[data-bs-theme="dark"] .input-group-text {
+    background-color: var(--nfa-card);
+    border-color: var(--nfa-input);
+    color: var(--nfa-muted-fg);
+}
+
+/* ─── Alert dark mode contrast ─── */
+.dark .alert-nfa-success,
+[data-bs-theme="dark"] .alert-nfa-success {
+    background-color: oklch(0.72 0.19 155 / .08);
+    color: oklch(0.65 0.17 155);
+}
+
+.dark .alert-nfa-error,
+[data-bs-theme="dark"] .alert-nfa-error {
+    background-color: oklch(0.6271 0.1936 33.339 / .08);
+    color: oklch(0.6 0.17 33);
+}
+
+/* ─── QR wrapper dark ─── */
+.dark .nfa-qr-wrapper,
+[data-bs-theme="dark"] .nfa-qr-wrapper {
+    background: oklch(0.22 0 0);
+    border-color: oklch(0.3 0 0);
+}
+
+/* ─── Water tracker buttons dark ─── */
+.dark .nfa-water-btn,
+[data-bs-theme="dark"] .nfa-water-btn {
+    background: var(--nfa-card);
+    border-color: oklch(0.35 0 0);
+    color: var(--nfa-fg);
+}
+
+.dark .nfa-water-btn:hover,
+[data-bs-theme="dark"] .nfa-water-btn:hover {
+    background: oklch(0.62 0.18 250 / .15);
+    border-color: oklch(0.62 0.18 250 / .4);
+}
+
+/* ─── Section badge dark ─── */
+.dark .nfa-section-badge,
+[data-bs-theme="dark"] .nfa-section-badge {
+    background: oklch(0.8606 0.1731 91.9357 / .08);
+}
+
+/* ─── Testimonial card hover dark ─── */
+.dark .nfa-testimonial-inner:hover,
+[data-bs-theme="dark"] .nfa-testimonial-inner:hover {
+    box-shadow: 0 12px 36px rgba(0, 0, 0, .25);
+}
+
+/* ─── Calendar day hover dark ─── */
+.dark .nfa-cal-day:hover,
+[data-bs-theme="dark"] .nfa-cal-day:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+}
+
+/* ─── Avatar border in dark (prevent white ring) ─── */
+.dark .nfa-avatar,
+[data-bs-theme="dark"] .nfa-avatar {
+    border-color: var(--nfa-card);
+}
+
+.dark .nfa-avatar-placeholder,
+[data-bs-theme="dark"] .nfa-avatar-placeholder {
+    border-color: var(--nfa-card);
+}
