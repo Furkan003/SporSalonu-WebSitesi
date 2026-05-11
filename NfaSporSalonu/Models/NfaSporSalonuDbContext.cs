@@ -220,6 +220,104 @@ public partial class NfaSporSalonuDbContext : DbContext
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .HasForeignKey(d => d.RoleId)
                 .HasConstraintName("FK__Users__RoleId__4E88ABD4");
+
+            // ── Seed Data: Test Kullanıcıları ──
+            // Şifre: "Test.1234" (BCrypt placeholder hash)
+            var seedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
+            const string passwordHash = "$2a$11$GHZ8eC/IX8DaoGE1PCgFK.V6GRxR7r/yihiiMIW7BFeZMcZg65.Cm";
+
+            entity.HasData(
+                // ─── Admin ───
+                new User
+                {
+                    UserId      = 100,
+                    RoleId      = 1, // Admin
+                    FirstName   = "Ahmet",
+                    LastName    = "Yılmaz",
+                    Email       = "admin@nfaspor.com",
+                    PasswordHash = passwordHash,
+                    PhoneNumber = "05301000001",
+                    Gender      = "Erkek",
+                    DateOfBirth = new DateTime(1985, 3, 15),
+                    IsActive    = true,
+                    CreatedAt   = seedDate
+                },
+                // ─── Trainer 1 ───
+                new User
+                {
+                    UserId      = 101,
+                    RoleId      = 2, // Trainer
+                    FirstName   = "Elif",
+                    LastName    = "Kara",
+                    Email       = "elif.kara@nfaspor.com",
+                    PasswordHash = passwordHash,
+                    PhoneNumber = "05302000001",
+                    Gender      = "Kadın",
+                    DateOfBirth = new DateTime(1990, 7, 22),
+                    IsActive    = true,
+                    CreatedAt   = seedDate
+                },
+                // ─── Trainer 2 ───
+                new User
+                {
+                    UserId      = 102,
+                    RoleId      = 2, // Trainer
+                    FirstName   = "Mehmet",
+                    LastName    = "Demir",
+                    Email       = "mehmet.demir@nfaspor.com",
+                    PasswordHash = passwordHash,
+                    PhoneNumber = "05302000002",
+                    Gender      = "Erkek",
+                    DateOfBirth = new DateTime(1988, 11, 5),
+                    IsActive    = true,
+                    CreatedAt   = seedDate
+                },
+                // ─── Member 1 ───
+                new User
+                {
+                    UserId      = 103,
+                    RoleId      = 3, // Member
+                    FirstName   = "Zeynep",
+                    LastName    = "Aydın",
+                    Email       = "zeynep.aydin@nfaspor.com",
+                    PasswordHash = passwordHash,
+                    PhoneNumber = "05303000001",
+                    Gender      = "Kadın",
+                    DateOfBirth = new DateTime(1995, 1, 10),
+                    IsActive    = true,
+                    CreatedAt   = seedDate
+                },
+                // ─── Member 2 ───
+                new User
+                {
+                    UserId      = 104,
+                    RoleId      = 3, // Member
+                    FirstName   = "Can",
+                    LastName    = "Özdemir",
+                    Email       = "can.ozdemir@nfaspor.com",
+                    PasswordHash = passwordHash,
+                    PhoneNumber = "05303000002",
+                    Gender      = "Erkek",
+                    DateOfBirth = new DateTime(2000, 4, 28),
+                    IsActive    = true,
+                    CreatedAt   = seedDate
+                },
+                // ─── Member 3 ───
+                new User
+                {
+                    UserId      = 105,
+                    RoleId      = 3, // Member
+                    FirstName   = "Selin",
+                    LastName    = "Çelik",
+                    Email       = "selin.celik@nfaspor.com",
+                    PasswordHash = passwordHash,
+                    PhoneNumber = "05303000003",
+                    Gender      = "Kadın",
+                    DateOfBirth = new DateTime(1998, 9, 3),
+                    IsActive    = true,
+                    CreatedAt   = seedDate
+                }
+            );
         });
 
         modelBuilder.Entity<UserMembership>(entity =>
@@ -240,6 +338,67 @@ public partial class NfaSporSalonuDbContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.UserMemberships)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK__UserMembe__UserI__5629CD9C");
+
+            // ── Seed Data: Aktif Üyelik Paketleri ──
+            var membershipStart = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
+
+            entity.HasData(
+                // Trainer 1 – Elif Kara → Sivil 12 Ay (PlanId=8)
+                new UserMembership
+                {
+                    UserMembershipId = 100,
+                    UserId       = 101,
+                    PlanId       = 8,  // Sivil 12 Ay
+                    StartDate    = membershipStart,
+                    EndDate      = membershipStart.AddDays(365),
+                    PurchaseDate = membershipStart,
+                    Status       = "Active"
+                },
+                // Trainer 2 – Mehmet Demir → Sivil 12 Ay (PlanId=8)
+                new UserMembership
+                {
+                    UserMembershipId = 101,
+                    UserId       = 102,
+                    PlanId       = 8,  // Sivil 12 Ay
+                    StartDate    = membershipStart,
+                    EndDate      = membershipStart.AddDays(365),
+                    PurchaseDate = membershipStart,
+                    Status       = "Active"
+                },
+                // Member 1 – Zeynep Aydın → Öğrenci 6 Ay (PlanId=3)
+                new UserMembership
+                {
+                    UserMembershipId = 102,
+                    UserId       = 103,
+                    PlanId       = 3,  // Öğrenci 6 Ay
+                    StartDate    = membershipStart,
+                    EndDate      = membershipStart.AddDays(180),
+                    PurchaseDate = membershipStart,
+                    Status       = "Active"
+                },
+                // Member 2 – Can Özdemir → Sivil 3 Ay (PlanId=6)
+                new UserMembership
+                {
+                    UserMembershipId = 103,
+                    UserId       = 104,
+                    PlanId       = 6,  // Sivil 3 Ay
+                    StartDate    = membershipStart,
+                    EndDate      = membershipStart.AddDays(90),
+                    PurchaseDate = membershipStart,
+                    Status       = "Active"
+                },
+                // Member 3 – Selin Çelik → Pilates 24 Seans (PlanId=10)
+                new UserMembership
+                {
+                    UserMembershipId = 104,
+                    UserId       = 105,
+                    PlanId       = 10, // Pilates 24 Seans
+                    StartDate    = membershipStart,
+                    EndDate      = membershipStart.AddDays(180),
+                    PurchaseDate = membershipStart,
+                    Status       = "Active"
+                }
+            );
         });
 
         modelBuilder.Entity<WorkoutAndDietProgram>(entity =>

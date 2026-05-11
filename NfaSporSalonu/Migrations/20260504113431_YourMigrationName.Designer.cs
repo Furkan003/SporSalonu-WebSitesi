@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NfaSporSalonu.Models;
 
@@ -11,9 +12,11 @@ using NfaSporSalonu.Models;
 namespace NfaSporSalonu.Migrations
 {
     [DbContext(typeof(NfaSporSalonuDbContext))]
-    partial class NfaSporSalonuDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260504113431_YourMigrationName")]
+    partial class YourMigrationName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -591,92 +594,6 @@ namespace NfaSporSalonu.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 100,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateOfBirth = new DateTime(1985, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "admin@nfaspor.com",
-                            FirstName = "Ahmet",
-                            Gender = "Erkek",
-                            IsActive = true,
-                            LastName = "Yılmaz",
-                            PasswordHash = "$2a$11$GHZ8eC/IX8DaoGE1PCgFK.V6GRxR7r/yihiiMIW7BFeZMcZg65.Cm",
-                            PhoneNumber = "05301000001",
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            UserId = 101,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateOfBirth = new DateTime(1990, 7, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "elif.kara@nfaspor.com",
-                            FirstName = "Elif",
-                            Gender = "Kadın",
-                            IsActive = true,
-                            LastName = "Kara",
-                            PasswordHash = "$2a$11$GHZ8eC/IX8DaoGE1PCgFK.V6GRxR7r/yihiiMIW7BFeZMcZg65.Cm",
-                            PhoneNumber = "05302000001",
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            UserId = 102,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateOfBirth = new DateTime(1988, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "mehmet.demir@nfaspor.com",
-                            FirstName = "Mehmet",
-                            Gender = "Erkek",
-                            IsActive = true,
-                            LastName = "Demir",
-                            PasswordHash = "$2a$11$GHZ8eC/IX8DaoGE1PCgFK.V6GRxR7r/yihiiMIW7BFeZMcZg65.Cm",
-                            PhoneNumber = "05302000002",
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            UserId = 103,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateOfBirth = new DateTime(1995, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "zeynep.aydin@nfaspor.com",
-                            FirstName = "Zeynep",
-                            Gender = "Kadın",
-                            IsActive = true,
-                            LastName = "Aydın",
-                            PasswordHash = "$2a$11$GHZ8eC/IX8DaoGE1PCgFK.V6GRxR7r/yihiiMIW7BFeZMcZg65.Cm",
-                            PhoneNumber = "05303000001",
-                            RoleId = 3
-                        },
-                        new
-                        {
-                            UserId = 104,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateOfBirth = new DateTime(2000, 4, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "can.ozdemir@nfaspor.com",
-                            FirstName = "Can",
-                            Gender = "Erkek",
-                            IsActive = true,
-                            LastName = "Özdemir",
-                            PasswordHash = "$2a$11$GHZ8eC/IX8DaoGE1PCgFK.V6GRxR7r/yihiiMIW7BFeZMcZg65.Cm",
-                            PhoneNumber = "05303000002",
-                            RoleId = 3
-                        },
-                        new
-                        {
-                            UserId = 105,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateOfBirth = new DateTime(1998, 9, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "selin.celik@nfaspor.com",
-                            FirstName = "Selin",
-                            Gender = "Kadın",
-                            IsActive = true,
-                            LastName = "Çelik",
-                            PasswordHash = "$2a$11$GHZ8eC/IX8DaoGE1PCgFK.V6GRxR7r/yihiiMIW7BFeZMcZg65.Cm",
-                            PhoneNumber = "05303000003",
-                            RoleId = 3
-                        });
                 });
 
             modelBuilder.Entity("NfaSporSalonu.Models.UserMembership", b =>
@@ -717,58 +634,6 @@ namespace NfaSporSalonu.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserMemberships");
-
-                    b.HasData(
-                        new
-                        {
-                            UserMembershipId = 100,
-                            EndDate = new DateTime(2027, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PlanId = 8,
-                            PurchaseDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "Active",
-                            UserId = 101
-                        },
-                        new
-                        {
-                            UserMembershipId = 101,
-                            EndDate = new DateTime(2027, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PlanId = 8,
-                            PurchaseDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "Active",
-                            UserId = 102
-                        },
-                        new
-                        {
-                            UserMembershipId = 102,
-                            EndDate = new DateTime(2026, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PlanId = 3,
-                            PurchaseDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "Active",
-                            UserId = 103
-                        },
-                        new
-                        {
-                            UserMembershipId = 103,
-                            EndDate = new DateTime(2026, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PlanId = 6,
-                            PurchaseDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "Active",
-                            UserId = 104
-                        },
-                        new
-                        {
-                            UserMembershipId = 104,
-                            EndDate = new DateTime(2026, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PlanId = 10,
-                            PurchaseDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "Active",
-                            UserId = 105
-                        });
                 });
 
             modelBuilder.Entity("NfaSporSalonu.Models.WorkoutAndDietProgram", b =>
