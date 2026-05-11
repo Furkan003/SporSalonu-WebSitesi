@@ -32,6 +32,6 @@ Projeyi bilgisayarınızda çalıştırmak için şu adımları izleyebilirsiniz
 
 * **Furkan** - [@Furkan003](https://github.com/Furkan003)
 * **Nejdet** - [@NejdetAskan](https://github.com/NejdetAskan)
-* **Arda** - [@ardayesilbas2424-maker](https://github.com/ardayesilbas2424-maker)
+* **Arda** - [@ArdaYesilbas](https://github.com/ArdaYesilbas)
 * **Yiğit** - [@YigitArslanAydin](https://github.com/YigitArslanAydin)
 ```
