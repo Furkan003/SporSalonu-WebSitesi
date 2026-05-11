@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace NfaSporSalonu.Models;
@@ -22,6 +22,8 @@ public partial class MemberMeasurement
     public decimal? Waist { get; set; }
 
     public string? Notes { get; set; }
+
+    public DateTime? UpdatedDate { get; set; }
 
     public virtual User? User { get; set; }
 }

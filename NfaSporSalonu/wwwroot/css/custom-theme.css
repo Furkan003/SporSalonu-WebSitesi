@@ -805,8 +805,8 @@ a.nfa-link:hover {
    ═══════════════════════════════════════════ */
 .nfa-theme-toggle {
     position: relative;
-    width: 52px;
-    height: 28px;
+    width: 44px;
+    height: 24px;
     border-radius: 999px;
     background: oklch(0.4 0 0);
     border: 2px solid oklch(0.5 0 0 / .3);
@@ -814,7 +814,7 @@ a.nfa-link:hover {
     transition: background .35s ease, border-color .35s ease;
     display: flex;
     align-items: center;
-    padding: 0 3px;
+    padding: 0 2px;
     flex-shrink: 0;
 }
 
@@ -824,20 +824,20 @@ a.nfa-link:hover {
 }
 
 .nfa-theme-toggle-knob {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background: #fff;
     box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: .65rem;
+    font-size: .55rem;
     transition: transform .35s cubic-bezier(.68, -.55, .27, 1.55);
 }
 
 .nfa-theme-toggle[data-active="true"] .nfa-theme-toggle-knob {
-    transform: translateX(24px);
+    transform: translateX(20px);
 }
 
 /* ═══════════════════════════════════════════
@@ -845,6 +845,9 @@ a.nfa-link:hover {
    ═══════════════════════════════════════════ */
 .nfa-water-tracker {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .nfa-water-visual {
@@ -931,8 +934,7 @@ a.nfa-link:hover {
     display: flex;
     justify-content: center;
     gap: .3rem;
-    flex-wrap: wrap;
-    max-width: 180px;
+    flex-wrap: nowrap;
     margin: 0 auto;
 }
 
@@ -1375,9 +1377,10 @@ a.nfa-link:hover {
 .nfa-navbar-actions {
     display: flex;
     align-items: center;
-    gap: .5rem;
+    gap: .625rem;
     flex-shrink: 0;
     white-space: nowrap;
+    margin-left: auto;
 }
 
 .nfa-navbar-user {
@@ -1736,4 +1739,102 @@ body {
 .dark .nfa-avatar-placeholder,
 [data-bs-theme="dark"] .nfa-avatar-placeholder {
     border-color: var(--nfa-card);
+}
+
+/* ═══════════════════════════════════════════
+   GLOBAL User Select Protection
+   Nükleer seviye: HER YERDE metin seçimini kapat,
+   yalnızca form elemanlarında aç.
+   ═══════════════════════════════════════════ */
+
+/* ── 1. Evrensel kilitleme ── */
+*,
+*::before,
+*::after {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+}
+
+/* ── 2. Varsayılan cursor: default (metin imleci yok) ── */
+body {
+    cursor: default;
+}
+
+/* ── 3. Yalnızca gerçekten seçilebilmesi gerekenler ── */
+input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="date"],
+textarea,
+select,
+[contenteditable="true"],
+pre,
+code,
+.nfa-selectable {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    cursor: text;
+}
+
+/* Select dropdown ve checkbox/radio — pointer */
+select,
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"],
+input[type="file"],
+input[type="color"],
+input[type="submit"],
+input[type="button"],
+input[type="reset"] {
+    cursor: pointer !important;
+}
+
+/* ── 4. Tıklanabilir elemanlar → pointer ── */
+a,
+button,
+.btn,
+[role="button"],
+[tabindex],
+label,
+.nav-link,
+.nfa-nav-link,
+.nfa-theme-toggle,
+.nfa-water-btn,
+.nfa-water-reset,
+.nfa-slider-btn,
+.nfa-slider-dot,
+.form-check-input,
+.form-check-label,
+.navbar-toggler,
+.page-link,
+.dropdown-item,
+.accordion-button,
+.modal .btn-close {
+    cursor: pointer !important;
+}
+
+/* ═══════════════════════════════════════════
+   Print Styles (Invoice)
+   ═══════════════════════════════════════════ */
+@media print {
+    .nfa-admin-sidebar,
+    .btn,
+    .nfa-no-print {
+        display: none !important;
+    }
+
+    .nfa-admin-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+
+    .card {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+    }
 }

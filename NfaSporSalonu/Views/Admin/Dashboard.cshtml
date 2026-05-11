@@ -1,6 +1,6 @@
 @model AdminDashboardViewModel
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "Kontrol Paneli";
     Layout = "_AdminLayout";
 }
 
@@ -133,7 +133,7 @@
                                         <td class="text-nfa-muted">@member.Email</td>
                                         <td>
                                             <span class="badge rounded-pill badge-nfa-active px-2 py-1">
-                                                @(member.RoleName ?? "–")
+                                                @(member.RoleName switch { "Admin" => "Yönetici", "Trainer" => "Eğitmen", "Member" => "Üye", _ => member.RoleName ?? "–" })
                                             </span>
                                         </td>
                                         <td class="text-nfa-muted">

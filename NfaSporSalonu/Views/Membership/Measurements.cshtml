@@ -21,6 +21,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-nfa alert-nfa-error d-flex align-items-center alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i><span>@TempData["Error"]</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
 
         <div class="card card-nfa-shadow nfa-animate-in">
             <div class="card-body p-0">
@@ -37,6 +44,8 @@
                                     <th>Göğüs (cm)</th>
                                     <th>Bel (cm)</th>
                                     <th>Not</th>
+                                    <th>Son Düzenleme</th>
+                                    <th style="text-align:center;">İşlemler</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -50,6 +59,24 @@
                                         <td>@(m.Chest?.ToString("0.#") ?? "–")</td>
                                         <td>@(m.Waist?.ToString("0.#") ?? "–")</td>
                                         <td class="text-nfa-muted" style="font-size:.8125rem;max-width:150px;overflow:hidden;text-overflow:ellipsis;">@(m.Notes ?? "–")</td>
+                                        <td class="text-nfa-muted" style="font-size:.8125rem;">
+                                            @if (m.UpdatedDate != null)
+                                            {
+                                                <span title="@m.UpdatedDate?.ToString("dd.MM.yyyy HH:mm")">
+                                                    <i class="bi bi-pencil me-1"></i>@m.UpdatedDate?.ToString("dd.MM.yyyy HH:mm")
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span>–</span>
+                                            }
+                                        </td>
+                                        <td style="text-align:center;">
+                                            <a asp-action="EditMeasurement" asp-route-id="@m.MeasurementId"
+                                               class="btn btn-nfa-outline btn-sm px-2 py-1" title="Düzenle">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 }
                             </tbody>

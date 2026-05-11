@@ -121,7 +121,7 @@ namespace NfaSporSalonu.Controllers
                 principal,
                 authProperties);
 
-            TempData["Success"] = "Giriş başarılı! Hoş geldiniz.";
+            // Sessiz yönlendirme — toast mesajı kaldırıldı
 
             // returnUrl varsa oraya, yoksa role göre yönlendir
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))

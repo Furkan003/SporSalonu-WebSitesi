@@ -17,26 +17,66 @@ namespace NfaSporSalonu.ViewModels
         public decimal? Chest { get; set; }
         public decimal? Waist { get; set; }
         public string? Notes { get; set; }
+        public DateTime? UpdatedDate { get; set; }
     }
 
     public class AddMeasurementViewModel
     {
+        [Required(ErrorMessage = "Boy alanı zorunludur.")]
         [Display(Name = "Boy (cm)")]
         [Range(50, 250, ErrorMessage = "Boy 50-250 cm aralığında olmalıdır.")]
         public decimal? Height { get; set; }
 
+        [Required(ErrorMessage = "Kilo alanı zorunludur.")]
         [Display(Name = "Kilo (kg)")]
         [Range(20, 300, ErrorMessage = "Kilo 20-300 kg aralığında olmalıdır.")]
         public decimal? Weight { get; set; }
 
+        [Required(ErrorMessage = "Bicep alanı zorunludur.")]
         [Display(Name = "Bicep (cm)")]
         [Range(10, 80, ErrorMessage = "Bicep 10-80 cm aralığında olmalıdır.")]
         public decimal? Bicep { get; set; }
 
+        [Required(ErrorMessage = "Göğüs alanı zorunludur.")]
         [Display(Name = "Göğüs (cm)")]
         [Range(40, 200, ErrorMessage = "Göğüs 40-200 cm aralığında olmalıdır.")]
         public decimal? Chest { get; set; }
 
+        [Required(ErrorMessage = "Bel alanı zorunludur.")]
+        [Display(Name = "Bel (cm)")]
+        [Range(30, 200, ErrorMessage = "Bel 30-200 cm aralığında olmalıdır.")]
+        public decimal? Waist { get; set; }
+
+        [Display(Name = "Notlar")]
+        [StringLength(255)]
+        public string? Notes { get; set; }
+    }
+
+    public class EditMeasurementViewModel
+    {
+        public int MeasurementId { get; set; }
+
+        [Required(ErrorMessage = "Boy alanı zorunludur.")]
+        [Display(Name = "Boy (cm)")]
+        [Range(50, 250, ErrorMessage = "Boy 50-250 cm aralığında olmalıdır.")]
+        public decimal? Height { get; set; }
+
+        [Required(ErrorMessage = "Kilo alanı zorunludur.")]
+        [Display(Name = "Kilo (kg)")]
+        [Range(20, 300, ErrorMessage = "Kilo 20-300 kg aralığında olmalıdır.")]
+        public decimal? Weight { get; set; }
+
+        [Required(ErrorMessage = "Bicep alanı zorunludur.")]
+        [Display(Name = "Bicep (cm)")]
+        [Range(10, 80, ErrorMessage = "Bicep 10-80 cm aralığında olmalıdır.")]
+        public decimal? Bicep { get; set; }
+
+        [Required(ErrorMessage = "Göğüs alanı zorunludur.")]
+        [Display(Name = "Göğüs (cm)")]
+        [Range(40, 200, ErrorMessage = "Göğüs 40-200 cm aralığında olmalıdır.")]
+        public decimal? Chest { get; set; }
+
+        [Required(ErrorMessage = "Bel alanı zorunludur.")]
         [Display(Name = "Bel (cm)")]
         [Range(30, 200, ErrorMessage = "Bel 30-200 cm aralığında olmalıdır.")]
         public decimal? Waist { get; set; }

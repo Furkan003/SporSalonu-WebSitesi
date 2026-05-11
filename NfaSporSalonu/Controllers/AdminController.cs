@@ -165,6 +165,143 @@ namespace NfaSporSalonu.Controllers
             return RedirectToAction(nameof(Users));
         }
 
+        // ═══════════════ KULLANICI DÜZENLEME ═══════════════
+
+        [HttpGet]
+        public async Task<IActionResult> EditUser(int id)
+        {
+            var now = DateTime.Now;
+            var user = await _context.Users
+                .Include(u => u.Role)
+                .Include(u => u.UserMemberships)
+                    .ThenInclude(um => um.Plan)
+                .FirstOrDefaultAsync(u => u.UserId == id);
+
+            if (user == null)
+            {
+                TempData["Error"] = "Kullanıcı bulunamadı.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            var activeMembership = user.UserMemberships
+                .Where(um => um.Status == "Active" && um.EndDate > now)
+                .OrderByDescending(um => um.EndDate)
+                .FirstOrDefault();
+
+            var roles = await _context.Roles
+                .Select(r => new RoleSelectItem { RoleId = r.RoleId, RoleName = r.RoleName })
+                .ToListAsync();
+
+            var viewModel = new EditUserViewModel
+            {
+                UserId = user.UserId,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Gender = user.Gender,
+                DateOfBirth = user.DateOfBirth,
+                RoleId = user.RoleId,
+                IsActive = user.IsActive == true,
+                ProfileImageUrl = user.ProfileImageUrl,
+                AvailableRoles = roles,
+                CurrentPlanName = activeMembership?.Plan?.PlanName,
+                MembershipEndDate = activeMembership?.EndDate,
+                HasActiveMembership = activeMembership != null
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUser(EditUserViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.AvailableRoles = await _context.Roles
+                    .Select(r => new RoleSelectItem { RoleId = r.RoleId, RoleName = r.RoleName })
+                    .ToListAsync();
+                return View(model);
+            }
+
+            var user = await _context.Users.FindAsync(model.UserId);
+            if (user == null)
+            {
+                TempData["Error"] = "Kullanıcı bulunamadı.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            // E-posta benzersizlik kontrolü (kendi kaydı hariç)
+            var emailExists = await _context.Users
+                .AnyAsync(u => u.Email == model.Email && u.UserId != model.UserId);
+            if (emailExists)
+            {
+                ModelState.AddModelError("Email", "Bu e-posta adresi başka bir kullanıcı tarafından kullanılıyor.");
+                model.AvailableRoles = await _context.Roles
+                    .Select(r => new RoleSelectItem { RoleId = r.RoleId, RoleName = r.RoleName })
+                    .ToListAsync();
+                return View(model);
+            }
+
+            // Güncelle (şifre hariç)
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Email = model.Email;
+            user.PhoneNumber = model.PhoneNumber;
+            user.Gender = model.Gender;
+            user.DateOfBirth = model.DateOfBirth;
+            user.RoleId = model.RoleId;
+            user.IsActive = model.IsActive;
+            user.ProfileImageUrl = model.ProfileImageUrl;
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = $"{user.FirstName} {user.LastName} kullanıcısı başarıyla güncellendi.";
+            return RedirectToAction(nameof(Users));
+        }
+
+        // ═══════════════ FATURA KESİMİ ═══════════════
+
+        [HttpGet]
+        public async Task<IActionResult> Invoice(int userId)
+        {
+            var now = DateTime.Now;
+            var user = await _context.Users
+                .Include(u => u.UserMemberships)
+                    .ThenInclude(um => um.Plan)
+                .FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user == null)
+            {
+                TempData["Error"] = "Kullanıcı bulunamadı.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            var activeMembership = user.UserMemberships
+                .Where(um => um.Status == "Active" && um.EndDate > now)
+                .OrderByDescending(um => um.EndDate)
+                .FirstOrDefault();
+
+            var viewModel = new InvoiceViewModel
+            {
+                UserId = user.UserId,
+                FullName = $"{user.FirstName} {user.LastName}",
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                PlanName = activeMembership?.Plan?.PlanName,
+                PlanPrice = activeMembership?.Plan?.Price,
+                MembershipStartDate = activeMembership?.StartDate,
+                MembershipEndDate = activeMembership?.EndDate,
+                MembershipStatus = activeMembership != null ? "Aktif" : "Üyelik Yok",
+                DurationInDays = activeMembership?.Plan?.DurationInDays,
+                InvoiceNumber = $"NFA-{now:yyyyMMdd}-{userId:D4}",
+                InvoiceDate = now
+            };
+
+            return View(viewModel);
+        }
+
         // ═══════════════ ÜYELİK ATAMA ═══════════════
 
         [HttpPost]

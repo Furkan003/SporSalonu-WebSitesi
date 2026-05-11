@@ -36,7 +36,7 @@
                 </div>
             </div>
             <div class="stat-value">@Model.Users.Count(u => u.RoleName == "Admin")</div>
-            <div class="stat-label">Admin</div>
+            <div class="stat-label">Yönetici</div>
         </div>
     </div>
     <div class="col-6 col-md-3">
@@ -97,7 +97,7 @@
                                         };
                                     }
                                     <span class="badge rounded-pill px-2 py-1 @roleBadgeClass">
-                                        @(user.RoleName ?? "Atanmadı")
+                                        @(user.RoleName switch { "Admin" => "Yönetici", "Trainer" => "Eğitmen", "Member" => "Üye", _ => user.RoleName ?? "Atanmadı" })
                                     </span>
                                 </td>
                                 <td>
@@ -124,35 +124,32 @@
                                 </td>
                                 <td class="text-nfa-muted">@(user.CreatedAt?.ToString("dd.MM.yyyy") ?? "–")</td>
                                 <td style="text-align:center;">
-                                    <div class="d-flex gap-1 justify-content-center">
-                                        @* Rol Değiştir Butonu *@
+                                    <div class="d-flex gap-1 align-items-center justify-content-center flex-nowrap">
+                                        <a asp-action="EditUser" asp-route-id="@user.UserId"
+                                           class="btn btn-nfa-outline btn-sm px-1 py-0" style="font-size:.75rem;line-height:1.8;"
+                                           title="Düzenle"><i class="bi bi-pencil-square"></i></a>
                                         <button type="button"
-                                                class="btn btn-nfa-outline btn-sm px-2 py-1"
+                                                class="btn btn-nfa-outline btn-sm px-1 py-0" style="font-size:.75rem;line-height:1.8;"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#roleModal"
                                                 data-user-id="@user.UserId"
                                                 data-user-name="@user.FullName"
                                                 data-current-role="@user.RoleId"
-                                                title="Rol Değiştir">
-                                            <i class="bi bi-person-gear"></i>
-                                        </button>
-
-                                        @* Üyelik Tanımla Butonları *@
-                                        <form asp-action="GrantMembership" method="post" style="display:inline;">
+                                                title="Rol Değiştir"><i class="bi bi-person-gear"></i></button>
+                                        <a asp-action="Invoice" asp-route-userId="@user.UserId"
+                                           class="btn btn-nfa-outline btn-sm px-1 py-0" style="font-size:.75rem;line-height:1.8;"
+                                           title="Fatura Kes"><i class="bi bi-receipt"></i></a>
+                                        <form asp-action="GrantMembership" method="post" class="d-inline">
                                             @Html.AntiForgeryToken()
                                             <input type="hidden" name="UserId" value="@user.UserId" />
                                             <input type="hidden" name="DurationMonths" value="1" />
-                                            <button type="submit" class="btn btn-nfa-grant-1 btn-sm px-2 py-1" title="1 Aylık Üyelik Tanımla">
-                                                <i class="bi bi-calendar-plus me-1"></i>1 Ay
-                                            </button>
+                                            <button type="submit" class="btn btn-nfa-grant-1 btn-sm px-1 py-0" style="font-size:.65rem;line-height:1.8;" title="1 Aylık Üyelik">1A</button>
                                         </form>
-                                        <form asp-action="GrantMembership" method="post" style="display:inline;">
+                                        <form asp-action="GrantMembership" method="post" class="d-inline">
                                             @Html.AntiForgeryToken()
                                             <input type="hidden" name="UserId" value="@user.UserId" />
                                             <input type="hidden" name="DurationMonths" value="3" />
-                                            <button type="submit" class="btn btn-nfa-grant-3 btn-sm px-2 py-1" title="3 Aylık Üyelik Tanımla">
-                                                <i class="bi bi-calendar-plus me-1"></i>3 Ay
-                                            </button>
+                                            <button type="submit" class="btn btn-nfa-grant-3 btn-sm px-1 py-0" style="font-size:.65rem;line-height:1.8;" title="3 Aylık Üyelik">3A</button>
                                         </form>
                                     </div>
                                 </td>
@@ -205,7 +202,7 @@
                         <select name="NewRoleId" id="modalRoleSelect" class="form-control-nfa w-100" required>
                             @foreach (var role in Model.AvailableRoles)
                             {
-                                <option value="@role.RoleId">@role.RoleName</option>
+                                <option value="@role.RoleId">@(role.RoleName switch { "Admin" => "Yönetici", "Trainer" => "Eğitmen", "Member" => "Üye", _ => role.RoleName })</option>
                             }
                         </select>
                     </div>

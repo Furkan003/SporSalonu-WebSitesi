@@ -1,20 +1,21 @@
-@model AddMeasurementViewModel
+@model EditMeasurementViewModel
 @{
-    ViewData["Title"] = "Ölçüm Ekle";
+    ViewData["Title"] = "Ölçüm Düzenle";
     Layout = "_Layout";
 }
 
 <section style="padding-top:100px;padding-bottom:60px;min-height:100vh;">
     <div class="container" style="max-width:600px;">
         <div class="card card-nfa-shadow-lg nfa-animate-in" style="border-radius:calc(var(--nfa-radius) * 2);overflow:hidden;">
-            <div style="background:linear-gradient(135deg, var(--nfa-secondary) 0%, oklch(0.4 0.02 286) 100%);padding:2rem;color:#fff;text-align:center;">
-                <i class="bi bi-rulers" style="font-size:2.5rem;opacity:.9;"></i>
-                <h2 class="fw-bold mt-2 mb-1">Yeni Ölçüm Ekle</h2>
-                <p style="opacity:.8;font-size:.875rem;margin-bottom:0;">Gelişiminizi takip etmek için ölçümlerinizi girin</p>
+            <div style="background:linear-gradient(135deg, oklch(0.62 0.18 250) 0%, oklch(0.4 0.02 286) 100%);padding:2rem;color:#fff;text-align:center;">
+                <i class="bi bi-pencil-square" style="font-size:2.5rem;opacity:.9;"></i>
+                <h2 class="fw-bold mt-2 mb-1">Ölçüm Düzenle</h2>
+                <p style="opacity:.8;font-size:.875rem;margin-bottom:0;">Ölçüm verilerinizi güncelleyin</p>
             </div>
             <div class="card-body p-4">
-                <form asp-action="AddMeasurement" method="post">
+                <form asp-action="EditMeasurement" method="post">
                     @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="MeasurementId" />
                     <div class="row g-3">
                         <div class="col-6">
                             <label asp-for="Height" class="form-label fw-semibold" style="font-size:.875rem;">Boy (cm)</label>
@@ -46,7 +47,7 @@
                             <textarea asp-for="Notes" class="form-control form-control-nfa" rows="2" placeholder="İsteğe bağlı notlar..."></textarea>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-nfa-primary w-100 py-2 mt-4"><i class="bi bi-check-lg me-1"></i>Ölçümü Kaydet</button>
+                    <button type="submit" class="btn btn-nfa-primary w-100 py-2 mt-4"><i class="bi bi-check-lg me-1"></i>Güncelle</button>
                 </form>
                 <div class="text-center mt-3">
                     <a asp-action="Measurements" class="nfa-link" style="font-size:.8125rem;"><i class="bi bi-arrow-left me-1"></i>Ölçümlerime Dön</a>

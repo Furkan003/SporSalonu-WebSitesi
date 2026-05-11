@@ -346,7 +346,8 @@ namespace NfaSporSalonu.Controllers
                     Bicep = m.Bicep,
                     Chest = m.Chest,
                     Waist = m.Waist,
-                    Notes = m.Notes
+                    Notes = m.Notes,
+                    UpdatedDate = m.UpdatedDate
                 })
                 .ToListAsync();
 
@@ -387,6 +388,72 @@ namespace NfaSporSalonu.Controllers
             await _context.SaveChangesAsync();
 
             TempData["Success"] = "Ölçüm başarıyla kaydedildi.";
+            return RedirectToAction(nameof(Measurements));
+        }
+
+        // ═══════════════ ÖLÇÜM DÜZENLEME ═══════════════
+
+        [HttpGet]
+        public async Task<IActionResult> EditMeasurement(int id)
+        {
+            var userId = GetCurrentUserId();
+            if (userId == null)
+                return RedirectToAction("Login", "Account");
+
+            var measurement = await _context.MemberMeasurements
+                .FirstOrDefaultAsync(m => m.MeasurementId == id && m.UserId == userId);
+
+            if (measurement == null)
+            {
+                TempData["Error"] = "Ölçüm bulunamadı.";
+                return RedirectToAction(nameof(Measurements));
+            }
+
+            var viewModel = new EditMeasurementViewModel
+            {
+                MeasurementId = measurement.MeasurementId,
+                Height = measurement.Height,
+                Weight = measurement.Weight,
+                Bicep = measurement.Bicep,
+                Chest = measurement.Chest,
+                Waist = measurement.Waist,
+                Notes = measurement.Notes
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditMeasurement(EditMeasurementViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var userId = GetCurrentUserId();
+            if (userId == null)
+                return RedirectToAction("Login", "Account");
+
+            var measurement = await _context.MemberMeasurements
+                .FirstOrDefaultAsync(m => m.MeasurementId == model.MeasurementId && m.UserId == userId);
+
+            if (measurement == null)
+            {
+                TempData["Error"] = "Ölçüm bulunamadı.";
+                return RedirectToAction(nameof(Measurements));
+            }
+
+            measurement.Height = model.Height;
+            measurement.Weight = model.Weight;
+            measurement.Bicep = model.Bicep;
+            measurement.Chest = model.Chest;
+            measurement.Waist = model.Waist;
+            measurement.Notes = model.Notes;
+            measurement.UpdatedDate = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Ölçüm başarıyla güncellendi.";
             return RedirectToAction(nameof(Measurements));
         }
 
