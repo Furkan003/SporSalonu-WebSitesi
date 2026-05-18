@@ -73,6 +73,16 @@ public partial class User
     public virtual ICollection<TrainerNote> TrainerNotesAsMember { get; set; } = new List<TrainerNote>();
 
     /// <summary>
+    /// Bu kullanıcının bıraktığı geri bildirimler/yorumlar.
+    /// </summary>
+    public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+
+    /// <summary>
+    /// Bu kullanıcının QR turnikeden geçiş logları.
+    /// </summary>
+    public virtual ICollection<QRAccessLog> QRAccessLogs { get; set; } = new List<QRAccessLog>();
+
+    /// <summary>
     /// Kullanıcının aktif bir üyeliği olup olmadığını kontrol eder.
     /// </summary>
     [NotMapped]

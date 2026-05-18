@@ -41,6 +41,10 @@ public partial class NfaSporSalonuDbContext : DbContext
 
     public virtual DbSet<TrainerNote> TrainerNotes { get; set; }
 
+    public virtual DbSet<Feedback> Feedbacks { get; set; }
+
+    public virtual DbSet<QRAccessLog> QRAccessLogs { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
@@ -476,6 +480,58 @@ public partial class NfaSporSalonuDbContext : DbContext
             entity.HasOne(d => d.Member).WithMany(p => p.TrainerNotesAsMember)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        modelBuilder.Entity<Feedback>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.ToTable("Feedbacks");
+
+            entity.Property(e => e.Rating)
+                .IsRequired();
+
+            // Rating değeri 1-5 arasında olmalıdır
+            entity.ToTable(t => t.HasCheckConstraint("CK_Feedbacks_Rating", "[Rating] >= 1 AND [Rating] <= 5"));
+
+            entity.Property(e => e.Comment)
+                .HasMaxLength(1000);
+
+            entity.Property(e => e.IsApproved)
+                .HasDefaultValue(false);
+
+            entity.Property(e => e.CreatedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            // User -> Feedback (1:N)
+            entity.HasOne(d => d.User)
+                .WithMany(p => p.Feedbacks)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.NoAction)
+                .HasConstraintName("FK_Feedbacks_User");
+        });
+
+        modelBuilder.Entity<QRAccessLog>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.ToTable("QRAccessLogs");
+
+            entity.Property(e => e.AccessTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.Property(e => e.Status)
+                .IsRequired()
+                .HasMaxLength(30);
+
+            // User -> QRAccessLog (1:N)
+            entity.HasOne(d => d.User)
+                .WithMany(p => p.QRAccessLogs)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.NoAction)
+                .HasConstraintName("FK_QRAccessLogs_User");
         });
 
         OnModelCreatingPartial(modelBuilder);
