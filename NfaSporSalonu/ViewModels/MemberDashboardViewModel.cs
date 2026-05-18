@@ -29,6 +29,9 @@ namespace NfaSporSalonu.ViewModels
 
         // Eğitmen Notları
         public List<TrainerNoteDto> TrainerNotes { get; set; } = new();
+
+        // QR Kod (Base64 PNG)
+        public string? QrCodeBase64 { get; set; }
     }
 
     public class NotificationDto

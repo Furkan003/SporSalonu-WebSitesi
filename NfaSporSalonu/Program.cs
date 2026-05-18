@@ -90,6 +90,7 @@ builder.Services.AddRateLimiter(options =>
 // Register Application Services (Dependency Injection)
 builder.Services.AddScoped<NfaSporSalonu.Services.IAnalyticsService, NfaSporSalonu.Services.AnalyticsService>();
 builder.Services.AddScoped<NfaSporSalonu.Services.ITurnstileService, NfaSporSalonu.Services.TurnstileService>();
+builder.Services.AddSingleton<NfaSporSalonu.Services.IQrCodeService, NfaSporSalonu.Services.QrCodeService>();
 
 var app = builder.Build();
 

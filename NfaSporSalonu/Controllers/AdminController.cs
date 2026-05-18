@@ -63,6 +63,12 @@ namespace NfaSporSalonu.Controllers
                 .Where(n => n.IsRead == false)
                 .CountAsync();
 
+            // Son 30 Gündeki Kayıtlar
+            var thirtyDaysAgo = now.AddDays(-30);
+            var last30DaysRegistrations = await _context.Users
+                .Where(u => u.CreatedAt >= thirtyDaysAgo)
+                .CountAsync();
+
             // Son Kayıt Olan 5 Üye
             var recentMembers = await _context.Users
                 .Include(u => u.Role)
@@ -91,6 +97,7 @@ namespace NfaSporSalonu.Controllers
                 PendingPayments = pendingPayments,
                 TodayAccessCount = todayAccessCount,
                 UnreadNotifications = unreadNotifications,
+                Last30DaysRegistrations = last30DaysRegistrations,
                 RecentMembers = recentMembers
             };
 

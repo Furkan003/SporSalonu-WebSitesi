@@ -21,6 +21,9 @@ namespace NfaSporSalonu.ViewModels
         public int TodayAccessCount { get; set; }
         public int UnreadNotifications { get; set; }
 
+        // Son 30 Gündeki Kayıtlar
+        public int Last30DaysRegistrations { get; set; }
+
         // Son Kayıt Olan Üyeler
         public List<RecentMemberDto> RecentMembers { get; set; } = new();
     }

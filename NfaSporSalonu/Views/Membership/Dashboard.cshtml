@@ -303,12 +303,32 @@
                     <span style="display:inline-block;width:4px;height:1em;background:var(--nfa-primary);border-radius:4px;margin-right:.5rem;vertical-align:middle;"></span>
                     Giriş QR Kodunuz
                 </h6>
-                <div class="nfa-qr-wrapper my-3">
-                    <i class="bi bi-qr-code" style="font-size:4rem;color:var(--nfa-muted-fg);"></i>
-                </div>
-                <p class="text-nfa-muted mb-0" style="font-size:.8125rem;">
-                    Spor salonuna giriş için bu QR kodu okutunuz.
-                </p>
+
+                @if (!string.IsNullOrEmpty(Model.QrCodeBase64))
+                {
+                    <div class="nfa-qr-wrapper my-3">
+                        <img src="@Model.QrCodeBase64"
+                             alt="Giriş QR Kodu"
+                             style="width:180px;height:180px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.1);image-rendering:pixelated;" />
+                    </div>
+                    <p class="text-nfa-muted mb-0" style="font-size:.8125rem;">
+                        <i class="bi bi-shield-check me-1" style="color:oklch(0.55 0.17 155);"></i>
+                        Spor salonuna giriş için bu QR kodu okutunuz.
+                    </p>
+                }
+                else
+                {
+                    <div class="nfa-qr-wrapper my-3">
+                        <i class="bi bi-qr-code" style="font-size:4rem;color:var(--nfa-muted-fg);"></i>
+                    </div>
+                    <p class="text-nfa-muted mb-2" style="font-size:.8125rem;">
+                        <i class="bi bi-exclamation-circle me-1"></i>
+                        Aktif üyeliğiniz bulunmadığı için QR kod üretilemez.
+                    </p>
+                    <a asp-controller="Membership" asp-action="Packages" class="btn btn-nfa-primary btn-sm px-3">
+                        <i class="bi bi-bag-plus me-1"></i>Paket Satın Al
+                    </a>
+                }
             </div>
         </div>
 

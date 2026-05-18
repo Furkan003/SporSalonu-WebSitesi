@@ -8,7 +8,7 @@
 <div class="row g-3 mb-4">
 
     @* Toplam Üye *@
-    <div class="col-6 col-md-3">
+    <div class="col-6 col-lg">
         <div class="card nfa-stat-card nfa-stat-primary nfa-animate-in">
             <div class="d-flex align-items-center justify-content-between mb-2">
                 <div class="stat-icon" style="background:rgba(255,255,255,.2);">
@@ -21,7 +21,7 @@
     </div>
 
     @* Aktif Üyelikler *@
-    <div class="col-6 col-md-3">
+    <div class="col-6 col-lg">
         <div class="card nfa-stat-card nfa-stat-success nfa-animate-in">
             <div class="d-flex align-items-center justify-content-between mb-2">
                 <div class="stat-icon" style="background:rgba(255,255,255,.2);">
@@ -34,7 +34,7 @@
     </div>
 
     @* Günlük Giriş *@
-    <div class="col-6 col-md-3">
+    <div class="col-6 col-lg">
         <div class="card nfa-stat-card nfa-stat-info nfa-animate-in">
             <div class="d-flex align-items-center justify-content-between mb-2">
                 <div class="stat-icon" style="background:rgba(255,255,255,.2);">
@@ -47,7 +47,7 @@
     </div>
 
     @* Eğitmenler *@
-    <div class="col-6 col-md-3">
+    <div class="col-6 col-lg">
         <div class="card nfa-stat-card nfa-stat-warning nfa-animate-in">
             <div class="d-flex align-items-center justify-content-between mb-2">
                 <div class="stat-icon" style="background:rgba(0,0,0,.08);">
@@ -56,6 +56,19 @@
             </div>
             <div class="stat-value">@Model.TotalTrainers</div>
             <div class="stat-label">Eğitmenler</div>
+        </div>
+    </div>
+
+    @* Son 30 Günde Kayıt *@
+    <div class="col-6 col-lg">
+        <div class="card nfa-stat-card nfa-animate-in" style="background:linear-gradient(135deg, oklch(0.45 0.18 280), oklch(0.55 0.2 310));color:#fff;">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="stat-icon" style="background:rgba(255,255,255,.2);">
+                    <i class="bi bi-calendar-plus-fill"></i>
+                </div>
+            </div>
+            <div class="stat-value">@Model.Last30DaysRegistrations</div>
+            <div class="stat-label">Son 30 Günde Kayıt</div>
         </div>
     </div>
 </div>

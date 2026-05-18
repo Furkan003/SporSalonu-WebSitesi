@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NfaSporSalonu.Models;
+using NfaSporSalonu.Services;
 using NfaSporSalonu.ViewModels;
 
 namespace NfaSporSalonu.Controllers
@@ -11,10 +12,12 @@ namespace NfaSporSalonu.Controllers
     public class MembershipController : Controller
     {
         private readonly NfaSporSalonuDbContext _context;
+        private readonly IQrCodeService _qrCodeService;
 
-        public MembershipController(NfaSporSalonuDbContext context)
+        public MembershipController(NfaSporSalonuDbContext context, IQrCodeService qrCodeService)
         {
             _context = context;
+            _qrCodeService = qrCodeService;
         }
 
         // ═══════════════ ÜYE DASHBOARD ═══════════════
@@ -95,9 +98,18 @@ namespace NfaSporSalonu.Controllers
                 })
                 .ToListAsync();
 
+            var fullName = $"{user.FirstName} {user.LastName}";
+
+            // QR Kod üret (aktif üyeliği varsa)
+            string? qrCodeBase64 = null;
+            if (activeMembership != null)
+            {
+                qrCodeBase64 = _qrCodeService.GenerateQrCodeBase64(userId.Value, fullName);
+            }
+
             var viewModel = new MemberDashboardViewModel
             {
-                FullName = $"{user.FirstName} {user.LastName}",
+                FullName = fullName,
                 Email = user.Email,
                 ProfileImageUrl = user.ProfileImageUrl,
                 CurrentPlanName = activeMembership?.Plan?.PlanName,
@@ -116,10 +128,40 @@ namespace NfaSporSalonu.Controllers
                     : null,
                 UnreadNotificationCount = unreadCount,
                 RecentNotifications = recentNotifications,
-                TrainerNotes = trainerNotes
+                TrainerNotes = trainerNotes,
+                QrCodeBase64 = qrCodeBase64
             };
 
             return View(viewModel);
+        }
+
+        // ═══════════════ QR KOD ÜRETİMİ ═══════════════
+
+        /// <summary>
+        /// Giriş yapan kullanıcının QR kodunu JSON olarak döner (AJAX için).
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> GenerateQrCode()
+        {
+            var userId = GetCurrentUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+                return NotFound();
+
+            var now = DateTime.Now;
+            var hasActiveMembership = await _context.UserMemberships
+                .AnyAsync(um => um.UserId == userId && um.Status == "Active" && um.EndDate > now);
+
+            if (!hasActiveMembership)
+                return BadRequest(new { error = "Aktif üyeliğiniz bulunmadığı için QR kod üretilemez." });
+
+            var fullName = $"{user.FirstName} {user.LastName}";
+            var qrBase64 = _qrCodeService.GenerateQrCodeBase64(userId.Value, fullName);
+
+            return Json(new { qrCode = qrBase64, memberName = fullName });
         }
 
         // ═══════════════ ÜYELİK PAKETLERİ ═══════════════
