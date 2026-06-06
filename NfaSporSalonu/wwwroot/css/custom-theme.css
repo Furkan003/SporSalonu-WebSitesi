@@ -485,17 +485,257 @@ body {
     border-radius: 999px;
 }
 
-/* ─── QR placeholder ─── */
-.nfa-qr-wrapper {
-    width: 180px;
-    height: 180px;
-    border-radius: var(--nfa-radius);
-    border: 2px dashed var(--nfa-border);
+/* ─── QR Card Component ─── */
+.nfa-qr-card {
+    border-radius: calc(var(--nfa-radius) * 3);
+    overflow: hidden;
+    box-shadow:
+        0 4px 24px 0 hsl(0 0% 0% / .08),
+        0 1px 3px 0 hsl(0 0% 0% / .06);
+    border: 1px solid var(--nfa-border);
+    transition: box-shadow .3s ease, transform .3s ease;
+}
+
+.nfa-qr-card:hover {
+    box-shadow:
+        0 8px 40px oklch(0.8606 0.1731 91.9357 / .18),
+        0 2px 8px hsl(0 0% 0% / .06);
+    transform: translateY(-2px);
+}
+
+.nfa-qr-header {
+    background: linear-gradient(135deg, var(--nfa-secondary) 0%, oklch(0.35 0.02 286) 50%, oklch(0.30 0.04 270) 100%);
+    padding: 1.25rem 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.nfa-qr-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, oklch(1 0 0 / .04) 50%, transparent 100%);
+    pointer-events: none;
+}
+
+.nfa-qr-header-title {
+    color: var(--nfa-primary);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--nfa-muted);
+    gap: .5rem;
+}
+
+.nfa-qr-header-title i {
+    font-size: 1.125rem;
+}
+
+.nfa-qr-body {
+    background: var(--nfa-card);
+    padding: 1.75rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nfa-qr-wrapper {
+    width: 192px;
+    height: 192px;
+    border-radius: calc(var(--nfa-radius) * 2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--nfa-card);
     margin: 0 auto;
+    position: relative;
+}
+
+.nfa-qr-wrapper img {
+    width: 192px;
+    height: 192px;
+    border-radius: calc(var(--nfa-radius) * 2);
+    image-rendering: pixelated;
+    box-shadow: 0 4px 24px oklch(0 0 0 / .1);
+    transition: transform .2s ease;
+}
+
+.nfa-qr-wrapper img:hover {
+    transform: scale(1.03);
+}
+
+/* Ambient glow behind the QR image */
+.nfa-qr-glow {
+    position: absolute;
+    inset: -8px;
+    border-radius: calc(var(--nfa-radius) * 2.5);
+    background: linear-gradient(135deg, oklch(0.8606 0.1731 91.9357 / .15), oklch(0.62 0.18 250 / .1));
+    filter: blur(16px);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.nfa-qr-wrapper img {
+    position: relative;
+    z-index: 1;
+}
+
+.nfa-qr-hint {
+    font-size: .8125rem;
+    color: var(--nfa-muted-fg);
+    text-align: center;
+    line-height: 1.5;
+}
+
+.nfa-qr-hint i {
+    color: oklch(0.55 0.17 155);
+}
+
+/* ─── QR Empty / Loading States ─── */
+.nfa-qr-empty {
+    width: 192px;
+    height: 192px;
+    border-radius: calc(var(--nfa-radius) * 2);
+    border: 2px dashed var(--nfa-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--nfa-muted);
+    gap: .5rem;
+}
+
+.nfa-qr-empty i {
+    font-size: 3rem;
+    color: var(--nfa-muted-fg);
+    opacity: .6;
+}
+
+.nfa-qr-empty span {
+    font-size: .75rem;
+    font-weight: 600;
+    color: var(--nfa-muted-fg);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+/* Shimmer animation for loading state */
+@keyframes nfaQrShimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.nfa-qr-loading {
+    width: 192px;
+    height: 192px;
+    border-radius: calc(var(--nfa-radius) * 2);
+    background: linear-gradient(90deg,
+        var(--nfa-muted) 25%,
+        oklch(0.8606 0.1731 91.9357 / .08) 50%,
+        var(--nfa-muted) 75%);
+    background-size: 200% 100%;
+    animation: nfaQrShimmer 1.8s ease infinite;
+}
+
+/* Pulse dot for "generating" hint */
+@keyframes nfaQrPulse {
+    0%, 80%, 100% { opacity: .3; transform: scale(.85); }
+    40% { opacity: 1; transform: scale(1); }
+}
+
+.nfa-qr-pulse-dots {
+    display: flex;
+    gap: .35rem;
+    justify-content: center;
+}
+
+.nfa-qr-pulse-dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--nfa-primary);
+    animation: nfaQrPulse 1.4s ease infinite;
+}
+
+.nfa-qr-pulse-dots span:nth-child(2) { animation-delay: .2s; }
+.nfa-qr-pulse-dots span:nth-child(3) { animation-delay: .4s; }
+
+/* ─── Utility: select-none ─── */
+.select-none {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* ─── QR Lightbox Overlay ─── */
+.nfa-qr-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity .3s ease;
+}
+
+.nfa-qr-lightbox.active {
+    opacity: 1;
+}
+
+.nfa-qr-lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: oklch(0.1 0 0 / .75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.nfa-qr-lightbox-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    transform: scale(.85);
+    transition: transform .3s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+.nfa-qr-lightbox.active .nfa-qr-lightbox-content {
+    transform: scale(1);
+}
+
+.nfa-qr-lightbox-content img {
+    width: 320px;
+    height: 320px;
+    border-radius: calc(var(--nfa-radius) * 2.5);
+    image-rendering: pixelated;
+    box-shadow:
+        0 0 0 4px var(--nfa-card),
+        0 16px 64px oklch(0 0 0 / .35);
+    background: #fff;
+}
+
+@media (min-width: 576px) {
+    .nfa-qr-lightbox-content img {
+        width: 380px;
+        height: 380px;
+    }
+}
+
+.nfa-qr-lightbox-hint {
+    color: oklch(0.85 0 0);
+    font-size: .8125rem;
+    font-weight: 500;
+    margin: 0;
+    opacity: .7;
 }
 
 /* ─── Notification list ─── */

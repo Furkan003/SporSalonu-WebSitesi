@@ -296,36 +296,49 @@
             </div>
         </div>
 
-        @* QR Kod Kartı *@
-        <div class="card card-nfa-shadow mb-4 nfa-animate-in">
-            <div class="card-body text-center">
-                <h6 class="nfa-section-title text-center" style="padding-left:0;">
-                    <span style="display:inline-block;width:4px;height:1em;background:var(--nfa-primary);border-radius:4px;margin-right:.5rem;vertical-align:middle;"></span>
-                    Giriş QR Kodunuz
+        @* QR Kod Kartı — Turnike Geçiş *@
+        <div class="nfa-qr-card mb-4 nfa-animate-in">
+            @* ── Gradient Header ── *@
+            <div class="nfa-qr-header select-none">
+                <h6 class="nfa-qr-header-title">
+                    <i class="bi bi-qr-code-scan"></i>
+                    Turnike Geçiş QR Kodunuz
                 </h6>
+            </div>
 
+            @* ── Body ── *@
+            <div class="nfa-qr-body">
                 @if (!string.IsNullOrEmpty(Model.QrCodeBase64))
                 {
-                    <div class="nfa-qr-wrapper my-3">
-                        <img src="@Model.QrCodeBase64"
-                             alt="Giriş QR Kodu"
-                             style="width:180px;height:180px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.1);image-rendering:pixelated;" />
+                    @* Aktif QR Gösterimi *@
+                    <div class="nfa-qr-wrapper">
+                        <div class="nfa-qr-glow"></div>
+                        <img id="qrCodeImg" src="@Model.QrCodeBase64"
+                             alt="Turnike Giriş QR Kodu"
+                             draggable="false"
+                             style="cursor:pointer;"
+                             title="Büyütmek için tıklayın" />
                     </div>
-                    <p class="text-nfa-muted mb-0" style="font-size:.8125rem;">
-                        <i class="bi bi-shield-check me-1" style="color:oklch(0.55 0.17 155);"></i>
-                        Spor salonuna giriş için bu QR kodu okutunuz.
+                    <p class="nfa-qr-hint select-none mb-0">
+                        <i class="bi bi-shield-check me-1"></i>
+                        Spor salonuna giriş yaparken lütfen bu kodu okutunuz.
                     </p>
                 }
                 else
                 {
-                    <div class="nfa-qr-wrapper my-3">
-                        <i class="bi bi-qr-code" style="font-size:4rem;color:var(--nfa-muted-fg);"></i>
+                    @* Yedek: QR Kod Bulunamadı / Yükleniyor *@
+                    <div class="nfa-qr-empty select-none">
+                        <i class="bi bi-qr-code"></i>
+                        <span>QR Kod Bulunamadı</span>
                     </div>
-                    <p class="text-nfa-muted mb-2" style="font-size:.8125rem;">
-                        <i class="bi bi-exclamation-circle me-1"></i>
+                    <div class="nfa-qr-pulse-dots select-none">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <p class="nfa-qr-hint select-none mb-2">
+                        <i class="bi bi-exclamation-circle me-1" style="color:var(--nfa-muted-fg);"></i>
                         Aktif üyeliğiniz bulunmadığı için QR kod üretilemez.
                     </p>
-                    <a asp-controller="Membership" asp-action="Packages" class="btn btn-nfa-primary btn-sm px-3">
+                    <a asp-controller="Membership" asp-action="Packages" class="btn btn-nfa-primary btn-sm px-4">
                         <i class="bi bi-bag-plus me-1"></i>Paket Satın Al
                     </a>
                 }
@@ -383,6 +396,17 @@
 
 </div>@* ── /container wrapper ── *@
 
+@* ── QR Lightbox Overlay ── *@
+<div id="qrLightbox" class="nfa-qr-lightbox" style="display:none;">
+    <div class="nfa-qr-lightbox-backdrop"></div>
+    <div class="nfa-qr-lightbox-content select-none">
+        <img id="qrLightboxImg" src="" alt="QR Kod" draggable="false" />
+        <p class="nfa-qr-lightbox-hint">
+            <i class="bi bi-fullscreen-exit me-1"></i>Kapatmak için herhangi bir yere tıklayın
+        </p>
+    </div>
+</div>
+
 @section Scripts {
     <link rel="stylesheet" href="~/css/custom-theme.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
@@ -424,6 +448,33 @@
             resetBtn.addEventListener('click', () => { count = 0; update(); });
 
             update();
+        })();
+
+        // ═══════ QR Lightbox ═══════
+        (function () {
+            const qrImg = document.getElementById('qrCodeImg');
+            const lightbox = document.getElementById('qrLightbox');
+            if (!qrImg || !lightbox) return;
+
+            const lbImg = document.getElementById('qrLightboxImg');
+
+            qrImg.addEventListener('click', function () {
+                lbImg.src = qrImg.src;
+                lightbox.style.display = 'flex';
+                requestAnimationFrame(() => lightbox.classList.add('active'));
+            });
+
+            lightbox.addEventListener('click', function () {
+                lightbox.classList.remove('active');
+                setTimeout(() => { lightbox.style.display = 'none'; }, 300);
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                    lightbox.classList.remove('active');
+                    setTimeout(() => { lightbox.style.display = 'none'; }, 300);
+                }
+            });
         })();
     </script>
 }
