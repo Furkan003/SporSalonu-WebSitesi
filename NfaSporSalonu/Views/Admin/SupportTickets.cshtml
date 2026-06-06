@@ -1,0 +1,195 @@
+@model AdminSupportTicketListViewModel
+@{
+    ViewData["Title"] = "Destek Talepleri";
+    Layout = "_AdminLayout";
+    ViewData["ActiveMenu"] = "SupportTickets";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-1"></i>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle me-1"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@* ── İstatistik Kartları ── *@
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card nfa-stat-card nfa-stat-primary nfa-animate-in">
+            <div class="stat-value">@Model.TotalCount</div>
+            <div class="stat-label">Toplam Talep</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card nfa-stat-card nfa-stat-warning nfa-animate-in">
+            <div class="stat-value">@Model.PendingCount</div>
+            <div class="stat-label">Bekleyen</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card nfa-stat-card nfa-stat-success nfa-animate-in">
+            <div class="stat-value">@(Model.TotalCount - Model.PendingCount)</div>
+            <div class="stat-label">İşlenen</div>
+        </div>
+    </div>
+</div>
+
+@* ── Filtre Butonları ── *@
+<div class="d-flex gap-2 mb-4 flex-wrap">
+    <a asp-action="SupportTickets" class="btn @(Model.FilterStatus == null ? "btn-nfa-primary" : "btn-nfa-outline") btn-sm">
+        <i class="bi bi-list me-1"></i>Tümü
+    </a>
+    <a asp-action="SupportTickets" asp-route-status="Bekliyor" class="btn @(Model.FilterStatus == "Bekliyor" ? "btn-nfa-primary" : "btn-nfa-outline") btn-sm">
+        <i class="bi bi-hourglass-split me-1"></i>Bekliyor
+    </a>
+    <a asp-action="SupportTickets" asp-route-status="Yanıtlandı" class="btn @(Model.FilterStatus == "Yanıtlandı" ? "btn-nfa-primary" : "btn-nfa-outline") btn-sm">
+        <i class="bi bi-check-circle me-1"></i>Yanıtlandı
+    </a>
+    <a asp-action="SupportTickets" asp-route-status="Kapatıldı" class="btn @(Model.FilterStatus == "Kapatıldı" ? "btn-nfa-primary" : "btn-nfa-outline") btn-sm">
+        <i class="bi bi-x-circle me-1"></i>Kapatıldı
+    </a>
+</div>
+
+@* ── Talep Listesi ── *@
+@if (Model.Tickets.Any())
+{
+    <div class="row g-3">
+        @foreach (var ticket in Model.Tickets)
+        {
+            var statusBadge = ticket.Status switch
+            {
+                "Bekliyor" => "badge-nfa-pending",
+                "İnceleniyor" => "badge-nfa-active",
+                "Yanıtlandı" => "badge-nfa-completed",
+                "Kapatıldı" => "badge-nfa-expired",
+                _ => "badge-nfa-pending"
+            };
+            var categoryIcon = ticket.Category switch
+            {
+                "İstek" => "bi-lightbulb",
+                "Dilek" => "bi-heart",
+                "Şikayet" => "bi-exclamation-triangle",
+                _ => "bi-chat-dots"
+            };
+            var categoryColor = ticket.Category switch
+            {
+                "İstek" => "oklch(0.72 0.19 155)",
+                "Dilek" => "oklch(0.62 0.18 250)",
+                "Şikayet" => "oklch(0.6271 0.1936 33)",
+                _ => "var(--nfa-primary)"
+            };
+
+            <div class="col-12 nfa-animate-in">
+                <div class="card card-nfa-shadow" style="border-left:4px solid @categoryColor;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi @categoryIcon" style="font-size:1.25rem;color:@categoryColor;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-0" style="font-size:.9375rem;">@ticket.Subject</h6>
+                                    <small class="text-nfa-muted">@ticket.Category · @ticket.UserFullName · @ticket.UserEmail</small>
+                                </div>
+                            </div>
+                            <span class="badge @statusBadge rounded-pill">@ticket.Status</span>
+                        </div>
+
+                        <p class="mb-2" style="font-size:.875rem;color:var(--nfa-muted-fg);line-height:1.6;">@ticket.Message</p>
+
+                        @if (!string.IsNullOrEmpty(ticket.AdminResponse))
+                        {
+                            <div class="p-3 mt-2" style="background:oklch(0.72 0.19 155 / .08);border-radius:var(--nfa-radius);border:1px solid oklch(0.72 0.19 155 / .15);">
+                                <small class="fw-semibold" style="color:oklch(0.55 0.17 155);"><i class="bi bi-reply me-1"></i>Admin Yanıtı:</small>
+                                <p class="mb-0 mt-1" style="font-size:.8125rem;">@ticket.AdminResponse</p>
+                                @if (ticket.ResponseDate != null)
+                                {
+                                    <small class="text-nfa-muted">@ticket.ResponseDate?.ToString("dd MMM yyyy HH:mm")</small>
+                                }
+                            </div>
+                        }
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <small class="text-nfa-muted"><i class="bi bi-clock me-1"></i>@ticket.CreatedDate.ToString("dd MMM yyyy HH:mm")</small>
+
+                            @if (ticket.Status != "Kapatıldı")
+                            {
+                                <div class="d-flex gap-2">
+                                    @if (ticket.Status == "Bekliyor" || ticket.Status == "İnceleniyor")
+                                    {
+                                        <button type="button" class="btn btn-nfa-sm btn-nfa-success" data-bs-toggle="modal" data-bs-target="#respondModal-@ticket.Id">
+                                            <i class="bi bi-reply me-1"></i>Yanıtla
+                                        </button>
+                                    }
+                                    <form asp-action="CloseTicket" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@ticket.Id" />
+                                        <button type="submit" class="btn btn-nfa-sm btn-nfa-danger" onclick="return confirm('Bu talebi kapatmak istediğinize emin misiniz?')">
+                                            <i class="bi bi-x-lg me-1"></i>Kapat
+                                        </button>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @* Yanıtla Modal *@
+            @if (ticket.Status != "Kapatıldı")
+            {
+                <div class="modal fade" id="respondModal-@ticket.Id" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content" style="background:var(--nfa-card);border:1px solid var(--nfa-border);">
+                            <div class="modal-header border-0">
+                                <h5 class="modal-title fw-bold" style="font-size:1rem;">Talebe Yanıt Ver</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <form asp-action="RespondTicket" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="TicketId" value="@ticket.Id" />
+                                <div class="modal-body">
+                                    <div class="mb-3 p-3" style="background:var(--nfa-muted);border-radius:var(--nfa-radius);">
+                                        <small class="fw-semibold">@ticket.Category – @ticket.Subject</small>
+                                        <p class="mb-0 mt-1" style="font-size:.8125rem;color:var(--nfa-muted-fg);">@ticket.Message</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold" style="font-size:.875rem;">Yanıtınız</label>
+                                        <textarea name="AdminResponse" class="form-control form-control-nfa" rows="4" required placeholder="Yanıtınızı yazın..."></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold" style="font-size:.875rem;">Durum</label>
+                                        <select name="NewStatus" class="form-select form-control-nfa">
+                                            <option value="Yanıtlandı" selected>Yanıtlandı</option>
+                                            <option value="İnceleniyor">İnceleniyor</option>
+                                            <option value="Kapatıldı">Kapatıldı</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-0">
+                                    <button type="button" class="btn btn-nfa-outline btn-sm" data-bs-dismiss="modal">İptal</button>
+                                    <button type="submit" class="btn btn-nfa-primary btn-sm"><i class="bi bi-send me-1"></i>Yanıtla</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}
+else
+{
+    <div class="card card-nfa-shadow">
+        <div class="nfa-empty-state">
+            <i class="bi bi-inbox"></i>
+            <p class="mb-0">Henüz destek talebi bulunmuyor.</p>
+        </div>
+    </div>
+}

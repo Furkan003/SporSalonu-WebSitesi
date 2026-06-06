@@ -638,6 +638,66 @@ namespace NfaSporSalonu.Controllers
             return RedirectToAction(nameof(Notifications));
         }
 
+        // ═══════════════ DESTEK TALEPLERİ ═══════════════
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateSupportTicket(CreateSupportTicketViewModel model, string? ReturnUrl = null)
+        {
+            var redirectUrl = !string.IsNullOrEmpty(ReturnUrl) ? ReturnUrl : "/#contact";
+
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Lütfen tüm alanları doldurunuz.";
+                return Redirect(redirectUrl);
+            }
+
+            var userId = GetCurrentUserId();
+            if (userId == null)
+                return RedirectToAction("Login", "Account");
+
+            var ticket = new SupportTicket
+            {
+                UserId = userId,
+                Category = model.Category,
+                Subject = model.Subject,
+                Message = model.Message,
+                Status = "Bekliyor",
+                CreatedDate = DateTime.Now
+            };
+
+            _context.SupportTickets.Add(ticket);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Destek talebiniz başarıyla gönderildi. En kısa sürede incelenecektir.";
+            return Redirect(redirectUrl);
+        }
+
+        public async Task<IActionResult> MyTickets()
+        {
+            var userId = GetCurrentUserId();
+            if (userId == null)
+                return RedirectToAction("Login", "Account");
+
+            var tickets = await _context.SupportTickets
+                .Where(t => t.UserId == userId)
+                .OrderByDescending(t => t.CreatedDate)
+                .Select(t => new SupportTicketItemDto
+                {
+                    Id = t.Id,
+                    Category = t.Category,
+                    Subject = t.Subject,
+                    Message = t.Message,
+                    Status = t.Status,
+                    AdminResponse = t.AdminResponse,
+                    CreatedDate = t.CreatedDate,
+                    ResponseDate = t.ResponseDate
+                })
+                .ToListAsync();
+
+            return View(tickets);
+        }
+
         // ═══════════════ YARDIMCI METOT ═══════════════
 
         private int? GetCurrentUserId()

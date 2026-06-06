@@ -1614,6 +1614,41 @@ a.nfa-link:hover {
     box-shadow: none;
 }
 
+/* ─── Logout Button (Red Accent on Glass) ─── */
+.nfa-navbar-btn-logout {
+    --bs-btn-color: #fff;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: oklch(0.55 0.22 30 / .35);
+    --bs-btn-active-border-color: oklch(0.65 0.2 30 / .6);
+
+    border: 1px solid oklch(0.65 0.2 30 / .45);
+    background: oklch(0.6 0.22 30 / .18);
+    color: oklch(1 0 0 / .95) !important;
+    border-radius: var(--nfa-radius);
+    font-weight: 600;
+    font-size: .8125rem;
+    transition: background .2s, border-color .2s, box-shadow .2s, transform .15s;
+}
+
+.nfa-navbar-btn-logout:hover {
+    background: oklch(0.55 0.22 30 / .35);
+    border-color: oklch(0.65 0.2 30 / .65);
+    color: #fff !important;
+    box-shadow: 0 0 12px oklch(0.6 0.22 30 / .25);
+    transform: translateY(-1px);
+}
+
+.nfa-navbar-btn-logout:active,
+.nfa-navbar-btn-logout:first-child:active,
+.nfa-navbar-btn-logout:focus {
+    background: oklch(0.5 0.22 30 / .4) !important;
+    border-color: oklch(0.65 0.2 30 / .7) !important;
+    color: #fff !important;
+    box-shadow: none;
+    transform: translateY(0);
+}
+
 .nfa-navbar-actions {
     display: flex;
     align-items: center;

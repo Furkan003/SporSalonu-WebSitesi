@@ -82,6 +82,8 @@ public partial class User
     /// </summary>
     public virtual ICollection<QRAccessLog> QRAccessLogs { get; set; } = new List<QRAccessLog>();
 
+    public virtual ICollection<SupportTicket> SupportTickets { get; set; } = new List<SupportTicket>();
+
     /// <summary>
     /// Kullanıcının aktif bir üyeliği olup olmadığını kontrol eder.
     /// </summary>

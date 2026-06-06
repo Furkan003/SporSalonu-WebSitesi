@@ -45,6 +45,8 @@ public partial class NfaSporSalonuDbContext : DbContext
 
     public virtual DbSet<QRAccessLog> QRAccessLogs { get; set; }
 
+    public virtual DbSet<SupportTicket> SupportTickets { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
@@ -532,6 +534,23 @@ public partial class NfaSporSalonuDbContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasConstraintName("FK_QRAccessLogs_User");
+        });
+
+        modelBuilder.Entity<SupportTicket>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("SupportTickets");
+            entity.Property(e => e.Category).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.Subject).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Message).IsRequired().HasMaxLength(2000);
+            entity.Property(e => e.Status).IsRequired().HasMaxLength(30).HasDefaultValue("Bekliyor");
+            entity.Property(e => e.AdminResponse).HasMaxLength(2000);
+            entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())").HasColumnType("datetime");
+            entity.Property(e => e.ResponseDate).HasColumnType("datetime");
+            entity.HasOne(d => d.User).WithMany(p => p.SupportTickets)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.NoAction)
+                .HasConstraintName("FK_SupportTickets_User");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -584,5 +584,96 @@ namespace NfaSporSalonu.Controllers
             TempData["Success"] = "Bildirim silindi.";
             return RedirectToAction(nameof(Notifications));
         }
+
+        // ═══════════════ DESTEK TALEPLERİ ═══════════════
+
+        public async Task<IActionResult> SupportTickets(string? status = null)
+        {
+            var query = _context.SupportTickets
+                .Include(t => t.User)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(status))
+                query = query.Where(t => t.Status == status);
+
+            var tickets = await query
+                .OrderByDescending(t => t.CreatedDate)
+                .Select(t => new SupportTicketItemDto
+                {
+                    Id = t.Id,
+                    Category = t.Category,
+                    Subject = t.Subject,
+                    Message = t.Message,
+                    Status = t.Status,
+                    AdminResponse = t.AdminResponse,
+                    CreatedDate = t.CreatedDate,
+                    ResponseDate = t.ResponseDate,
+                    UserFullName = t.User != null ? t.User.FirstName + " " + t.User.LastName : null,
+                    UserEmail = t.User != null ? t.User.Email : null
+                })
+                .ToListAsync();
+
+            var viewModel = new AdminSupportTicketListViewModel
+            {
+                Tickets = tickets,
+                TotalCount = await _context.SupportTickets.CountAsync(),
+                PendingCount = await _context.SupportTickets.CountAsync(t => t.Status == "Bekliyor"),
+                FilterStatus = status
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RespondTicket(RespondTicketViewModel model)
+        {
+            var ticket = await _context.SupportTickets.FindAsync(model.TicketId);
+            if (ticket == null)
+            {
+                TempData["Error"] = "Talep bulunamadı.";
+                return RedirectToAction(nameof(SupportTickets));
+            }
+
+            ticket.AdminResponse = model.AdminResponse;
+            ticket.Status = model.NewStatus ?? "Yanıtlandı";
+            ticket.ResponseDate = DateTime.Now;
+
+            // Kullanıcıya bildirim gönder
+            if (ticket.UserId != null)
+            {
+                _context.Notifications.Add(new Notification
+                {
+                    UserId = ticket.UserId,
+                    Message = $"Destek talebiniz yanıtlandı: \"{ticket.Subject}\"",
+                    NotificationType = "Destek",
+                    CreatedDate = DateTime.Now,
+                    IsRead = false
+                });
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Talep başarıyla yanıtlandı.";
+            return RedirectToAction(nameof(SupportTickets));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CloseTicket(int id)
+        {
+            var ticket = await _context.SupportTickets.FindAsync(id);
+            if (ticket == null)
+            {
+                TempData["Error"] = "Talep bulunamadı.";
+                return RedirectToAction(nameof(SupportTickets));
+            }
+
+            ticket.Status = "Kapatıldı";
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Talep kapatıldı.";
+            return RedirectToAction(nameof(SupportTickets));
+        }
     }
 }

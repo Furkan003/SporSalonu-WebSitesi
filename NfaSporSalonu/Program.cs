@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.RateLimiting;
 using NfaSporSalonu.Models;
 using System.Text.Json;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -92,6 +93,15 @@ builder.Services.AddScoped<NfaSporSalonu.Services.IAnalyticsService, NfaSporSalo
 builder.Services.AddScoped<NfaSporSalonu.Services.ITurnstileService, NfaSporSalonu.Services.TurnstileService>();
 builder.Services.AddSingleton<NfaSporSalonu.Services.IQrCodeService, NfaSporSalonu.Services.QrCodeService>();
 
+// Turkish Culture for decimal separator (comma)
+var trCulture = new CultureInfo("tr-TR");
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(trCulture);
+    options.SupportedCultures = new[] { trCulture };
+    options.SupportedUICultures = new[] { trCulture };
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -102,6 +112,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRequestLocalization();
 
 // Global Exception Handling for API
 app.Use(async (context, next) =>
