@@ -1,0 +1,169 @@
+@model PaymentDetailViewModel
+@{
+    ViewData["Title"] = "Ödeme Detayı";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 nfa-animate-in">
+    <a asp-action="Payments" class="btn btn-nfa-outline btn-sm px-3">
+        <i class="bi bi-arrow-left me-1"></i>Ödemelere Dön
+    </a>
+    <button onclick="window.print()" class="btn btn-nfa-primary btn-sm px-3">
+        <i class="bi bi-printer me-1"></i>Yazdır
+    </button>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card card-nfa-shadow-lg nfa-animate-in" style="border-radius:calc(var(--nfa-radius) * 2);overflow:hidden;">
+            @* Header *@
+            <div style="background:linear-gradient(135deg, var(--nfa-secondary) 0%, oklch(0.4 0.02 286) 100%);padding:2rem;color:#fff;">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h4 class="fw-bold mb-1">NFA Spor Merkezi</h4>
+                        <p style="opacity:.7;font-size:.8125rem;margin-bottom:0;">Ödeme Detayı</p>
+                    </div>
+                    <div class="text-end">
+                        <div class="fw-bold" style="font-size:1rem;">#@Model.PaymentId</div>
+                        <div style="opacity:.7;font-size:.8125rem;">
+                            @(Model.PaymentDate?.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR")) ?? "–")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body p-4">
+                @* Durum Badge *@
+                <div class="text-center mb-4">
+                    @if (Model.Status == "Completed")
+                    {
+                        <span class="badge badge-nfa-completed rounded-pill px-4 py-2" style="font-size:.9rem;">
+                            <i class="bi bi-check-circle me-1"></i>Tamamlandı
+                        </span>
+                    }
+                    else if (Model.Status == "Pending")
+                    {
+                        <span class="badge badge-nfa-pending rounded-pill px-4 py-2" style="font-size:.9rem;">
+                            <i class="bi bi-hourglass-split me-1"></i>Bekliyor
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-nfa-expired rounded-pill px-4 py-2" style="font-size:.9rem;">
+                            <i class="bi bi-x-circle me-1"></i>@Model.Status
+                        </span>
+                    }
+                </div>
+
+                @* Üye Bilgileri *@
+                <div class="mb-4 p-3 rounded" style="background:rgba(255,255,255,.03);border:1px solid var(--admin-border, rgba(255,255,255,.08));">
+                    <h6 class="fw-semibold mb-3" style="font-size:.875rem;">
+                        <i class="bi bi-person me-1" style="color:var(--nfa-primary);"></i>Üye Bilgileri
+                    </h6>
+                    <div class="row g-3" style="font-size:.875rem;">
+                        <div class="col-sm-6">
+                            <span style="color:var(--admin-muted, rgba(255,255,255,.45));font-size:.75rem;">Ad Soyad</span>
+                            <div class="fw-semibold">@(Model.MemberFullName ?? "–")</div>
+                        </div>
+                        <div class="col-sm-6">
+                            <span style="color:var(--admin-muted, rgba(255,255,255,.45));font-size:.75rem;">E-posta</span>
+                            <div class="fw-semibold">@(Model.MemberEmail ?? "–")</div>
+                        </div>
+                    </div>
+                </div>
+
+                @* Ödeme Bilgileri *@
+                <div class="mb-4 p-3 rounded" style="background:rgba(255,255,255,.03);border:1px solid var(--admin-border, rgba(255,255,255,.08));">
+                    <h6 class="fw-semibold mb-3" style="font-size:.875rem;">
+                        <i class="bi bi-credit-card me-1" style="color:var(--nfa-primary);"></i>Ödeme Bilgileri
+                    </h6>
+                    <div class="row g-3" style="font-size:.875rem;">
+                        <div class="col-sm-6">
+                            <span style="color:var(--admin-muted, rgba(255,255,255,.45));font-size:.75rem;">Ödeme Yöntemi</span>
+                            <div class="fw-semibold">@(Model.PaymentMethod ?? "–")</div>
+                        </div>
+                        <div class="col-sm-6">
+                            <span style="color:var(--admin-muted, rgba(255,255,255,.45));font-size:.75rem;">İşlem No</span>
+                            <div class="fw-semibold" style="font-family:monospace;">@(Model.TransactionId ?? "–")</div>
+                        </div>
+                        <div class="col-sm-6">
+                            <span style="color:var(--admin-muted, rgba(255,255,255,.45));font-size:.75rem;">Ödeme Tarihi</span>
+                            <div class="fw-semibold">@(Model.PaymentDate?.ToString("dd MMMM yyyy HH:mm", new System.Globalization.CultureInfo("tr-TR")) ?? "–")</div>
+                        </div>
+                        <div class="col-sm-6">
+                            <span style="color:var(--admin-muted, rgba(255,255,255,.45));font-size:.75rem;">Tutar</span>
+                            <div class="fw-bold" style="font-size:1.25rem;color:var(--nfa-primary);">
+                                @Model.Amount.ToString("C2", new System.Globalization.CultureInfo("tr-TR"))
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @* Paket / Üyelik Bilgileri *@
+                @if (Model.PlanName != null)
+                {
+                    <div class="mb-4 p-3 rounded" style="background:rgba(255,255,255,.03);border:1px solid var(--admin-border, rgba(255,255,255,.08));">
+                        <h6 class="fw-semibold mb-3" style="font-size:.875rem;">
+                            <i class="bi bi-gem me-1" style="color:var(--nfa-primary);"></i>Üyelik Paketi
+                        </h6>
+                        <div class="row g-3" style="font-size:.875rem;">
+                            <div class="col-sm-6">
+                                <span style="color:var(--admin-muted, rgba(255,255,255,.45));font-size:.75rem;">Paket</span>
+                                <div class="fw-semibold">@Model.PlanName</div>
+                            </div>
+                            <div class="col-sm-6">
+                                <span style="color:var(--admin-muted, rgba(255,255,255,.45));font-size:.75rem;">Süre</span>
+                                <div class="fw-semibold">@(Model.PlanDuration) gün</div>
+                            </div>
+                            <div class="col-sm-6">
+                                <span style="color:var(--admin-muted, rgba(255,255,255,.45));font-size:.75rem;">Başlangıç</span>
+                                <div class="fw-semibold">@(Model.MembershipStartDate?.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR")) ?? "–")</div>
+                            </div>
+                            <div class="col-sm-6">
+                                <span style="color:var(--admin-muted, rgba(255,255,255,.45));font-size:.75rem;">Bitiş</span>
+                                <div class="fw-semibold">@(Model.MembershipEndDate?.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR")) ?? "–")</div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @* Toplam Özet *@
+                <div class="d-flex justify-content-end">
+                    <div class="text-end" style="min-width:250px;">
+                        <div class="d-flex justify-content-between gap-4 mb-1" style="font-size:.875rem;">
+                            <span style="color:var(--admin-muted, rgba(255,255,255,.45));">Ara Toplam:</span>
+                            <span class="fw-semibold">@Model.Amount.ToString("C2", new System.Globalization.CultureInfo("tr-TR"))</span>
+                        </div>
+                        <div class="d-flex justify-content-between gap-4 mb-2" style="font-size:.875rem;">
+                            <span style="color:var(--admin-muted, rgba(255,255,255,.45));">KDV (%20):</span>
+                            <span class="fw-semibold">@((Model.Amount * 0.20m).ToString("C2", new System.Globalization.CultureInfo("tr-TR")))</span>
+                        </div>
+                        <hr style="border-color:var(--admin-border, rgba(255,255,255,.08));" />
+                        <div class="d-flex justify-content-between gap-4" style="font-size:1.125rem;">
+                            <span class="fw-bold">Genel Toplam:</span>
+                            <span class="fw-bold" style="color:var(--nfa-primary);">@((Model.Amount * 1.20m).ToString("C2", new System.Globalization.CultureInfo("tr-TR")))</span>
+                        </div>
+                    </div>
+                </div>
+
+                @* Footer *@
+                <div class="text-center mt-4 pt-3" style="border-top:1px solid var(--admin-border, rgba(255,255,255,.08));">
+                    <p style="color:var(--admin-muted, rgba(255,255,255,.45));font-size:.75rem;" class="mb-0">
+                        Bu belge NFA Spor Merkezi tarafından düzenlenmiştir. • Ödeme No: #@Model.PaymentId
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@media print {
+        .nfa-admin-sidebar, .nfa-no-print, .d-flex.justify-content-between.mb-4 { display: none !important; }
+        .nfa-admin-content { margin-left: 0 !important; padding: 0 !important; }
+        body { background: #fff !important; color: #000 !important; }
+        .card { border: 1px solid #ddd !important; box-shadow: none !important; background: #fff !important; color: #000 !important; }
+        .fw-semibold, .fw-bold, h4, h6, div { color: #000 !important; }
+        span[style*="admin-muted"] { color: #666 !important; }
+    }
+</style>

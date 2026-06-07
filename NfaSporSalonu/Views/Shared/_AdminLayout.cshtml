@@ -50,6 +50,7 @@
             background: rgba(255,255,255,.05) !important;
             border-color: var(--admin-border) !important;
             color: var(--admin-fg) !important;
+            color-scheme: dark;
         }
         .form-control:focus, .form-select:focus {
             background: rgba(255,255,255,.08) !important;
@@ -58,6 +59,18 @@
             box-shadow: 0 0 0 3px oklch(0.795 0.184 86.047 / .15) !important;
         }
         .form-control::placeholder { color: rgba(255,255,255,.35) !important; }
+        /* Select option dark fix */
+        .form-select option, select option {
+            background: #1a1a1a !important;
+            color: #e8e8e8 !important;
+        }
+        .form-select option:disabled { color: rgba(255,255,255,.35) !important; }
+        /* Labels */
+        label, .form-label { color: var(--admin-fg) !important; }
+        /* Input date/time */
+        input[type="date"], input[type="time"], input[type="datetime-local"] {
+            color-scheme: dark;
+        }
         /* Tables */
         .table { color: var(--admin-fg) !important; --bs-table-bg: transparent !important; }
         .table th { border-color: var(--admin-border) !important; color: var(--admin-muted) !important; }
